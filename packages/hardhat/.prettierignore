@@ -1,0 +1,10 @@
+.vscode
+build
+circuits
+contracts/Verifier.sol
+scripts/ganacheHelper.js
+cli.js
+index.js
+coverage
+coverage.json
+tornado
