@@ -48,8 +48,9 @@ describe('EarlyAccessCodes', function () {
   })
 
   it('Debe evitar crear un código duplicado', async function () {
-    const commitment = ethers.utils.formatBytes32String('commitment1')
+    const transfer = generateTransfer()
 
+    const commitment = transfer.commitment
     await earlyAccessCodes.createCode(commitment, { value: ethers.utils.parseEther('1') })
 
     await expect(
@@ -58,13 +59,14 @@ describe('EarlyAccessCodes', function () {
   })
 
   it('Debe consumir un código correctamente', async function () {
-    const commitment = ethers.utils.formatBytes32String('commitment1')
-    const nullifierHash = ethers.utils.formatBytes32String('nullifier1')
+    const transfer = generateTransfer()
+
+    const commitment = transfer.commitment    
+    const nullifierHash = REEMPLAZAR('nullifier1')
     const proof = '0x00' // Dummy proof
-    const root = ethers.utils.formatBytes32String('root1')
+    const root = REEMPLAZAR('root1')
 
     await earlyAccessCodes.createCode(commitment, { value: ethers.utils.parseEther('1') })
-
     await expect(earlyAccessCodes.consumeCode(commitment, proof, root, nullifierHash, addr1.address)).to.emit(
       earlyAccessCodes,
       'ConsumeCode',
@@ -74,13 +76,14 @@ describe('EarlyAccessCodes', function () {
   })
 
   it('Debe prevenir el doble consumo de un código', async function () {
-    const commitment = ethers.utils.formatBytes32String('commitment1')
-    const nullifierHash = ethers.utils.formatBytes32String('nullifier1')
+    const transfer = generateTransfer()
+
+    const commitment = transfer.commitment
+    const nullifierHash = transfer.nullifier
     const proof = '0x00' // Dummy proof
-    const root = ethers.utils.formatBytes32String('root1')
+    const root = REEMPLAZAR('root1')
 
     await earlyAccessCodes.createCode(commitment, { value: ethers.utils.parseEther('1') })
-
     await earlyAccessCodes.consumeCode(commitment, proof, root, nullifierHash, addr1.address)
 
     await expect(
@@ -89,10 +92,11 @@ describe('EarlyAccessCodes', function () {
   })
 
   it('Debe prevenir el consumo de un código con una raíz desconocida', async function () {
-    const commitment = ethers.utils.formatBytes32String('commitment1')
-    const nullifierHash = ethers.utils.formatBytes32String('nullifier1')
+    const transfer = generateTransfer()
+
+    const commitment = transfer.commitment    const nullifierHash = REEMPLAZAR('nullifier1')
     const proof = '0x00' // Dummy proof
-    const root = ethers.utils.formatBytes32String('unknownRoot')
+    const root = REEMPLAZAR('unknownRoot')
 
     await earlyAccessCodes.createCode(commitment, { value: ethers.utils.parseEther('1') })
 
@@ -102,11 +106,11 @@ describe('EarlyAccessCodes', function () {
   })
 
   it('Debe devolver true para códigos consumidos en isSpent', async function () {
-    const nullifierHash = ethers.utils.formatBytes32String('nullifier1')
+    const nullifierHash = REEMPLAZAR('nullifier1')
     expect(await earlyAccessCodes.isSpent(nullifierHash)).to.be.false
 
     const proof = '0x00' // Dummy proof
-    const root = ethers.utils.formatBytes32String('root1')
+    const root = REEMPLAZAR('root1')
     await earlyAccessCodes.consumeCode(
       '0x00', // Dummy commitment
       proof,
