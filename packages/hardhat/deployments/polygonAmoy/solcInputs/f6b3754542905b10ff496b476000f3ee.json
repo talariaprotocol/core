@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/helpers/Hasher.sol": {
+      "content": "pragma solidity ^0.8.20; \ncontract Hasher { \n    function MiMCSponge(uint256 xL_in,uint256 xR_in) external pure returns(uint256,uint256) { \n        uint n = 220; \n        bytes32 ci = 0x0fbe43c36a80e36d7c7c584d4f8f3759fb51f0d66065d8a227b688d12488c5d4;\n        uint q = 0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001;\n        uint xL = xL_in;\n        uint xR = xR_in;\n        uint t=xL;\n        uint b=mulmod(t, t, q);\n        uint c=mulmod(b, b, q);\n        uint d=mulmod(c, t, q);\n        xR=addmod(xR, d, q);\n        \n        for(uint i = 0; i < n-1; i++){\n            if (i<n-2 && i!=0){\n                ci = keccak256(abi.encodePacked(ci));\n            }\n            else if(i==n-2)\n            {\n                ci = 0;\n            }\n            (xL, xR)=(xR, xL);\n            t = addmod(uint(ci), xL, q);\n            \n            b = mulmod(t, t, q);\n            c = mulmod(b, b, q);\n            d = mulmod(c, t, q);\n            xR = addmod(xR, d, q);\n        }\n        return (xL, xR);\n    } \n\n} "
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

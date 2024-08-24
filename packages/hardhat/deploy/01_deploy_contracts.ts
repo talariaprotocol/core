@@ -54,14 +54,14 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     log: true,
   })
 
-  const USDConOptimismSepolia = "0x5fd84259d66Cd46123540766Be93DFE6D43130D7"
+  const USDConOptimismSepolia = '0x5fd84259d66Cd46123540766Be93DFE6D43130D7'
   const giftCardsContract = await deploy('GiftCards', {
     from: deployer,
     args: [verifier.address, hasher.address, levels, USDConOptimismSepolia],
     log: true,
   })
 
-  const poapAddress = "0x22C1f6050E56d2876009903609a2cC3fEf83B415";
+  const poapAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415'
   const poapAirdropperContract = await deploy('POAPAirdropper', {
     from: deployer,
     args: [verifier.address, hasher.address, levels, poapAddress],
@@ -78,6 +78,39 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     log: true,
   })
 
+  // Done using https://tools.privado.id/query-builder
+  // const privadoIDQuery = {
+  //   "circuitId": "credentialAtomicQuerySigV2OnChain",
+  //   "id": 1724520004n,
+  //   "query": {
+  //     "allowedIssuers": [
+  //       "*"
+  //     ],
+  //     "context": "ipfs://QmXg98gx2r421aHA9ZLJXnrLnorz1sM6p2m4yZfRAYMhob",
+  //     "type": "Cak3Role",
+  //     "skipClaimRevocationCheck": true,
+  //     "credentialSubject": {
+  //       "role": {
+  //         "$eq": "investor"
+  //       }
+  //     }
+  //   }
+  // }
+
+  const privadoIDQuery = {
+    schema: 1,
+    slotIndex: 1,
+    operator: 1,
+    value: [],
+    circuitId: '',
+  }
+
+  const privadoIdValidatorModule = await deploy('PrivadoIDValidatorModule', {
+    from: deployer,
+    args: [privadoIDQuery],
+    log: true,
+  })
+
   // Save addresses
   addresses[network.name] = {
     Verifier: verifier.address,
@@ -89,6 +122,7 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     POAPAirdropper: poapAirdropperContract.address,
     TestValidatorModule: testValidatorModule.address,
     WorldcoinValidatorModule: worldcoinValidatorModule.address,
+    PrivadoIDValidatorModule: privadoIdValidatorModule.address,
   }
 
   // Write updated addresses back to the JSON file
@@ -145,6 +179,12 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     await run('verify:verify', {
       address: worldcoinValidatorModule.address,
       contract: 'contracts/modules/WorldcoinValidatorModule.sol:WorldcoinValidatorModule',
+    })
+
+    await run('verify:verify', {
+      address: privadoIdValidatorModule.address,
+      constructorArguments: [privadoIDQuery],
+      contract: 'contracts/modules/PrivadoIDValidatorModule.sol:PrivadoIDValidatorModule',
     })
 
     console.log('Verification successful!')

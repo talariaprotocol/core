@@ -9,5 +9,28 @@
     "POAPAirdropper": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
     "TestValidatorModule": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
     "WorldcoinValidatorModule": "0x331b814A1aDd167927c29D9af93670687fF8145A"
+  },
+  "zkSyncSepolia": {
+    "Verifier": "0x7FC6B6D589A4B0C4FC7252c0B42E9EEf21C5c35e",
+    "Hasher": "0x3d4023D93b96F78CCafdf6Db87E7bb1F277Cf204",
+    "EarlyAccessCodes": "0xEA8789cd5b415DCde53734b7A9Bf9e09A9B5bf8A",
+    "EarlyAccessCodesTestContract": "0x7cb1f3B86f022915df048986990c53eB5d1cafB8",
+    "NumberContract": "0x88320d516a4Cbb976E6d05F845962F141Ab5F607",
+    "GiftCards": "0x04034db0E5772DA4C3A4a1F31a248DCd600C6aF8",
+    "POAPAirdropper": "0x27b128E3bA79e16af181b69c0A2c2Cce24234A0D",
+    "TestValidatorModule": "0x8A874840ef4190ffB031b7e5F93d0C57cF498eA0",
+    "WorldcoinValidatorModule": "0x876d5D8e796b71775E09207377B183aE7626a581"
+  },
+  "polygonAmoy": {
+    "Verifier": "0x8adbd2f6bc6519D86F7C259edC7A30804cbc4Ae9",
+    "Hasher": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "EarlyAccessCodes": "0xB808ffe40A4Add6DF866a22ace5AfCD1a782EcC0",
+    "EarlyAccessCodesTestContract": "0xF65c25F287f87B2B1Ca3286121eee1959215d7F6",
+    "NumberContract": "0x7126d1631d090D0612Cf37cF75B4D36bF2673014",
+    "GiftCards": "0xC0d1855b8D61604F83b87C63a3E94B6511ce37F6",
+    "POAPAirdropper": "0x22257FF37950917C17024d46f3f90DD5448E872D",
+    "TestValidatorModule": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
+    "WorldcoinValidatorModule": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+    "PrivadoIDValidatorModule": "0x7CDd81CF9d4bE5F0cfF96BC5dD73bbfe8667A449"
   }
 }

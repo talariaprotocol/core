@@ -1,0 +1,109 @@
+{
+  "address": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "arg",
+          "type": "bytes"
+        }
+      ],
+      "name": "validate",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "worldcoinVerifier",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xb4bf71360ce973535c603ac4ff8614d46c9bafd9af73b40ed1a624b6e7a0c34b",
+  "receipt": {
+    "to": null,
+    "from": "0xEB71ed911e4dFc35Da80103a72fE983C8c709F33",
+    "contractAddress": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+    "transactionIndex": 0,
+    "gasUsed": "206665",
+    "logsBloom": "0x00000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000008000000000000000000040000000000000000000000000000000000000800000000000000000000100100000000000000000000000100000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000200000000000000200000000000000000000000000000000000000000000000000000000000004000000000000000000001000000000000000000000000000000100000000800000000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0x4f0ce141f0d7bf3bd0a5fb6d9bb6c1b3ee1314eccc077c89fac764de995ef102",
+    "transactionHash": "0xb4bf71360ce973535c603ac4ff8614d46c9bafd9af73b40ed1a624b6e7a0c34b",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 11119921,
+        "transactionHash": "0xb4bf71360ce973535c603ac4ff8614d46c9bafd9af73b40ed1a624b6e7a0c34b",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000eb71ed911e4dfc35da80103a72fe983c8c709f33",
+          "0x0000000000000000000000004631753190f2f5a15a7ba172bbac102b7d95fa22"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000001606d259600c0000000000000000000000000000000000000000000000000005d69839f26846bf00000000000000000000000000000000000000000000018ce118d31ab969575100000000000000000000000000000000000000000000000005c0916799083abf00000000000000000000000000000000000000000000018ce12ed9ed12c96351",
+        "logIndex": 0,
+        "blockHash": "0x4f0ce141f0d7bf3bd0a5fb6d9bb6c1b3ee1314eccc077c89fac764de995ef102"
+      }
+    ],
+    "blockNumber": 11119921,
+    "cumulativeGasUsed": "206665",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "76e8e54d94c8c23eafb89159fce21361",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"arg\",\"type\":\"bytes\"}],\"name\":\"validate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"worldcoinVerifier\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/modules/WorldcoinValidatorModule.sol\":\"WorldcoinValidatorModule\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/modules/IValidationModule.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\ninterface IValidationModule {\\n  function validate(bytes calldata arg) external returns (bool);\\n}\",\"keccak256\":\"0xbce3d3ab208ca1c7fd5e6500f0836c0b99c6dd4b172ebb27bab1a41d2322f94f\",\"license\":\"MIT\"},\"contracts/modules/WorldcoinValidatorModule.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\nimport \\\"../modules/IValidationModule.sol\\\";\\n\\n\\ninterface WorldcoinVerifier {\\n  function verifyProof(\\n    bytes calldata args\\n  ) external returns (bool);\\n}\\n\\ncontract WorldcoinValidatorModule is IValidationModule {\\n\\n  address public worldcoinVerifier;\\n\\n  constructor() {\\n    worldcoinVerifier = 0x11cA3127182f7583EfC416a8771BD4d11Fae4334; // Sepolia Tesnet Address @todo: move to deploy script\\n  }\\n  \\n\\n\\n  function validate(bytes calldata arg) external override returns (bool) {\\n    require(WorldcoinVerifier(worldcoinVerifier).verifyProof(\\n      arg\\n    ), \\\"Worldcoin Verification Failed\\\");\\n    \\n    return true;\\n  }\\n}\",\"keccak256\":\"0x6be8ab7018178fb61323da27384aa8917cf2d0f27d5ac4ae68f3769c03e621b8\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50600080546001600160a01b0319167311ca3127182f7583efc416a8771bd4d11fae433417905561025d806100466000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063c16e50ef1461003b578063d988e14514610063575b600080fd5b61004e61004936600461015d565b61008e565b60405190151581526020015b60405180910390f35b600054610076906001600160a01b031681565b6040516001600160a01b03909116815260200161005a565b60008054604051632ae132ff60e11b81526001600160a01b03909116906355c265fe906100c190869086906004016101cf565b6020604051808303816000875af11580156100e0573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061010491906101fe565b6101545760405162461bcd60e51b815260206004820152601d60248201527f576f726c64636f696e20566572696669636174696f6e204661696c6564000000604482015260640160405180910390fd5b50600192915050565b6000806020838503121561017057600080fd5b823567ffffffffffffffff8082111561018857600080fd5b818501915085601f83011261019c57600080fd5b8135818111156101ab57600080fd5b8660208285010111156101bd57600080fd5b60209290920196919550909350505050565b60208152816020820152818360408301376000818301604090810191909152601f909201601f19160101919050565b60006020828403121561021057600080fd5b8151801515811461022057600080fd5b939250505056fea264697066735822122068b3deedc124c91bdfc206fc36f9e91a89b7d5d41d3c484f2903a3cb9697d71b64736f6c63430008140033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063c16e50ef1461003b578063d988e14514610063575b600080fd5b61004e61004936600461015d565b61008e565b60405190151581526020015b60405180910390f35b600054610076906001600160a01b031681565b6040516001600160a01b03909116815260200161005a565b60008054604051632ae132ff60e11b81526001600160a01b03909116906355c265fe906100c190869086906004016101cf565b6020604051808303816000875af11580156100e0573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061010491906101fe565b6101545760405162461bcd60e51b815260206004820152601d60248201527f576f726c64636f696e20566572696669636174696f6e204661696c6564000000604482015260640160405180910390fd5b50600192915050565b6000806020838503121561017057600080fd5b823567ffffffffffffffff8082111561018857600080fd5b818501915085601f83011261019c57600080fd5b8135818111156101ab57600080fd5b8660208285010111156101bd57600080fd5b60209290920196919550909350505050565b60208152816020820152818360408301376000818301604090810191909152601f909201601f19160101919050565b60006020828403121561021057600080fd5b8151801515811461022057600080fd5b939250505056fea264697066735822122068b3deedc124c91bdfc206fc36f9e91a89b7d5d41d3c484f2903a3cb9697d71b64736f6c63430008140033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 24,
+        "contract": "contracts/modules/WorldcoinValidatorModule.sol:WorldcoinValidatorModule",
+        "label": "worldcoinVerifier",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}

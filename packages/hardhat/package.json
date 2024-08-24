@@ -7,6 +7,8 @@
     "compile": "hardhat compile",
     "deploy": "hardhat deploy",
     "deploy:optimism": "hardhat deploy --network optimismSepolia",
+    "deploy:zkSync": "DEPLOY_TARGET=zksync hardhat run --network zkSyncSepolia deploy-helpers/deploy_zksync.ts",
+    "deploy:amoy": "hardhat deploy --network polygonAmoy",
     "fork": "MAINNET_FORKING_ENABLED=true hardhat node --network hardhat --no-deploy",
     "generate": "hardhat run scripts/generateAccount.ts",
     "flatten": "hardhat flatten",
@@ -22,6 +24,8 @@
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.1",
+    "@matterlabs/hardhat-zksync-deploy": "^1.5.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.2.2",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.3",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
@@ -40,7 +44,7 @@
     "eslint": "^7.19.0",
     "eslint-config-prettier": "latest",
     "eslint-plugin-prettier": "latest",
-    "ethers": "^6.10.0",
+    "ethers": "^6.13.2",
     "hardhat": "^2.19.4",
     "hardhat-deploy": "^0.11.45",
     "hardhat-deploy-ethers": "^0.4.1",
@@ -51,7 +55,9 @@
     "solidity-coverage": "^0.8.5",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "zksync-ethers": "^6.11.2",
+    "zksync-web3": "^0.17.1"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",

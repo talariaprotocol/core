@@ -10,6 +10,14 @@ import '@nomicfoundation/hardhat-verify'
 import 'hardhat-deploy'
 import 'hardhat-deploy-ethers'
 
+// Conditionally import zkSync plugins only if needed
+if (process.env.DEPLOY_TARGET === 'zksync') {
+  console.log('Loading zkSync plugins')
+
+  require('@matterlabs/hardhat-zksync-solc')
+  require('@matterlabs/hardhat-zksync-deploy')
+}
+
 // If not set, it uses ours Alchemy's default API key.
 // You can get your own at https://dashboard.alchemyapi.io
 const providerApiKey = process.env.ALCHEMY_API_KEY || 'oKxs-03sij-U_N0iOlrSsZFr29-IqbuF'
@@ -19,6 +27,7 @@ const deployerPrivateKey =
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || 'DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW'
 const blockscoutApiKey = process.env.BLOCKSCOUT_API_KEY || '' // Use a Blockscout API key if required
+const polygonApiKey = '3WV3Z8PP7HFSW2E6Z65GR9845PJMW2ET6Z'
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -31,6 +40,20 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  ...(process.env.DEPLOY_TARGET === 'zksync'
+    ? {
+        zksolc: {
+          version: '1.5.2',
+          compilerSource: 'binary',
+          settings: {
+            optimizer: {
+              enabled: true,
+              runs: 200,
+            },
+          },
+        },
+      }
+    : {}),
   defaultNetwork: 'localhost',
   namedAccounts: {
     deployer: {
@@ -79,6 +102,10 @@ const config: HardhatUserConfig = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
+    polygonAmoy: {
+      url: `https://polygon-amoy.g.alchemy.com/v2/${providerApiKey}`,
+      accounts: [deployerPrivateKey],
+    },
     polygonZkEvm: {
       url: `https://polygonzkevm-mainnet.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
@@ -119,10 +146,23 @@ const config: HardhatUserConfig = {
       url: 'https://sepolia.publicgoods.network',
       accounts: [deployerPrivateKey],
     },
+    ...(process.env.DEPLOY_TARGET === 'zksync'
+      ? {
+          zkSyncSepolia: {
+            url: 'https://sepolia.era.zksync.dev',
+            ethNetwork: 'sepolia', // The Ethereum Web3 RPC URL, or the identifier of the network (e.g. `mainnet` or `sepolia`)
+            zksync: true,
+            accounts: [deployerPrivateKey],
+          },
+        }
+      : {}),
   },
   // configuration for harhdat-verify plugin
   etherscan: {
-    apiKey: `${etherscanApiKey}`,
+    apiKey: {
+      polygonAmoy: polygonApiKey,
+      default: `${etherscanApiKey}`,
+    },
     customChains: [
       {
         network: 'optimism-sepolia',
@@ -132,10 +172,26 @@ const config: HardhatUserConfig = {
           browserURL: 'https://optimism-sepolia.blockscout.com/',
         },
       },
+      {
+        network: 'zkSyncSepolia',
+        chainId: 300,
+        urls: {
+          apiURL: 'https://block-explorer-api.sepolia.zksync.dev/api',
+          browserURL: 'https://sepolia.explorer.zksync.io',
+        },
+      },
+      {
+        network: 'polygonAmoy',
+        chainId: 80002,
+        urls: {
+          apiURL: 'https://api-amoy.polygonscan.com/api',
+          browserURL: 'https://amoy.polygonscan.com',
+        },
+      },
     ],
   },
   sourcify: {
-    enabled: false
+    enabled: false,
   },
   // configuration for etherscan-verify from hardhat-deploy plugin
   verify: {

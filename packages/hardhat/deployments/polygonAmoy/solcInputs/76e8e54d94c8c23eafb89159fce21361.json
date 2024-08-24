@@ -1,0 +1,39 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/modules/IValidationModule.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ninterface IValidationModule {\n  function validate(bytes calldata arg) external returns (bool);\n}"
+    },
+    "contracts/modules/WorldcoinValidatorModule.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"../modules/IValidationModule.sol\";\n\n\ninterface WorldcoinVerifier {\n  function verifyProof(\n    bytes calldata args\n  ) external returns (bool);\n}\n\ncontract WorldcoinValidatorModule is IValidationModule {\n\n  address public worldcoinVerifier;\n\n  constructor() {\n    worldcoinVerifier = 0x11cA3127182f7583EfC416a8771BD4d11Fae4334; // Sepolia Tesnet Address @todo: move to deploy script\n  }\n  \n\n\n  function validate(bytes calldata arg) external override returns (bool) {\n    require(WorldcoinVerifier(worldcoinVerifier).verifyProof(\n      arg\n    ), \"Worldcoin Verification Failed\");\n    \n    return true;\n  }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
