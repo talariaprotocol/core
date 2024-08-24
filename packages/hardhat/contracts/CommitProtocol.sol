@@ -4,6 +4,8 @@ pragma solidity ^0.8.20;
 import "./helpers/MerkleTreeWithHistory.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
+import "./modules/IValidationModule.sol";
+
 interface IVerifier {
   function verifyProof(bytes memory _proof, uint256[6] memory _input) external returns (bool);
 }
@@ -14,6 +16,9 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
   mapping(bytes32 => bool) public nullifierHashes;
   // we store all commitments just to prevent accidental creations with the same commitment
   mapping(bytes32 => bool) public commitments;
+
+  // commitments to validation modules 
+  mapping(bytes32 => address[]) public validationModules;
 
   event NewCode(bytes32 indexed commitment, uint32 leafIndex, uint256 timestamp);
   event ConsumeCode(address to, bytes32 nullifierHash);
@@ -36,11 +41,15 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
     @dev Set new code.
     @param _commitment the note commitment, which is PedersenHash(nullifier + secret)
   */
-  function setCode(bytes32 _commitment) public virtual payable nonReentrant {
+  function setCode(bytes32 _commitment, address[] calldata _validationModules) public virtual payable nonReentrant {
     require(!commitments[_commitment], "The commitment has been submitted");
 
     uint32 insertedIndex = _insert(_commitment);
     commitments[_commitment] = true;
+
+    for (uint256 i = 0; i < _validationModules.length; i++) {
+      validationModules[_commitment].push(_validationModules[i]);
+    }
 
     emit NewCode(_commitment, insertedIndex, block.timestamp);
   }
@@ -55,10 +64,12 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
       - optional fee that goes to the transaction sender (usually a relay)
   */
   function consumeCode(
+    bytes32 _commitment,
     bytes calldata _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
-    address payable _recipient
+    address payable _recipient,
+    bytes[] calldata _validationsArgs
   ) public virtual payable nonReentrant {
     require(!nullifierHashes[_nullifierHash], "The note has been already spent");
     require(isKnownRoot(_root), "Cannot find your merkle root"); // Make sure to use a recent one
@@ -70,6 +81,10 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
       ),
       "Invalid withdraw proof"
     );
+
+    for (uint256 i = 0; i < validationModules[_commitment].length; i++) {
+      IValidationModule(validationModules[_commitment][i]).validate(_validationsArgs[i]);
+    }
 
     nullifierHashes[_nullifierHash] = true;
 

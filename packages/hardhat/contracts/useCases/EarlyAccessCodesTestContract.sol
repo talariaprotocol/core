@@ -12,11 +12,13 @@ contract EarlyAccessCodesTestContract {
   event Success(bool success);
 
   function testFunction(
+    bytes32 _commitment,
     bytes calldata _proof,
-    bytes32 _root, //need?
-    bytes32 _nullifierHash
+    bytes32 _root,
+    bytes32 _nullifierHash,
+    bytes[] calldata _validationsArgs
   ) external {
-    earlyAccessCodes.consumeEarlyAccessCode(_proof, _root, _nullifierHash, payable(msg.sender));
+    earlyAccessCodes.consumeEarlyAccessCode(_commitment, _proof, _root, _nullifierHash, payable(msg.sender), _validationsArgs);
   
     emit Success(true);
   }

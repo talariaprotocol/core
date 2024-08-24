@@ -19,8 +19,8 @@ contract ERC1155Transfer is CommitProtocol {
     token = _token;
   }
 
-  function createTransfer(bytes32 _commitment, uint256 _id, uint256 _amount) public payable nonReentrant {
-    super.setCode(_commitment);
+  function createTransfer(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 _amount) public payable nonReentrant {
+    super.setCode(_commitment, _validationModules);
 
     token.safeTransferFrom(msg.sender, address(this), _id, _amount, "");
 
@@ -33,9 +33,10 @@ contract ERC1155Transfer is CommitProtocol {
     bytes calldata _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
-    address payable _to
+    address payable _to,
+    bytes[] calldata _validationsArgs
   ) public nonReentrant {
-    super.consumeCode(_proof, _root, _nullifierHash, _to);
+    super.consumeCode(_commitment, _proof, _root, _nullifierHash, _to, _validationsArgs);
 
     uint256 id = TransferIds[_commitment];
     uint256 amount = TransferAmounts[_commitment];

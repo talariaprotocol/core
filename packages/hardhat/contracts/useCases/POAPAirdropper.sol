@@ -18,11 +18,12 @@ contract POAPAirdropper is ERC721Transfer {
   ) ERC721Transfer(_verifier, _hasher, _merkleTreeHeight, _token) {  
   }
 
-  function createPOAPAirdropper(bytes32 _commitment, uint256 _id, uint256 limit) external payable nonReentrant {
+  function createPOAPAirdropper(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) external payable nonReentrant {
     limits[_commitment] = limit;
     
     createTransfer(
       _commitment,
+      _validationModules,
       _id
     );
   }
@@ -32,7 +33,8 @@ contract POAPAirdropper is ERC721Transfer {
     bytes calldata _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
-    address payable _to
+    address payable _to,
+    bytes[] calldata _validationsArgs
   ) external nonReentrant {
     require(consumed[_commitment] < limits[_commitment], "POAPAirdropper: Limit reached");
 
@@ -42,7 +44,8 @@ contract POAPAirdropper is ERC721Transfer {
       _proof,
       _root,
       _nullifierHash,
-      _to
+      _to,
+      _validationsArgs
     );
   }
 }

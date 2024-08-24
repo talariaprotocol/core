@@ -11,7 +11,6 @@ import {
 export const websnarkUtils = require('websnark/src/utils')
 export const buildGroth16 = require('websnark/src/groth16')
 
-
 import {
   EarlyAccessCodes,
   EarlyAccessCodes__factory,
@@ -19,6 +18,8 @@ import {
   EarlyAccessCodesTestContract__factory,
   Hasher,
   Hasher__factory,
+  TestValidatorModule,
+  TestValidatorModule__factory,
   Verifier,
   Verifier__factory,
 } from '../typechain-types'
@@ -38,6 +39,9 @@ describe('EarlyAccessCodes', function () {
     earlyAccessCodes: EarlyAccessCodes,
     EarlyAccessCodesTestContract: EarlyAccessCodesTestContract__factory,
     earlyAccessCodesTestContract: EarlyAccessCodesTestContract
+
+  let TestValidatorModule: TestValidatorModule__factory, testValidatorModule: TestValidatorModule
+
   let owner: any, addr1: any, addr2: any
 
   let tree: any
@@ -71,10 +75,12 @@ describe('EarlyAccessCodes', function () {
     EarlyAccessCodesTestContract = await ethers.getContractFactory('EarlyAccessCodesTestContract')
     earlyAccessCodesTestContract = await EarlyAccessCodesTestContract.deploy(
       await earlyAccessCodes.getAddress(),
-    );
+    )
 
-    [owner, addr1, addr2] = await ethers.getSigners();
+    TestValidatorModule = await ethers.getContractFactory('TestValidatorModule')
+    testValidatorModule = await TestValidatorModule.deploy()
 
+    ;[owner, addr1, addr2] = await ethers.getSigners()
   })
 
   it('Debe permitir crear un código', async function () {
@@ -82,10 +88,7 @@ describe('EarlyAccessCodes', function () {
 
     const commitment = transfer.commitment
 
-    await expect(earlyAccessCodes.createEarlyAccessCode(commitment, { value: 0 })).to.emit(
-      earlyAccessCodes,
-      'NewCode',
-    )
+    await expect(earlyAccessCodes.createEarlyAccessCode(commitment, [])).to.emit(earlyAccessCodes, 'NewCode')
 
     expect(await earlyAccessCodes.commitments(commitment)).to.be.true
   })
@@ -94,9 +97,9 @@ describe('EarlyAccessCodes', function () {
     const transfer = generateTransfer()
 
     const commitment = transfer.commitment
-    await earlyAccessCodes.createEarlyAccessCode(commitment, { value: 0 })
+    await earlyAccessCodes.createEarlyAccessCode(commitment, [])
 
-    await expect(earlyAccessCodes.createEarlyAccessCode(commitment, { value: 0 })).to.be.revertedWith(
+    await expect(earlyAccessCodes.createEarlyAccessCode(commitment, [])).to.be.revertedWith(
       'The commitment has been submitted',
     )
   })
@@ -107,8 +110,10 @@ describe('EarlyAccessCodes', function () {
     tree.insert(transfer.commitment)
     let recipient = getRandomRecipient()
 
-    // Create Code
-    await expect(earlyAccessCodes.connect(owner).createEarlyAccessCode(transfer.commitment, { value: 0 })).to.emit(
+    // Create Code with test validator module
+    await expect(earlyAccessCodes.connect(owner).createEarlyAccessCode(transfer.commitment, [
+      await testValidatorModule.getAddress()
+    ])).to.emit(
       earlyAccessCodes,
       'NewCode',
     )
@@ -134,12 +139,12 @@ describe('EarlyAccessCodes', function () {
     const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, proving_key)
     const { proof } = websnarkUtils.toSolidityInput(proofData)
 
-    const root = zeroPadValue(toBeHex(input.root), 32);
-    const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32);
+    const root = zeroPadValue(toBeHex(input.root), 32)
+    const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32)
 
     // Execute the test function!
     await expect(
-      earlyAccessCodesTestContract.connect(owner).testFunction(proof, root, nullifierHash),
+      earlyAccessCodesTestContract.connect(owner).testFunction(transfer.commitment, proof, root, nullifierHash, ["0x"]),
     ).to.emit(earlyAccessCodesTestContract, 'Success')
   })
 })

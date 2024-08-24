@@ -13,8 +13,8 @@ contract ETHGiftCards is CommitProtocol {
     uint32 _merkleTreeHeight
   ) CommitProtocol(_verifier, _hasher, _merkleTreeHeight) {}
 
-  function createGiftCard(bytes32 _commitment) public payable nonReentrant {
-    super.setCode(_commitment);
+  function createGiftCard(bytes32 _commitment, address[] calldata _validationModules) public payable nonReentrant {
+    super.setCode(_commitment, _validationModules);
 
     require(msg.value > 0, "value should be greater than 0");
 
@@ -26,9 +26,10 @@ contract ETHGiftCards is CommitProtocol {
     bytes calldata _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
-    address payable _to
+    address payable _to,
+    bytes[] calldata _validationsArgs
   ) public nonReentrant {
-    super.consumeCode(_proof, _root, _nullifierHash, _to);
+    super.consumeCode(_commitment,_proof, _root, _nullifierHash, _to, _validationsArgs);
 
     uint256 value = giftCardValues[_commitment];
   giftCardValues[_commitment] = 0;
