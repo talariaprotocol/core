@@ -1,4 +1,4 @@
-name: Lint
+name: Lint & Test
 
 on:
   push:
@@ -41,3 +41,6 @@ jobs:
 
       - name: Run hardhat lint
         run: yarn hardhat:lint --max-warnings=0
+      
+      - name: Run hardhat test
+        run: yarn hardhat:test 
