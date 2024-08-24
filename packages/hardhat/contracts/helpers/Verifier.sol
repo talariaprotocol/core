@@ -191,7 +191,7 @@ contract Verifier {
    */
   function verifyProof(
     bytes memory proof,
-    uint256[3] memory input
+    uint256[6] memory input
   ) public view returns (bool) {
     uint256[8] memory p = abi.decode(proof, (uint256[8]));
 

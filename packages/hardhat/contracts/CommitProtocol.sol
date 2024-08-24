@@ -5,7 +5,7 @@ import "./helpers/MerkleTreeWithHistory.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 interface IVerifier {
-  function verifyProof(bytes memory _proof, uint256[3] memory _input) external returns (bool);
+  function verifyProof(bytes memory _proof, uint256[6] memory _input) external returns (bool);
 }
 
 contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
@@ -63,11 +63,10 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
     require(!nullifierHashes[_nullifierHash], "The note has been already spent");
     require(isKnownRoot(_root), "Cannot find your merkle root"); // Make sure to use a recent one
     
-    address aux = _recipient;
     require(
       verifier.verifyProof(
         _proof,
-        [uint256(_root), uint256(_nullifierHash), uint256(uint160(aux))]
+        [uint256(_root), uint256(_nullifierHash), uint256(uint160(address(_recipient))),0 ,0, 0]
       ),
       "Invalid withdraw proof"
     );

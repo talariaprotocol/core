@@ -11,7 +11,7 @@ contract EarlyAccessCodes is CommitProtocol {
     uint32 _merkleTreeHeight
   ) CommitProtocol(_verifier, _hasher, _merkleTreeHeight) {}
 
-  function createEarlyAccessCode(bytes32 _commitment) external payable nonReentrant {
+  function createEarlyAccessCode(bytes32 _commitment) external payable {
     super.setCode(_commitment);
   }
 
@@ -20,7 +20,7 @@ contract EarlyAccessCodes is CommitProtocol {
     bytes32 _root,
     bytes32 _nullifierHash,
     address payable _to
-  ) external nonReentrant {
+  ) external {
     super.consumeCode(_proof, _root, _nullifierHash, _to);
   }
 }

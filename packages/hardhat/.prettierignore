@@ -7,4 +7,4 @@ cli.js
 index.js
 coverage
 coverage.json
-tornado
+tornado/**/*
