@@ -1,8 +1,9 @@
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { run } from 'hardhat'
+import { ethers, run } from 'hardhat'
 import { readFileSync, writeFileSync } from 'fs'
 import path from 'path'
+import { AlephNFT, AlephNFT__factory, MORFI, MORFI__factory } from '../typechain-types'
 
 const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre
@@ -54,17 +55,27 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     log: true,
   })
 
-  const USDConOptimismSepolia = '0x5fd84259d66Cd46123540766Be93DFE6D43130D7'
+  const MORFI = await deploy('MORFI', {
+    from: deployer,
+    log: true,
+    args: [deployer],
+  })
+
+  const AlephNFT = await deploy('AlephNFT', {
+    from: deployer,
+    log: true,
+    args: [deployer],
+  })
+
   const giftCardsContract = await deploy('GiftCards', {
     from: deployer,
-    args: [verifier.address, hasher.address, levels, USDConOptimismSepolia],
+    args: [verifier.address, hasher.address, levels, MORFI.address],
     log: true,
   })
 
-  const poapAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415'
-  const poapAirdropperContract = await deploy('POAPAirdropper', {
+  const AlephNFTAirdropperContract = await deploy('AlephNFTAirdropper', {
     from: deployer,
-    args: [verifier.address, hasher.address, levels, poapAddress],
+    args: [verifier.address, hasher.address, levels, AlephNFT.address],
     log: true,
   })
 
@@ -119,7 +130,9 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     EarlyAccessCodesTestContract: earlyAccessCodesTestContract.address,
     NumberContract: numberContract.address,
     GiftCards: giftCardsContract.address,
-    POAPAirdropper: poapAirdropperContract.address,
+    MORFI: MORFI.address,
+    AlephNFT: AlephNFT.address,
+    AlephNFTAirdropper: AlephNFTAirdropperContract.address,
     TestValidatorModule: testValidatorModule.address,
     WorldcoinValidatorModule: worldcoinValidatorModule.address,
     PrivadoIDValidatorModule: privadoIdValidatorModule.address,
@@ -160,15 +173,27 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     })
 
     await run('verify:verify', {
-      address: giftCardsContract.address,
-      contract: 'contracts/useCases/GiftCards.sol:GiftCards',
-      constructorArguments: [verifier.address, hasher.address, 20, USDConOptimismSepolia],
+      address: MORFI.address,
+      contract: 'contracts/useCases/MORFI.sol:MORFI',
+      constructorArguments: [deployer],
     })
 
     await run('verify:verify', {
-      address: poapAirdropperContract.address,
-      contract: 'contracts/useCases/POAPAirdropper.sol:POAPAirdropper',
-      constructorArguments: [verifier.address, hasher.address, 20, poapAddress],
+      address: AlephNFT.address,
+      contract: 'contracts/useCases/AlephNFT.sol:AlephNFT',
+      constructorArguments: [deployer],
+    })
+
+    await run('verify:verify', {
+      address: giftCardsContract.address,
+      contract: 'contracts/useCases/GiftCards.sol:GiftCards',
+      constructorArguments: [verifier.address, hasher.address, 20, MORFI.address],
+    })
+
+    await run('verify:verify', {
+      address: AlephNFTAirdropperContract.address,
+      contract: 'contracts/useCases/AlephNFTAirdropper.sol:AlephNFTAirdropper',
+      constructorArguments: [verifier.address, hasher.address, 20, AlephNFT.address],
     })
 
     await run('verify:verify', {

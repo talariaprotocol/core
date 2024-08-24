@@ -3,11 +3,11 @@ pragma solidity ^0.8.20;
 
 import "../ERC721Transfer.sol";
 
-contract POAPAirdropper is ERC721Transfer {
+contract AlephNFTAirdropper is ERC721Transfer {
 
-// Map for consumed poaps per campaign
+// Map for consumed AlephNFTs per campaign
   mapping(bytes32 => uint256) public consumed;
-// Map for limit amount of poaps per campaign
+// Map for limit amount of AlephNFTs per campaign
   mapping(bytes32 => uint256) public limits;
 
   constructor (
@@ -18,7 +18,7 @@ contract POAPAirdropper is ERC721Transfer {
   ) ERC721Transfer(_verifier, _hasher, _merkleTreeHeight, _token) {  
   }
 
-  function createPOAPAirdrop(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) public payable  {
+  function createAlephNFTAirdrop(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) public payable  {
     limits[_commitment] = limit;
     
     createTransfer(
@@ -28,7 +28,7 @@ contract POAPAirdropper is ERC721Transfer {
     );
   }
 
-  function consumePOAPAirdrop(
+  function consumeAlephNFTAirdrop(
     bytes32 _commitment,
     bytes calldata _proof,
     bytes32 _root,
@@ -36,7 +36,7 @@ contract POAPAirdropper is ERC721Transfer {
     address payable _to,
     bytes[] calldata _validationsArgs
   ) public  {
-    require(consumed[_commitment] < limits[_commitment], "POAPAirdropper: Limit reached");
+    require(consumed[_commitment] < limits[_commitment], "AlephNFTAirdropper: Limit reached");
 
     consumed[_commitment] += 1;
     consumeTransfer(
@@ -49,17 +49,17 @@ contract POAPAirdropper is ERC721Transfer {
     );
   }
 
-  function bulkCreatePOAPAirdrop(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _ids, uint256[] calldata _limits) external payable  {
+  function bulkCreateAlephNFTAirdrop(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _ids, uint256[] calldata _limits) external payable  {
     require(_commitments.length == _ids.length, "commitments and ids length mismatch");
     require(_commitments.length == _limits.length, "commitments and limits length mismatch");
     require(_commitments.length == _validationModules.length, "commitments and validationModules length mismatch");
 
     for (uint256 i = 0; i < _commitments.length; i++) {
-      createPOAPAirdrop(_commitments[i], _validationModules[i], _ids[i], _limits[i]);
+      createAlephNFTAirdrop(_commitments[i], _validationModules[i], _ids[i], _limits[i]);
     }
   }
 
-  function bulkConsumePOAPAirdrop(
+  function bulkConsumeAlephNFTAirdrop(
     bytes32[] calldata _commitments,
     bytes[] calldata _proofs,
     bytes32[] calldata _roots,
@@ -74,7 +74,7 @@ contract POAPAirdropper is ERC721Transfer {
     require(_commitments.length == _validationsArgs.length, "commitments and validationsArgs length mismatch");
 
     for (uint256 i = 0; i < _commitments.length; i++) {
-      consumePOAPAirdrop(_commitments[i], _proofs[i], _roots[i], _nullifierHashes[i], _tos[i], _validationsArgs);
+      consumeAlephNFTAirdrop(_commitments[i], _proofs[i], _roots[i], _nullifierHashes[i], _tos[i], _validationsArgs);
     }
   }
 }

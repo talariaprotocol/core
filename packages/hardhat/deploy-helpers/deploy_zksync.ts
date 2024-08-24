@@ -75,20 +75,22 @@ const deployAndVerify = async function (hre: HardhatRuntimeEnvironment) {
     await earlyAccessCodes.getAddress(),
   ])
 
-  const USDConOptimismSepolia = '0x5fd84259d66Cd46123540766Be93DFE6D43130D7'
+  const MORFI = await deployAndVerifyContract('MORFI', [deployer.zkWallet.address])
+
+  const AlephNFT = await deployAndVerifyContract('AlephNFT', [deployer.zkWallet.address])
+
   const giftCardsContract = await deployAndVerifyContract('GiftCards', [
     await verifier.getAddress(),
     await hasher.getAddress(),
     20,
-    USDConOptimismSepolia,
+    await MORFI.getAddress(),
   ])
 
-  const poapAddress = '0x22C1f6050E56d2876009903609a2cC3fEf83B415'
-  const poapAirdropperContract = await deployAndVerifyContract('POAPAirdropper', [
+  const AlephNFTAirdropperContract = await deployAndVerifyContract('AlephNFTAirdropper', [
     await verifier.getAddress(),
     await hasher.getAddress(),
     20,
-    poapAddress,
+    await MORFI.getAddress(),
   ])
 
   const testValidatorModule = await deployAndVerifyContract('TestValidatorModule')
