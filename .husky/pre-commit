@@ -2,3 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 yarn lint-staged --verbose
+
+# Test Contracts
+yarn test
+
