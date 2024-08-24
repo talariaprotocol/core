@@ -1,0 +1,13 @@
+{
+  "optimismSepolia": {
+    "Verifier": "0xF65c25F287f87B2B1Ca3286121eee1959215d7F6",
+    "Hasher": "0x7126d1631d090D0612Cf37cF75B4D36bF2673014",
+    "EarlyAccessCodes": "0x7CDd81CF9d4bE5F0cfF96BC5dD73bbfe8667A449",
+    "EarlyAccessCodesTestContract": "0xdd6F34ca1870929324001ce99eb7d057585cA52f",
+    "NumberContract": "0xc9420473439B3BAC4c740822409d6dFaCdE5cA2B",
+    "GiftCards": "0x887d110a0822C5c5C2CAc774C6eCB3d63916a335",
+    "POAPAirdropper": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
+    "TestValidatorModule": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
+    "WorldcoinValidatorModule": "0x331b814A1aDd167927c29D9af93670687fF8145A"
+  }
+}
