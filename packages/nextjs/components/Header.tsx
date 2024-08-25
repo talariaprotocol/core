@@ -115,17 +115,17 @@ export const Header = () => {
   useEffect(() => {
     if (!address) return;
 
-    getRoleCredentialProofRequest(address, "investor", "acme").then(req => {
-      setInvestorQR(JSON.stringify(req));
-    });
+    // getRoleCredentialProofRequest(address, "investor", "acme").then(req => {
+    //   setInvestorQR(JSON.stringify(req));
+    // });
 
-    getRoleCredentialProofRequest(address, "founder", "acme").then(req => {
-      setFounderQR(JSON.stringify(req));
-    });
+    // getRoleCredentialProofRequest(address, "founder", "acme").then(req => {
+    //   setFounderQR(JSON.stringify(req));
+    // });
 
-    getRoleCredentialProofRequest(address, "employee", "acme").then(req => {
-      setEmployeeQR(JSON.stringify(req));
-    });
+    // getRoleCredentialProofRequest(address, "employee", "acme").then(req => {
+    //   setEmployeeQR(JSON.stringify(req));
+    // });
   }, [address]);
 
   const roleContext = useRole();
@@ -172,139 +172,7 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button size="icon" variant="outline" className="sm:hidden">
-            <PanelLeft className="h-5 w-5" />
-            <span className="sr-only">Toggle Menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="sm:max-w-xs">
-          <nav className="grid gap-6 text-lg font-medium">
-            <Link
-              href="/"
-              className={`${
-                pathname === "/" ? "text-foreground" : ""
-              } group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base`}
-            >
-              <BuildingIcon className="h-5 w-5 transition-all group-hover:scale-110" />
-              <span className="sr-only">Acme Inc</span>
-            </Link>
-            <Link
-              href="#"
-              className={`${
-                pathname === "/" ? "text-foreground" : "text-muted-foreground"
-              } flex items-center gap-4 px-2.5  hover:text-foreground`}
-            >
-              <Home className="h-5 w-5" />
-              Home
-            </Link>
-
-            {roleContext?.role.role === "founder" && (
-              <>
-                <Link
-                  href="/fundraising"
-                  className={`${
-                    pathname === "/fundraising" ? "text-foreground" : "text-muted-foreground"
-                  } flex items-center gap-4 px-2.5  hover:text-foreground`}
-                >
-                  <DollarSignIcon className="h-5 w-5" />
-                  Fundraising
-                </Link>
-                <Link
-                  href="/holdings"
-                  className={`${
-                    pathname === "/holdings" ? "text-foreground" : "text-muted-foreground"
-                  } flex items-center gap-4 px-2.5  hover:text-foreground`}
-                >
-                  <WalletIcon className="h-5 w-5" />
-                  Holdings
-                </Link>
-                <Link
-                  href="/payroll"
-                  className={`${
-                    pathname === "/payroll" ? "text-foreground" : "text-muted-foreground"
-                  } flex items-center gap-4 px-2.5  hover:text-foreground`}
-                >
-                  <UsersIcon className="h-5 w-5" />
-                  Payroll
-                </Link>
-                <Link
-                  href="#"
-                  className={`${
-                    pathname === "/settings" ? "text-foreground" : "text-muted-foreground"
-                  } flex items-center gap-4 px-2.5  hover:text-foreground`}
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
-              </>
-            )}
-          </nav>
-        </SheetContent>
-      </Sheet>
-      {roleContext?.role.role ? (
-        <Badge variant="outline">{roleContext.role.role}</Badge>
-      ) : !address ? (
-        <Button disabled> Connect Wallet to unlock features</Button>
-      ) : (
-        <Dialog
-          onOpenChange={open => {
-            setPolling(!polling);
-            setIsDialogOpen(open);
-          }}
-        >
-          <DialogTrigger asChild>
-            <Button variant="default" className="float-right w-[150px]">
-              Verify Identity
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[800px] max-h-[800px]">
-            <div className="text-md">Scan with the Polygon ID App</div>
-            <div className="grid grid-cols-3 gap-10">
-              <div className="cols-span-1">
-                <div className="text-sm w-fit">Founder</div>
-                <QRCode
-                  // size={256}
-                  height={200}
-                  width={200}
-                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                  value={founderQR ?? ""}
-                  viewBox={`0 0 256 256`}
-                />
-              </div>
-              <div className="cols-span-1">
-                <div className="text-sm">Investor</div>
-                <QRCode
-                  // size={256}
-                  height={200}
-                  width={200}
-                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                  value={investorQR ?? ""}
-                  viewBox={`0 0 256 256`}
-                />
-              </div>
-              <div className="cols-span-1">
-                <div className="text-sm">Employee</div>
-                <QRCode
-                  // size={256}
-                  height={200}
-                  width={200}
-                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                  value={employeeQR ?? ""}
-                  viewBox={`0 0 256 256`}
-                />
-              </div>
-            </div>
-            {/* <DialogFooter>
-              <Button className="w-full" onClick={checkRole}>
-                Flow Succeed? Click here
-              </Button>
-            </DialogFooter> */}
-          </DialogContent>
-        </Dialog>
-      )}
-      <Breadcrumb></Breadcrumb>
+      {/* <Breadcrumb></Breadcrumb> */}
       <div className="w-full flex items-center justify-end">
         <div className="relative ml-auto flex-1 md:grow-0">
           <ConnectButton></ConnectButton>

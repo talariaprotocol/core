@@ -10,10 +10,16 @@ type Credential = {
   jsonld: string;
   schema: string;
 };
-export const roleCredential: Credential = {
-  type: "CommitRole",
+export const oldRoleCredential: Credential = {
+  type: "Cak3Role",
   jsonld: "ipfs://QmXg98gx2r421aHA9ZLJXnrLnorz1sM6p2m4yZfRAYMhob",
   schema: "https://ipfs.io/ipfs/QmSAbrYw8S8w7FiJaav6HwgRmCzvhBRwQ4Sp7nF6biUF2L",
+};
+
+export const roleCredential: Credential = {
+  type: "AlephRole",
+  jsonld: "ipfs://QmZqXLiV2Nm5eD88HtA92CGQQEedgzxvACECu7BXt1gbfH",
+  schema: "https://ipfs.io/ipfs/QmPKFXu5fXtVT3dCMGp5vyTWNr4k6AGhriQyFcitWr1K1g",
 };
 
 export const pohCredential: Credential = {
@@ -28,13 +34,45 @@ export const socialCredential: Credential = {
   type: "socialKYC",
 };
 
-export const getRoleCredentialProofRequest = async (address: string, _role: Role, _company: string) => {
+export const getNationalityCredentialProofRequest = async (address: string) => {
+  const { auth } = await import("@iden3/js-iden3-auth");
+
+  const request = auth.createAuthorizationRequest(
+    "Log in into Aleph",
+    "did:polygonid:polygon:amoy:2qQPv3iiEqqjxiMQ3q2Sqv512rsYLK3ZSy9bdW9eHi",
+    host + `/api/${address}/save-role/founder`,
+  );
+  request.id = "7f38a193-0918-4a48-9fac-36adfdb8b542";
+  request.thid = "7f38a193-0918-4a48-9fac-36adfdb8b542";
+
+  const proofReq = {
+    circuitId: "credentialAtomicQuerySigV2OnChain",
+    id: 1724534707,
+    query: {
+      allowedIssuers: ["*"],
+      context: "https://raw.githubusercontent.com/anima-protocol/claims-polygonid/main/schemas/json-ld/poi-v1.json-ld",
+      type: "AnimaProofOfIdentity",
+      skipClaimRevocationCheck: true,
+      credentialSubject: {
+        document_country: {
+          $eq: "ARG",
+        },
+      },
+    },
+  };
+  const scope = request.body.scope ?? [];
+  request.body.scope = [...(scope as any), proofReq];
+
+  return request;
+};
+
+export const getRoleCredentialProofRequest = async (address: string) => {
   const { auth } = await import("@iden3/js-iden3-auth");
 
   const request = auth.createAuthorizationRequest(
     "Log in into Commit",
     "did:polygonid:polygon:amoy:2qQ68JkRcf3xrHPQPWZei3YeVzHPP58wYNxx2mEouR",
-    host + `/api/${address}/save-role/${_role}`,
+    host + `/api/${address}/save-role/"founder"`,
   );
   request.id = "7f38a193-0918-4a48-9fac-36adfdb8b542";
   request.thid = "7f38a193-0918-4a48-9fac-36adfdb8b542";
@@ -46,7 +84,42 @@ export const getRoleCredentialProofRequest = async (address: string, _role: Role
       allowedIssuers: ["*"],
       type: roleCredential.type,
       context: roleCredential.jsonld,
-      credentialSubject: getCredentialSubject(roleCredential, { role: _role, company: _company }),
+      credentialSubject: {
+        role: {
+          $eq: "founder",
+        },
+      },
+    },
+  };
+  const scope = request.body.scope ?? [];
+  request.body.scope = [...(scope as any), proofReq];
+
+  return request;
+};
+
+export const getOldRoleCredentialProofRequest = async (address: string) => {
+  const { auth } = await import("@iden3/js-iden3-auth");
+
+  const request = auth.createAuthorizationRequest(
+    "Log in into Commit",
+    "did:polygonid:polygon:amoy:2qQ68JkRcf3xrHPQPWZei3YeVzHPP58wYNxx2mEouR",
+    host + `/api/${address}/save-role/"founder"`,
+  );
+  request.id = "7f38a193-0918-4a48-9fac-36adfdb8b542";
+  request.thid = "7f38a193-0918-4a48-9fac-36adfdb8b542";
+
+  const proofReq = {
+    id: 1,
+    circuitId: "credentialAtomicQuerySigV2",
+    query: {
+      allowedIssuers: ["*"],
+      type: oldRoleCredential.type,
+      context: oldRoleCredential.jsonld,
+      credentialSubject: {
+        role: {
+          $eq: "founder",
+        },
+      },
     },
   };
   const scope = request.body.scope ?? [];
@@ -58,7 +131,7 @@ export const getRoleCredentialProofRequest = async (address: string, _role: Role
 export const getCredentialSubject = (credential: Credential, params: any) => {
   let subject;
   switch (credential.type) {
-    case "CommitRole":
+    case "AlephRole":
       subject = {
         role: {
           $eq: params.role,
@@ -95,7 +168,7 @@ export const verifyRoleCredentialInWebWallet = async (
     backUrl: back,
     finishUrl: host + "/credential/verified",
     logoUrl: "https://my-app.org/logo.png", // todo
-    name: "Commit",
+    name: "Cak3",
     zkQueries: [
       {
         circuitId: "credentialAtomicQuerySigV2",

@@ -17,9 +17,23 @@ export const chain: Chain = {
   testnet: true,
 };
 
+export const zkChain: Chain = {
+    id: 300,
+    name: "Zk Sepolia testnet ",
+    nativeCurrency: {
+        decimals: 18,
+        name: "zkNetwork Sepolia",
+        symbol: "ETH",
+    },
+    rpcUrls: {
+        default: { http: ["http://127.0.0.1:8546/"] },
+    },
+    testnet: true,
+};
+
 export const config = createConfig(
   getDefaultConfig({
-    chains: [chain],
+    chains: [chain, zkChain],
     transports: {
       [chain.id]: fallback([unstable_connector(injected), http(chain.rpcUrls.default.http[0])]),
     },

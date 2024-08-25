@@ -17,7 +17,7 @@ export async function POST(req: Request, { params }: { params: { address: string
   }
 
   console.log("Inserting proof", address, proof, role);
-  const newProof = await insertProof(address, JSON.stringify(proof), role);
+  const newProof = await insertProof(address, proof, role);
 
   return NextResponse.json({ status: "Success", proof: newProof }, { status: 200 });
 }

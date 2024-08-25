@@ -3,19 +3,24 @@ import { createContext, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Header } from "./Header";
+import { useRole } from "./ScaffoldEthAppWithProviders";
 import { ToastProvider } from "./ui/toast";
 import { Toaster } from "./ui/toaster";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  AwardIcon,
   BuildingIcon,
   DollarSignIcon,
+  FileKey2Icon,
+  GiftIcon,
   GitGraphIcon,
   GroupIcon,
   Home,
   LineChart,
   Package,
   Package2,
+  ScanBarcodeIcon,
   Settings,
   ShoppingCart,
   Users2,
@@ -31,84 +36,63 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/com
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import Iden3AuthComponent from "~~/utils/privadoId/iden3component";
 import { Role } from "~~/utils/privadoId/identities";
-import { useRole } from "./ScaffoldEthAppWithProviders";
 
 const CustomSidebar = () => {
   // Get current page
   const pathname = usePathname();
 
-  const roleContext = useRole();
-
   return (
     <>
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          href="#"
+          href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <BuildingIcon className="h-4 w-4 transition-all group-hover:scale-110" />
-          <span className="sr-only">Acme Inc</span>
+          <ScanBarcodeIcon className="h-4 w-4 transition-all group-hover:scale-110" />
+          <span className="sr-only">Commit Protocol</span>
         </Link>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/"
+              href="/early-access"
               className={`${
-                pathname === "/" ? "bg-accent" : ""
+                pathname === "/early-access" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
-              <Home className="h-5 w-5" />
-              <span className="sr-only">Home</span>
+              <FileKey2Icon className="h-5 w-5" />
+              <span className="sr-only">Early access</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Home</TooltipContent>
+          <TooltipContent side="right">Early access</TooltipContent>
         </Tooltip>
-        {roleContext?.role.role === "founder" && (
-          <>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/fundraising"
-                  className={`${
-                    pathname === "/fundraising" ? "bg-accent" : ""
-                  }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
-                >
-                  <DollarSignIcon className="h-5 w-5" />
-                  <span className="sr-only">Fundraising</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Fundraising</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/holdings"
-                  className={`${
-                    pathname === "/holdings" ? "bg-accent" : ""
-                  }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
-                >
-                  <WalletIcon className="h-5 w-5" />
-                  <span className="sr-only">Holdings</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Holdings</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/payroll"
-                  className={`${
-                    pathname === "/payroll" ? "bg-accent" : ""
-                  }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
-                >
-                  <UsersIcon className="h-5 w-5" />
-                  <span className="sr-only">Payroll</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Payroll</TooltipContent>
-            </Tooltip>
-          </>
-        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/giftcard"
+              className={`${
+                pathname === "/giftcard" ? "bg-accent" : ""
+              }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <GiftIcon className="h-5 w-5" />
+              <span className="sr-only">Giftcard</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Giftcard</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/poap-airdrop"
+              className={`${
+                pathname === "/poap-airdrop" ? "bg-accent" : ""
+              }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <AwardIcon className="h-5 w-5" />
+              <span className="sr-only">POAP Airdrop</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">POAP Airdrop</TooltipContent>
+        </Tooltip>
       </nav>
     </>
   );

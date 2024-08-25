@@ -2,7 +2,7 @@
 import { createClient, createPool } from "@vercel/postgres";
 
 const client = createPool({
-  connectionString: process.env.POSTGRES_URL,
+connectionString: process.env.POSTGRES_URL,
 });
 
 export async function setup() {
@@ -17,7 +17,6 @@ export async function setup() {
 
 export async function insertProof(address: string, proof: string, role: string) {
   await setup();
-
   const result = await client.query("INSERT INTO ZKProofs (address, proof, role) VALUES ($1, $2, $3) RETURNING *", [
     address,
     proof,
@@ -28,7 +27,6 @@ export async function insertProof(address: string, proof: string, role: string) 
 
 export async function getProofsByAddress(address: string) {
   await setup();
-
   const result = await client.query("SELECT * FROM ZKProofs WHERE address = $1", [address]);
   return result.rows;
 }

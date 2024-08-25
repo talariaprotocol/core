@@ -161,6 +161,8 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       polygonAmoy: polygonApiKey,
+      "optimism-sepolia": etherscanApiKey,
+      zkSyncSepolia: etherscanApiKey,
       default: `${etherscanApiKey}`,
     },
     customChains: [

@@ -43,9 +43,9 @@ async function uploadAndMint() {
   const MORFI = MORFIContract.attach(addresses[network.name].MORFI) as MORFI
 
   console.log('Transferring tokens to initial owners...')
-  await MORFI.transfer(leboAddress, '100')
-  await MORFI.transfer(fainsteinAddress, '100')
-  await MORFI.transfer(martinAddress, '100')
+  await MORFI.transfer(leboAddress, hre.ethers.parseEther('100'))
+  await MORFI.transfer(fainsteinAddress, hre.ethers.parseEther('100'))
+  await MORFI.transfer(martinAddress, hre.ethers.parseEther('100'))
   console.log('Tokens transferred!')
 
 

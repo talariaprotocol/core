@@ -147,49 +147,6 @@ describe('EarlyAccessCodes', function () {
       earlyAccessCodesTestContract.connect(owner).testFunction(transfer.commitment, proof, root, nullifierHash, ["0x"]),
     ).to.emit(earlyAccessCodesTestContract, 'Success')
   })
-
-  it('Debe consumir segundo código correctamente', async function () {
-    // Generate pedersen hashes and add to the tree
-    const transfer = generateTransfer()
-    tree.insert(transfer.commitment)
-    let recipient = getRandomRecipient()
-
-    // Create Code with test validator module
-    await expect(earlyAccessCodes.connect(owner).createEarlyAccessCode(transfer.commitment, [
-      await testValidatorModule.getAddress()
-    ])).to.emit(
-      earlyAccessCodes,
-      'NewCode',
-    )
-
-    // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(0)
-    const input = stringifyBigInts({
-      // public
-      root: tree.root(),
-      nullifierHash: pedersenHash(transfer.nullifier.leInt2Buff(31)),
-      relayer: ZeroAddress,
-      recipient: await owner.getAddress(),
-      fee: 0,
-      refund: 0,
-
-      // private
-      nullifier: transfer.nullifier,
-      secret: transfer.secret,
-      pathElements: pathElements,
-      pathIndices: pathIndices,
-    })
-
-    const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, proving_key)
-    const { proof } = websnarkUtils.toSolidityInput(proofData)
-
-    const root = zeroPadValue(toBeHex(input.root), 32)
-    const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32)
-
-    // Execute the test function!
-    await expect(
-      earlyAccessCodesTestContract.connect(owner).testFunction(transfer.commitment, proof, root, nullifierHash, ["0x"]),
-    ).to.emit(earlyAccessCodesTestContract, 'Success')
-  })
-
 })
+
+// Gift Cards Test

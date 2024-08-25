@@ -11,8 +11,9 @@ export async function GET(req: Request) {
   }
 
   const proofs = await getProofsByAddress(address);
-  return NextResponse.json({
-    status: 200,
-    data: proofs,
-  });
+  console.log("Proofs", proofs);
+
+  if (!proofs) return NextResponse.json({ status: 404, error: "No proofs found" });
+  
+  return NextResponse.json({ status: 200, proofs });
 }

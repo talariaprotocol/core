@@ -8,6 +8,8 @@ contract GiftCards is ERC20Transfer {
   // Mapping for gift card's metadata
   mapping(bytes32 => string) public metadata;
 
+  event Success(bool success);
+
   constructor (
     IVerifier _verifier,
     IHasher _hasher,
@@ -41,6 +43,9 @@ contract GiftCards is ERC20Transfer {
       _to,
       _validationsArgs
     );
+
+        emit Success(true);
+
   }
 
   function bulkCreateGiftCard(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _values, string[] calldata _metadata) external payable  {

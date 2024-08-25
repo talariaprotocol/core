@@ -2,13 +2,16 @@
 pragma solidity ^0.8.20;
 
 import "../ERC721Transfer.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract AlephNFTAirdropper is ERC721Transfer {
+contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
 
 // Map for consumed AlephNFTs per campaign
   mapping(bytes32 => uint256) public consumed;
 // Map for limit amount of AlephNFTs per campaign
   mapping(bytes32 => uint256) public limits;
+
+  event Success(bool success);
 
   constructor (
     IVerifier _verifier,
@@ -16,6 +19,16 @@ contract AlephNFTAirdropper is ERC721Transfer {
     uint32 _merkleTreeHeight,
     IERC721 _token
   ) ERC721Transfer(_verifier, _hasher, _merkleTreeHeight, _token) {  
+  }
+
+  // Implement the onERC721Received function
+  function onERC721Received(
+    address operator,
+    address from,
+    uint256 tokenId,
+    bytes calldata data
+  ) external override returns (bytes4) {
+    return this.onERC721Received.selector;
   }
 
   function createAlephNFTAirdrop(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) public payable  {
@@ -47,6 +60,9 @@ contract AlephNFTAirdropper is ERC721Transfer {
       _to,
       _validationsArgs
     );
+
+        emit Success(true);
+
   }
 
   function bulkCreateAlephNFTAirdrop(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _ids, uint256[] calldata _limits) external payable  {

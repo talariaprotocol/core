@@ -18,7 +18,7 @@ contract ERC721Transfer is CommitProtocol {
     token = _token;
   }
 
-  function createTransfer(bytes32 _commitment, address[] calldata _validationModules, uint256 _id) public payable nonReentrant {
+  function createTransfer(bytes32 _commitment, address[] calldata _validationModules, uint256 _id) public payable {
     super.setCode(_commitment, _validationModules);
 
     token.safeTransferFrom(msg.sender, address(this), _id);
@@ -33,7 +33,7 @@ contract ERC721Transfer is CommitProtocol {
     bytes32 _nullifierHash,
     address payable _to,
     bytes[] calldata _validationsArgs
-  ) public nonReentrant {
+  ) public {
     super.consumeCode(_commitment,_proof, _root, _nullifierHash, _to, _validationsArgs);
 
     uint256 id = TransferId[_commitment];

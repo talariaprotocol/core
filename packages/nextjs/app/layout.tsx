@@ -3,20 +3,23 @@ import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithPro
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
+import MiniKitProvider from "~~/worldcoin/MinikitProvider";
 
 export const metadata = getMetadata({
-  title: "Cake",
-  description: "All-in-one Financial Platform for Web3 Founder",
+  title: "Commit Protocol",
+  description: "Descentralized access control for your smart contracts",
 });
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
-      <body>
-        <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
-      </body>
+      <MiniKitProvider>
+        <body>
+          <ThemeProvider enableSystem>
+            <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          </ThemeProvider>
+        </body>
+      </MiniKitProvider>
     </html>
   );
 };

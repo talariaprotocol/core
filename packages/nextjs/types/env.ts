@@ -9,10 +9,12 @@ export const env = createEnv({
     NEXT_PUBLIC_VERCEL_ENV: z
       .union([z.literal("production"), z.literal("preview"), z.literal("development")])
       .default("development"),
+    NEXT_PUBLIC_VERCEL_BRANCH_URL: z.string().optional(),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   runtimeEnv: {
     NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
+    NEXT_PUBLIC_VERCEL_BRANCH_URL: process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
   // For Next.js >= 13.4.4, you only need to destructure client variables:

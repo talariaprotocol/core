@@ -18,7 +18,7 @@ contract ERC20Transfer is CommitProtocol {
     token = _token;
   }
 
-  function createTransfer(bytes32 _commitment, uint256 _value, address[] calldata _validationModules) public payable nonReentrant {
+  function createTransfer(bytes32 _commitment, uint256 _value, address[] calldata _validationModules) public payable {
     super.setCode(_commitment, _validationModules);
 
     token.transferFrom(msg.sender, address(this), _value);
@@ -33,12 +33,12 @@ contract ERC20Transfer is CommitProtocol {
     bytes32 _nullifierHash,
     address payable _to,
     bytes[] calldata _validationsArgs
-  ) public nonReentrant {
+  ) public {
     super.consumeCode(_commitment, _proof, _root, _nullifierHash, _to, _validationsArgs );
 
     uint256 value = TransferValues[_commitment];
 
-    token.transferFrom(address(this), _to, value);
+    token.transfer(_to, value);
   }
 
  
