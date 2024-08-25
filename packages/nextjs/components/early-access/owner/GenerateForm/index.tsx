@@ -1,19 +1,21 @@
 "use client";
 
 import React from "react";
+import {useWaitForTransactionReceipt} from "wagmi";
+import {Label} from "~~/components/ui/label";
 import EarlyAccessCodesContractAbi from "../../../../contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
 import { MiniKit } from "@worldcoin/minikit-js";
 import { useAccount, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
-import { Input } from "~~/components/ui/input";
 import { NumberContractAddress, OptimismSepoliaChainId, WorldcoinValidatorModuleAddress } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 
 const GenerateForm = () => {
-  const [codesAmount, setCodesAmount] = React.useState<string>("");
+  const [compressObject, setCompressObject] = React.useState<string>("");
   const account = useAccount();
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: hash });
 
   React.useEffect(() => {
     console.log("MINIKIT Is installed:", MiniKit.isInstalled());
@@ -44,7 +46,9 @@ const GenerateForm = () => {
       secret: secret,
     };
     console.log("response", responseObject);
-    console.log(compressEncryptAndEncode(responseObject));
+    const resultObject = compressEncryptAndEncode(responseObject);
+    setCompressObject(resultObject)
+    console.log("compress object", resultObject);
     try {
       const result = await createEarlyAccessCode(commitment);
       console.log("ReturnedResult", result);
@@ -58,16 +62,32 @@ const GenerateForm = () => {
   };
 
   return (
-    <div>
-      <h5 className="text-lg font-bold">Generate Early access codes</h5>
-      {/* <label>Number of codes to generate</label>
-      <Input type="number" value={codesAmount} onChange={event => setCodesAmount(event.target.value)} /> */}
-      <p>
-        By pressing this button, an early access code will be generated. This code will be used by users to access the
-        early access program.
-      </p>
-      <Button onClick={onSubmit}>Generate and submit codes</Button>
-    </div>
+      <main className="mt-8 w-full max-w-4xl">
+        <div className="bg-white shadow rounded-lg p-8">
+          <div>
+            <Label htmlFor="code-type" className="block text-sm font-medium text-gray-700">
+              By pressing this button, an early access code will be generated. This code will be used by users to access the
+              early access program.
+            </Label>
+          </div>
+          {!isConfirmed ? (
+          <div className="mt-6 flex justify-end">
+            <Button
+                type="button"
+                className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={onSubmit}>
+              Generate Code
+            </Button>
+          </div>
+          ) : ( <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900">Generated Code</h2>
+            <pre className="mt-4 p-4 bg-gray-100 rounded-md shadow-inner">
+              {/* Placeholder for generated code output */}
+              <code> {{compressObject}}</code>
+            </pre>
+          </div>) }
+        </div>
+      </main>
   );
 };
 

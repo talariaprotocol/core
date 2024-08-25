@@ -1,19 +1,21 @@
 'use client'
-import {WriteContractData} from "@wagmi/core/query";
 import {useState} from "react";
 import {Address,parseUnits} from "viem";
 import {erc20Abi} from "viem";
+import {useReadContract} from "wagmi";
 import {useWaitForTransactionReceipt} from "wagmi";
 import {useAccount} from "wagmi";
 import {useWriteContract} from "wagmi";
 import {useToast} from "~~/components/ui/use-toast";
+import {OptimismSepoliaChainId} from "~~/contracts/addresses";
+import {polygonTestnet} from "~~/contracts/addresses";
 import {MorfiAddress} from "~~/contracts/addresses";
 import {zkSyncTestNetCode} from "~~/contracts/addresses";
 import {compressEncryptAndEncode} from "~~/helper";
 import {Button} from "~~/components/ui/button";
 import {Input} from "~~/components/ui/input";
 import {GiftCardAddress} from "~~/contracts/addresses";
-import GiftCardAbi from "../../../contracts-data/deployments/optimismSepolia/GiftCards.json";
+import GiftCardAbi from "../../../contracts-data/deployments/polygonAmoy/GiftCards.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 
 const GiftCardOwnerPage = () => {
@@ -24,14 +26,14 @@ const GiftCardOwnerPage = () => {
     const { toast } = useToast();
     const [amount, setAmount] = useState('');
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: approvalHash });
-
+    const { isLoading: isConfirmingCreated, isSuccess: isConfirmedCreated } = useWaitForTransactionReceipt({ hash: createGiftcardHash });
     const handleApprove = async () => {
     try {
         const result = await writeApprovalAsync({
-            address: MorfiAddress[zkSyncTestNetCode] as Address,
+            address: MorfiAddress[OptimismSepoliaChainId] as Address,
             abi: erc20Abi,
             functionName: 'approve',
-            args: [GiftCardAddress[zkSyncTestNetCode], parseUnits(amount, 18)]
+            args: [GiftCardAddress[OptimismSepoliaChainId], parseUnits(amount, 18)],
         });
         console.log(result)
     } catch (error) {
@@ -44,13 +46,14 @@ const GiftCardOwnerPage = () => {
 
     const createGiftCardCode = async (commitment: string) => {
         return await writeCreateGiftcardAsync({
-            address: GiftCardAddress[zkSyncTestNetCode],
+            address: GiftCardAddress[OptimismSepoliaChainId],
             account: account.address,
             abi: GiftCardAbi.abi,
             functionName: "createGiftCard",
             args: [commitment, [], parseUnits(amount, 18), "dummy_metadata"],
         });
     };
+
 
     const onSubmit = async () => {
         const parsedNumber = Number(amount);
@@ -110,7 +113,8 @@ const GiftCardOwnerPage = () => {
                     </div>
 
                     {/* Gift Card Content */}
-                    <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+                    {!isConfirmed ? (
+                        <div className="relative z-10 p-6 h-full flex flex-col justify-between">
                         {/* Gift Card Title */}
                         <div>
                             <h2 className="text-white text-3xl font-bold">Gift Card</h2>
@@ -121,10 +125,11 @@ const GiftCardOwnerPage = () => {
                         <div className="text-center">
                             <p className="text-white text-lg">Amount:</p>
                             <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                                {amount} USDC
+                                {amount} Morfi
                             </p>
                         </div>
                     </div>
+                    ) : (<div></div>) }
 
                     {/* Additional Decorative Element */}
                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
@@ -145,22 +150,26 @@ const GiftCardOwnerPage = () => {
                             {"Aprobar fondos"}
                         </Button>
                     </div>
-                ) : (
-                        <div className="w-96 h-56 mb-8">
-                            <Input
-                                id="amount"
-                                type="number"
-                                value={amount}
-                                disabled={true}
-                                className="border p-2 rounded"
-                                placeholder="Amount"
-                            />
-                            <Button
-                                className="mt-3"
-                                onClick={onSubmit}>
-                                {"Crear giftcard"}
-                            </Button>
-                        </div>
+                ) : ( !isConfirmingCreated  ? (
+                            <div className="w-96 h-56 mb-8">
+                                <Input
+                                    id="amount"
+                                    type="number"
+                                    value={amount}
+                                    disabled={true}
+                                    className="border p-2 rounded"
+                                    placeholder="Amount"
+                                />
+                                <Button
+                                    className="mt-3"
+                                    onClick={onSubmit}>
+                                    {"Crear giftcard"}
+                                </Button>
+                            </div>
+                    ) :
+                    (
+                        <div></div>
+                    )
                     )}
             </div>
         </>

@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 "use client";
 
+import {ethers} from "ethers";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {parseUnits} from "viem";
+import {UseReadContractReturnType} from "wagmi";
+import {useReadContract} from "wagmi";
+import {OptimismSepoliaChainId} from "~~/contracts/addresses";
 import GiftCardAbi from "../../../../contracts-data/deployments/optimismSepolia/GiftCards.json";
 import { decodeDecryptAndDecompress } from "../../helper";
 import { ISuccessResult } from "@worldcoin/idkit";
 import { useIDKit } from "@worldcoin/idkit";
-import { IDKitWidget } from "@worldcoin/idkit";
 import { ZeroAddress, hexlify, toBeHex, toBigInt, zeroPadValue } from "ethers";
 import { useAccount, useSignMessage, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { BaseError } from "wagmi";
@@ -16,9 +20,7 @@ import { Card } from "~~/components/ui/card";
 import { CardHeader } from "~~/components/ui/card";
 import { CardDescription } from "~~/components/ui/card";
 import { CardTitle } from "~~/components/ui/card";
-import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
-import { zkSyncTestNetCode } from "~~/contracts/addresses";
 import { GiftCardAddress } from "~~/contracts/addresses";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 
@@ -40,7 +42,6 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
   const decodedparams = decodeDecryptAndDecompress(params.userCode) as any;
   console.log(decodedparams);
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
-
   useEffect(() => {
     const getProvingKey = async () => {
       const provingKeyPath = path.resolve(__dirname, "./withdraw_proving_key.bin");
@@ -51,11 +52,15 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
     void getProvingKey();
   }, []);
 
+  const transactionInformation = useReadContract({
+    abi: GiftCardAbi.abi,
+    address: GiftCardAddress[OptimismSepoliaChainId],
+    functionName: 'TransferValues',
+    args: [decodedparams.commitment],
+  });
+
   const account = useAccount();
-  const [isVerified, setIsVerified] = useState(false);
-  const [worldCoinProof, setWorldCoinProof] = useState<ISuccessResult>();
   const [isSigned, setIsSigned] = useState(false);
-  const { setOpen } = useIDKit();
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
@@ -90,11 +95,11 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
       const root = zeroPadValue(toBeHex(input.root), 32);
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32);
       const result = await writeContractAsync({
-        address: GiftCardAddress[zkSyncTestNetCode],
+        address: GiftCardAddress[OptimismSepoliaChainId],
         account: account.address,
         abi: GiftCardAbi.abi,
-        functionName: "consumeCode",
-        args: [decodedparams.commitment, proof, root, nullifierHash, []],
+        functionName: "consumeGiftCard",
+        args: [decodedparams.commitment, proof, root, nullifierHash, account.address, []],
       });
       console.log("RESULT", result);
       setIsSigned(true);
@@ -117,11 +122,7 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
         </CardHeader>
         {account.isConnected ? (
           <>
-            {!isVerified ? (
-              <Button onClick={() => setOpen(true)}>
-                {isPending ? "Pending, please check your wallet..." : "Verify Humanity"}
-              </Button>
-            ) : !isSigned ? (
+            { !isSigned ? (
               <Button onClick={submitTx}>{isPending ? "Pending, please check your wallet..." : "Sign Document"}</Button>
             ) : (
               <Button disabled>Document signed successfully</Button>
@@ -166,8 +167,10 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
                     <div className="text-center">
                       <p className="text-white text-lg">Amount:</p>
                       <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                        {/* {amount} USDC */}
-                        TEST
+                        {transactionInformation} Morfi
+                      </p>
+                      <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
+                        {transactionInformation ? transactionInformation['data'] ? ethers.formatEther(transactionInformation['data']) : console.log("") : console.log("") } Morfi
                       </p>
                     </div>
                   </div>
@@ -176,11 +179,11 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
                   <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
                 </div>
                 <p>
-                  See transaction in{" "}
+                  See transaction in{"optimism-sepolia"}
                   <Link
                     className="cursor-pointer text-blue-500"
                     target="_blank"
-                    href={`https://sepolia.explorer.zksync.io/tx/${hash}`}
+                    href={`https://optimism-sepolia.blockscout.com/tx/${hash}`}
                   >
                     Blockscout
                   </Link>
