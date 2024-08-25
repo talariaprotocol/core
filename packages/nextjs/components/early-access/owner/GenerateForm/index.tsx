@@ -3,11 +3,16 @@
 import React from "react";
 import {useWaitForTransactionReceipt} from "wagmi";
 import {Label} from "~~/components/ui/label";
-import EarlyAccessCodesContractAbi from "../../../../contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
+import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
 import { MiniKit } from "@worldcoin/minikit-js";
 import { useAccount, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
-import { NumberContractAddress, OptimismSepoliaChainId, WorldcoinValidatorModuleAddress } from "~~/contracts/addresses";
+import { Input } from "~~/components/ui/input";
+import {
+  EarlyAccessCodeAddress,
+  NumberContractAddress,
+  OptimismSepoliaChainId,
+} from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 
@@ -23,11 +28,11 @@ const GenerateForm = () => {
 
   const createEarlyAccessCode = async (commitment: string) => {
     return await writeContractAsync({
-      address: NumberContractAddress[OptimismSepoliaChainId],
+      address: EarlyAccessCodeAddress[OptimismSepoliaChainId],
       account: account.address,
       abi: EarlyAccessCodesContractAbi.abi,
       functionName: "createEarlyAccessCode",
-      args: [commitment, [WorldcoinValidatorModuleAddress[OptimismSepoliaChainId]]],
+      args: [commitment, []],
     });
   };
 
@@ -83,7 +88,7 @@ const GenerateForm = () => {
             <h2 className="text-lg font-medium text-gray-900">Generated Code</h2>
             <pre className="mt-4 p-4 bg-gray-100 rounded-md shadow-inner">
               {/* Placeholder for generated code output */}
-              <code> {{compressObject}}</code>
+              <code>{compressObject}</code>
             </pre>
           </div>) }
         </div>

@@ -1,24 +1,21 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 "use client";
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import NumberContractAbi from "../../../../contracts-data/deployments/optimismSepolia/NumberContract.json";
 import { ISuccessResult } from "@worldcoin/idkit";
 import { useIDKit } from "@worldcoin/idkit";
 import { IDKitWidget } from "@worldcoin/idkit";
-import { ZeroAddress, hexlify, toBeHex, toBigInt, zeroPadValue } from "ethers";
+import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { BaseError } from "wagmi";
-import zlib from "zlib";
 import { Button } from "~~/components/ui/button";
 import { Card } from "~~/components/ui/card";
 import { CardHeader } from "~~/components/ui/card";
 import { CardDescription } from "~~/components/ui/card";
 import { CardTitle } from "~~/components/ui/card";
-import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
+import EarlyAccessCodesTestContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodesTestContract.json";
 import {
   generateTransfer,
   getRandomRecipient,
@@ -27,48 +24,9 @@ import {
   stringifyBigInts,
   toFixedHex,
 } from "~~/contracts-data/helpers/helpers";
-import { NumberContractAddress } from "~~/contracts/addresses";
+import { EarlyAccesCodeTestAddress, NumberContractAddress } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-/* eslint-disable @typescript-eslint/no-var-requires */
+import { generateWorldIdOnChainParameter } from "~~/worldcoin/utils";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 
@@ -105,19 +63,23 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
   const [isSigned, setIsSigned] = useState(false);
   const { setOpen } = useIDKit();
   const { data: hash, isPending: isPendingSendNumber, error, writeContractAsync } = useWriteContract();
-  const { data: fetchedNumber, isPending: isPendingReadNumber } = useReadContract({
-    abi: NumberContractAbi.abi,
-    address: NumberContractAddress[11155420],
-    functionName: "number",
-  });
+  // const { data: fetchedNumber, isPending: isPendingReadNumber } = useReadContract({
+  //   abi: EarlyAccessCodesTestContractAbi.abi,
+  //   address: EarlyAccesCodeTestAddress[11155420],
+  //   functionName: "number",
+  // });
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
-  const [userContractNumber, setUserContractNumber] = useState<string>("");
+  // const [userContractNumber, setUserContractNumber] = useState<string>("");
 
   const submitTx = async () => {
+    if (!account.address) {
+      return;
+    }
     try {
       console.log("Generating markle tree");
+      console.log("decodedparams", decodedparams);
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
 
@@ -149,21 +111,28 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32);
       console.log("nullifierHash", nullifierHash);
       console.log("worldCoinProof", worldCoinProof);
-      console.log(userContractNumber, BigInt(userContractNumber));
+      // console.log(userContractNumber, BigInt(userContractNumber));
+      // const asd = (externalNullifier = encodePacked(
+      //   encodePacked("app_staging_d8e1007ecb659d3ca0a6a9c4f6f61287").hashToField(),
+      //   action,
+      // ));
+      // externalNullifierHash = externalNullifier.hashToField();
+
+      if (!worldCoinProof) {
+        console.error("No worldCoinProof was provided");
+        return;
+      }
+
+      const worldIdParameters = generateWorldIdOnChainParameter(worldCoinProof, account.address);
+      console.log("worldIdParameters", worldIdParameters);
       const result = await writeContractAsync({
-        address: NumberContractAddress[11155420],
+        address: EarlyAccesCodeTestAddress[11155420],
         account: account.address,
-        abi: NumberContractAbi.abi,
-        functionName: "setNumber",
-        args: [
-          decodedparams.commitment,
-          proof,
-          root,
-          nullifierHash,
-          [worldCoinProof?.proof],
-          BigInt(userContractNumber),
-        ],
+        abi: EarlyAccessCodesTestContractAbi.abi,
+        functionName: "testFunction",
+        args: [decodedparams.commitment, proof, root, nullifierHash, []],
       });
+
       console.log("RESULT", result);
       setIsSigned(true);
     } catch (e) {
@@ -178,6 +147,7 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
     try {
       setWorldCoinProof(proof);
       setIsVerified(true);
+
       toast({
         description: "Verification successful. You can now reclame.",
       });
@@ -200,20 +170,20 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
         {account.isConnected ? (
           <>
             <IDKitWidget
-              app_id="app_staging_d8e1007ecb659d3ca0a6a9c4f6f61287"
-              action="investor-kyc"
+              app_id="app_staging_671675a8edd5130f3a7b0d2f9bc7b11c"
+              action="commit2"
               signal={account.address}
               onSuccess={onSuccessWorldCoin}
               autoClose
             />
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
               <h3 className="text-lg font-bold">Enter contract number value</h3>
               <Input
                 disabled={isPendingSendNumber}
                 value={userContractNumber}
                 onChange={e => setUserContractNumber(e.target.value)}
               />
-            </div>
+            </div> */}
             {!isVerified ? (
               <Button onClick={() => setOpen(true)}>
                 {isPendingSendNumber ? "Pending, please check your wallet..." : "Verify Humanity"}
@@ -244,10 +214,10 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
         ) : (
           <Button disabled>Please connect your wallet to continue</Button>
         )}
-        <Card>
+        {/* <Card>
           <h3 className="text-lg font-bold">Current contract number</h3>
           <p>{fetchedNumber as string}</p>
-        </Card>
+        </Card> */}
       </Card>
     </div>
   );

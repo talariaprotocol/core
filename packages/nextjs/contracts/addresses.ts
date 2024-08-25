@@ -9,6 +9,14 @@ export const NumberContractAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.NumberContract as Address,
 };
 
+export const EarlyAccessCodeAddress: Record<number, Address> = {
+  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.EarlyAccessCodes as Address,
+};
+
+export const EarlyAccesCodeTestAddress: Record<number, Address> = {
+  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.EarlyAccessCodesTestContract as Address,
+};
+
 export const GiftCardAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.GiftCards as Address,
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.GiftCards as Address,
