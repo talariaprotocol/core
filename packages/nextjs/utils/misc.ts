@@ -6,4 +6,4 @@ export const host =
     : env.NEXT_PUBLIC_VERCEL_ENV === "preview"
       ? (env.NEXT_PUBLIC_VERCEL_BRANCH_URL ? "https://" + env.NEXT_PUBLIC_VERCEL_BRANCH_URL : undefined) ||
         "https://test-commitprotocol.vercel.app"
-      : "http://localhost:3000";
+      : "https://test-commitprotocol.vercel.app";

@@ -32,3 +32,14 @@ export const MorfiAddress: Record<number, Address> = {
 export const WorldcoinValidatorModuleAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.WorldcoinValidatorModule as Address,
 };
+
+export const AirNftContractAddress: Record<number, Address> = {
+  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AlephNFT as Address,
+  [polygonTestnet]: DeployedAddresses.polygonAmoy.AlephNFT as Address,
+
+};
+
+export const AirNftDropperContractAddress: Record<number, Address> = {
+  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AlephNFTAirdropper as Address,
+  [polygonTestnet]: DeployedAddresses.polygonAmoy.AlephNFTAirdropper as Address,
+};

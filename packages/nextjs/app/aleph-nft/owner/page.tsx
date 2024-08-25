@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import GiftCardAbi from "../../../contracts-data/deployments/polygonAmoy/GiftCards.json";
-import { Address, parseUnits } from "viem";
-import { erc20Abi } from "viem";
+import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json"
+import { Address, erc721Abi, parseUnits } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
@@ -12,13 +10,10 @@ import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
-import { OptimismSepoliaChainId } from "~~/contracts/addresses";
-import { MorfiAddress } from "~~/contracts/addresses";
-import { GiftCardAddress } from "~~/contracts/addresses";
+import { AirNftContractAddress, AirNftDropperContractAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
-import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
-const GiftCardOwnerPage = () => {
+const AlephNftOwnerPage = () => {
   //SmartContract stuff
   const {
     data: approvalHash,
@@ -30,26 +25,24 @@ const GiftCardOwnerPage = () => {
     data: createGiftcardHash,
     isPending: isPendingCreateGiftcard,
     error: createGiftcardError,
-    writeContractAsync: writeCreateGiftcardAsync,
+    writeContractAsync: writeCreateAlephNftAsync,
   } = useWriteContract();
   const account = useAccount();
   const { toast } = useToast();
-  const [amount, setAmount] = useState("");
-  const [compressObject, setCompressObject] = useState<string>("");
+  const [id, setId] = useState("");
+  const [encryptedObject, setEncryptedObject] = useState("");
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: approvalHash });
   const { isLoading: isConfirmingCreated, isSuccess: isConfirmedCreated } = useWaitForTransactionReceipt({
     hash: createGiftcardHash,
   });
-
-  const chainId = account.chainId || OptimismSepoliaChainId;
-
+  
   const handleApprove = async () => {
     try {
       const result = await writeApprovalAsync({
-        address: MorfiAddress[chainId] as Address,
-        abi: erc20Abi,
+        address: AirNftContractAddress[OptimismSepoliaChainId] as Address,
+        abi: erc721Abi,
         functionName: "approve",
-        args: [GiftCardAddress[chainId], parseUnits(amount, 18)],
+        args: [AirNftDropperContractAddress[OptimismSepoliaChainId], BigInt(id)],
       });
       console.log(result);
     } catch (error) {
@@ -60,22 +53,17 @@ const GiftCardOwnerPage = () => {
     }
   };
 
-  const createGiftCardCode = async (commitment: string) => {
-    return await writeCreateGiftcardAsync({
-      address: GiftCardAddress[chainId],
+  const createAirdropCode = async (commitment: string) => {
+    return await writeCreateAlephNftAsync({
+      address: AirNftDropperContractAddress[OptimismSepoliaChainId],
       account: account.address,
-      abi: GiftCardAbi.abi,
-      functionName: "createGiftCard",
-      args: [commitment, [], parseUnits(amount, 18), "dummy_metadata"],
+      abi: AlephNftDropperAbi.abi,
+      functionName: "createAlephNFTAirdrop",
+      args: [commitment, [], BigInt(id), BigInt(1000)],
     });
   };
 
   const onSubmit = async () => {
-    const parsedNumber = Number(amount);
-    if (isNaN(parsedNumber) || parsedNumber <= 0) {
-      alert("Please enter a valid number");
-      return;
-    }
     const transfer = generateTransfer();
     const { commitment, nullifier, secret } = transfer;
     const responseObject = {
@@ -85,10 +73,9 @@ const GiftCardOwnerPage = () => {
     };
     const compressedObject = compressEncryptAndEncode(responseObject);
     console.log(compressedObject);
-    setCompressObject(compressedObject);
-
+    setEncryptedObject(compressedObject);
     try {
-      const result = await createGiftCardCode(commitment);
+      const result = await createAirdropCode(commitment);
       console.log("ReturnedResult", result);
     } catch (e) {
       console.error("Error creating giftcard", e);
@@ -98,9 +85,6 @@ const GiftCardOwnerPage = () => {
       console.log("createGiftcardError", createGiftcardError);
     }
   };
-
-  // @ts-expect-error
-  const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   //Render stuff
   return (
@@ -129,40 +113,40 @@ const GiftCardOwnerPage = () => {
           <div className="relative z-10 p-6 h-full flex flex-col justify-between">
             {/* Gift Card Title */}
             <div>
-              <h2 className="text-white text-3xl font-bold">Gift Card</h2>
-              <p className="text-white text-sm">A special gift just for you</p>
+              <h2 className="text-white text-3xl font-bold">Nft</h2>
+              <p className="text-white text-sm">A special Nft just for you</p>
             </div>
 
             {/* Gift Card Amount */}
             <div className="text-center">
-              <p className="text-white text-lg">Amount:</p>
+              <p className="text-white text-lg">Id of the nft:</p>
               <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                {amount} Morfi
+                {id}
               </p>
             </div>
           </div>
           {/* Additional Decorative Element */}
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
         </div>
-        {isConfirmedCreated && (
-          <div>
-            <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto w-96 h-56 mb-8">
-              <code className="font-mono">{compressObject}</code>
-            </pre>
-          </div>
-        )}
+          {isConfirmedCreated && (
+        <div>
+          <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto w-96 h-56 mb-8">
+            <code className="font-mono">{encryptedObject}</code>
+          </pre>
+        </div>
+          ) }
         {!isConfirmed ? (
           <div className="w-96 h-56 mb-8">
             <Input
               id="amount"
-              type="number"
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
+              type="string"
+              value={id}
+              onChange={e => setId(e.target.value)}
               className="border p-2 rounded"
-              placeholder="Amount"
+              placeholder="nft"
             />
             <Button className="mt-3" onClick={handleApprove}>
-              {"Aprobar fondos"}
+              {"Aprobar Nft"}
             </Button>
           </div>
         ) : !isConfirmingCreated ? (
@@ -171,16 +155,16 @@ const GiftCardOwnerPage = () => {
               <Input
                 id="amount"
                 type="number"
-                value={amount}
+                value={id}
                 disabled={true}
                 className="border p-2 rounded"
                 placeholder="Amount"
               />
               <Button className="mt-3" onClick={onSubmit}>
-                {"Crear giftcard"}
+                {"Airdrop Nft"}
               </Button>
             </div>
-          )
+          ) 
         ) : (
           <div>
             <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto grid-cols-3">
@@ -188,17 +172,9 @@ const GiftCardOwnerPage = () => {
             </pre>
           </div>
         )}
-        {createGiftcardHash && (
-          <p>
-            See transaction in{" "}
-            <Link className="cursor-pointer text-blue-500" target="_blank" href={`${explorerUrl}${createGiftcardHash}`}>
-              Explorer
-            </Link>
-          </p>
-        )}
       </div>
     </>
   );
 };
 
-export default GiftCardOwnerPage;
+export default AlephNftOwnerPage;

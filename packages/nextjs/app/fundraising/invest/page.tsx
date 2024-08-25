@@ -25,7 +25,6 @@ import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "~~/component
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { useToast } from "~~/components/ui/use-toast";
-import { host } from "~~/utils/misc";
 
 function getQueryParams() {
   if (typeof window === "undefined") {
