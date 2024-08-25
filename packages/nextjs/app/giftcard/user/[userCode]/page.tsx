@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 "use client";
 
-import {ethers} from "ethers";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {parseUnits} from "viem";
-import {UseReadContractReturnType} from "wagmi";
-import {useReadContract} from "wagmi";
-import {OptimismSepoliaChainId} from "~~/contracts/addresses";
 import GiftCardAbi from "../../../../contracts-data/deployments/optimismSepolia/GiftCards.json";
 import { decodeDecryptAndDecompress } from "../../helper";
 import { ISuccessResult } from "@worldcoin/idkit";
 import { useIDKit } from "@worldcoin/idkit";
+import { ethers } from "ethers";
 import { ZeroAddress, hexlify, toBeHex, toBigInt, zeroPadValue } from "ethers";
+import { parseUnits } from "viem";
+import { UseReadContractReturnType } from "wagmi";
+import { useReadContract } from "wagmi";
 import { useAccount, useSignMessage, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { BaseError } from "wagmi";
 import { Button } from "~~/components/ui/button";
@@ -21,8 +20,23 @@ import { CardHeader } from "~~/components/ui/card";
 import { CardDescription } from "~~/components/ui/card";
 import { CardTitle } from "~~/components/ui/card";
 import { useToast } from "~~/components/ui/use-toast";
-import { GiftCardAddress } from "~~/contracts/addresses";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
+import { OptimismSepoliaChainId } from "~~/contracts/addresses";
+import { GiftCardAddress } from "~~/contracts/addresses";
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 
@@ -52,10 +66,10 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
     void getProvingKey();
   }, []);
 
-  const transactionInformation = useReadContract({
+  const { data: returnedData }: { data?: string } = useReadContract({
     abi: GiftCardAbi.abi,
     address: GiftCardAddress[OptimismSepoliaChainId],
-    functionName: 'TransferValues',
+    functionName: "TransferValues",
     args: [decodedparams.commitment],
   });
 
@@ -122,7 +136,7 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
         </CardHeader>
         {account.isConnected ? (
           <>
-            { !isSigned ? (
+            {!isSigned ? (
               <Button onClick={submitTx}>{isPending ? "Pending, please check your wallet..." : "Sign Document"}</Button>
             ) : (
               <Button disabled>Document signed successfully</Button>
@@ -167,10 +181,11 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
                     <div className="text-center">
                       <p className="text-white text-lg">Amount:</p>
                       <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                        {transactionInformation} Morfi
+                        Morfi
                       </p>
                       <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                        {transactionInformation ? transactionInformation['data'] ? ethers.formatEther(transactionInformation['data']) : console.log("") : console.log("") } Morfi
+                        {returnedData && ethers.formatEther(BigInt(returnedData))}
+                        Morfi
                       </p>
                     </div>
                   </div>
