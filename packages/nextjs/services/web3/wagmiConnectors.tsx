@@ -17,7 +17,7 @@ const wallets = [
   metaMaskWallet,
   walletConnectWallet,
   ledgerWallet,
-  coinbaseWallet,
+  //coinbaseWallet,
   rainbowWallet,
   safeWallet,
   ...(!targetNetworks.some(network => network.id !== (chains.hardhat as chains.Chain).id) || !onlyLocalBurnerWallet
@@ -35,7 +35,6 @@ export const wagmiConnectors = connectorsForWallets(
       wallets,
     },
   ],
-
   {
     appName: "scaffold-eth-2",
     projectId: scaffoldConfig.walletConnectProjectId,
