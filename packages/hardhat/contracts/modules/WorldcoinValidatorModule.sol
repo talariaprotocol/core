@@ -43,8 +43,8 @@ contract WorldcoinValidatorModule is IValidationModule {
   constructor() {
     worldcoinVerifier = 0x11cA3127182f7583EfC416a8771BD4d11Fae4334; // Sepolia Tesnet Address @todo: move to deploy script
   
-    _appId = "app_1cacc4c0bf96307772c86a86c4f07de3";
-    _action = "commit";
+    _appId = "app_staging_671675a8edd5130f3a7b0d2f9bc7b11c";
+    _action = "commit2";
   }
   
 
