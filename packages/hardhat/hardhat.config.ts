@@ -28,6 +28,7 @@ const deployerPrivateKey =
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || 'DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW'
 const blockscoutApiKey = process.env.BLOCKSCOUT_API_KEY || '' // Use a Blockscout API key if required
 const polygonApiKey = '3WV3Z8PP7HFSW2E6Z65GR9845PJMW2ET6Z'
+const arbitrumApiKey = "1W124WYR21JHW7CWPD5ZDGAKCSP3AIVC7I";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -92,6 +93,14 @@ const config: HardhatUserConfig = {
     },
     optimismSepolia: {
       url: `https://opt-sepolia.g.alchemy.com/v2/${providerApiKey}`,
+      accounts: [deployerPrivateKey],
+    },
+    avalanche: {
+      url: 'https://api.avax.network/ext/bc/C/rpc',
+      accounts: [deployerPrivateKey],
+    },
+    avalancheFuji: {
+      url: 'https://api.avax-test.network/ext/bc/C/rpc',
       accounts: [deployerPrivateKey],
     },
     polygon: {
@@ -163,6 +172,8 @@ const config: HardhatUserConfig = {
       polygonAmoy: polygonApiKey,
       "optimism-sepolia": etherscanApiKey,
       zkSyncSepolia: etherscanApiKey,
+      avalancheFuji: etherscanApiKey,
+      arbitrumSepolia: arbitrumApiKey,
       default: `${etherscanApiKey}`,
     },
     customChains: [
@@ -190,6 +201,22 @@ const config: HardhatUserConfig = {
           browserURL: 'https://amoy.polygonscan.com',
         },
       },
+      {
+        network: 'avalancheFuji',
+        chainId: 43113,
+        urls: {
+          apiURL: 'https://api.avax-test.network/ext/bc/C/rpc',
+          browserURL: 'https://cchain.explorer.avax-test.network',
+        },
+      },
+      {
+        network: 'arbitrumSepolia',
+        chainId: 421611,
+        urls: {
+          apiURL: 'https://arb-sepolia.blockscout.com/api',
+          browserURL: 'https://arb-sepolia.blockscout.com/',
+        },
+      }
     ],
   },
   sourcify: {

@@ -40,5 +40,33 @@
     "TestValidatorModule": "0xCdbf1055f9d9901ef9988ffb5b9cc93564aC2880",
     "WorldcoinValidatorModule": "0x537d630b33B2CEE5282231B0A0c5aFB96A63Be19",
     "PrivadoIDValidatorModule": "0x604a3e143B503F5ee36218e236bECfF4C0e60ff6"
+  },
+  "arbitrumSepolia": {
+    "Verifier": "0x8adbd2f6bc6519D86F7C259edC7A30804cbc4Ae9",
+    "Hasher": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "EarlyAccessCodes": "0xB808ffe40A4Add6DF866a22ace5AfCD1a782EcC0",
+    "EarlyAccessCodesTestContract": "0xF65c25F287f87B2B1Ca3286121eee1959215d7F6",
+    "NumberContract": "0x7126d1631d090D0612Cf37cF75B4D36bF2673014",
+    "GiftCards": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
+    "MORFI": "0xC0d1855b8D61604F83b87C63a3E94B6511ce37F6",
+    "AlephNFT": "0x22257FF37950917C17024d46f3f90DD5448E872D",
+    "AlephNFTAirdropper": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+    "TestValidatorModule": "0x7CDd81CF9d4bE5F0cfF96BC5dD73bbfe8667A449",
+    "WorldcoinValidatorModule": "0xdd6F34ca1870929324001ce99eb7d057585cA52f",
+    "PrivadoIDValidatorModule": "0xc9420473439B3BAC4c740822409d6dFaCdE5cA2B"
+  },
+  "avalancheFuji": {
+    "Verifier": "0x8adbd2f6bc6519D86F7C259edC7A30804cbc4Ae9",
+    "Hasher": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "EarlyAccessCodes": "0xB808ffe40A4Add6DF866a22ace5AfCD1a782EcC0",
+    "EarlyAccessCodesTestContract": "0xF65c25F287f87B2B1Ca3286121eee1959215d7F6",
+    "NumberContract": "0x7126d1631d090D0612Cf37cF75B4D36bF2673014",
+    "GiftCards": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
+    "MORFI": "0xC0d1855b8D61604F83b87C63a3E94B6511ce37F6",
+    "AlephNFT": "0x22257FF37950917C17024d46f3f90DD5448E872D",
+    "AlephNFTAirdropper": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+    "TestValidatorModule": "0x7CDd81CF9d4bE5F0cfF96BC5dD73bbfe8667A449",
+    "WorldcoinValidatorModule": "0xdd6F34ca1870929324001ce99eb7d057585cA52f",
+    "PrivadoIDValidatorModule": "0xc9420473439B3BAC4c740822409d6dFaCdE5cA2B"
   }
 }

@@ -54,7 +54,7 @@ async function uploadAndMint() {
   const alephNFT = AlephNFTContract.attach(addresses[network.name].AlephNFT) as AlephNFT
 
   console.log('Minting NFTs...')
-  const folder = "https://ipfs.io/ipfs/QmYY1DAVEFT442CeuBi7Rid1e3pumNhZmXJ6JdRd7uJosU"
+  const folder = "https://ipfs.io/ipfs/QmUAZMAgL24jDKMh3ocfQ7cxaZevWknmNxRrdaPaiULijM"
   await alephNFT.safeMint(leboAddress, 10, folder + "/0.json")
   await alephNFT.safeMint(fainsteinAddress, 11, folder + "/1.json")
   await alephNFT.safeMint(martinAddress, 12, folder + "/2.json")
