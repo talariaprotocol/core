@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import GiftCardAbi from "../../../contracts-data/deployments/polygonAmoy/GiftCards.json";
+import { CheckIcon, TimerIcon } from "lucide-react";
 import { Address, parseUnits } from "viem";
 import { erc20Abi } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
@@ -41,15 +42,33 @@ const GiftCardOwnerPage = () => {
     hash: createGiftcardHash,
   });
 
+  const [appStatus, setAppStatus] = useState<
+    {
+      status: string;
+      icon: React.ReactNode;
+    }[]
+  >([]);
+
   const chainId = account.chainId || OptimismSepoliaChainId;
 
   const handleApprove = async () => {
     try {
+      setAppStatus(prevState => [...prevState, { status: "Sending approval...", icon: <TimerIcon size={24} /> }]);
       const result = await writeApprovalAsync({
         address: MorfiAddress[chainId] as Address,
         abi: erc20Abi,
         functionName: "approve",
         args: [GiftCardAddress[chainId], parseUnits(amount, 18)],
+      });
+
+      setAppStatus(prevState => {
+        prevState[0].icon = <CheckIcon size={24} />;
+        prevState[0].status = "Approval sent";
+        prevState[1] = {
+          status: "Time to create giftcard!",
+          icon: <TimerIcon size={24} />,
+        };
+        return prevState;
       });
       console.log(result);
     } catch (error) {
@@ -71,6 +90,10 @@ const GiftCardOwnerPage = () => {
   };
 
   const onSubmit = async () => {
+    setAppStatus(prevState => {
+      prevState[1].status = "Generating codes...";
+      return prevState;
+    });
     const parsedNumber = Number(amount);
     if (isNaN(parsedNumber) || parsedNumber <= 0) {
       alert("Please enter a valid number");
@@ -88,7 +111,25 @@ const GiftCardOwnerPage = () => {
     setCompressObject(compressedObject);
 
     try {
+      setAppStatus(prevState => {
+        prevState[1] = {
+          status: "Codes generated!",
+          icon: <CheckIcon size={24} />,
+        };
+        prevState[2] = {
+          status: "Submitting commitment to the contract...",
+          icon: <TimerIcon size={24} />,
+        };
+        return prevState;
+      });
       const result = await createGiftCardCode(commitment);
+      setAppStatus(prevState => {
+        prevState[2] = {
+          status: "Commitment submitted",
+          icon: <CheckIcon size={24} />,
+        };
+        return prevState;
+      });
       console.log("ReturnedResult", result);
     } catch (e) {
       console.error("Error creating giftcard", e);
@@ -105,8 +146,8 @@ const GiftCardOwnerPage = () => {
   //Render stuff
   return (
     <>
-      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
-        <div className="relative w-96 h-56 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden mb-8">
+      <div className="grid items-start gap-4 md:gap-8 lg:col-span-4">
+        <div className="relative w-96 h-56 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden">
           {/* Decorative Background Elements */}
           <div className="absolute inset-0 bg-opacity-20 bg-white pointer-events-none">
             <svg
@@ -162,7 +203,7 @@ const GiftCardOwnerPage = () => {
               placeholder="Amount"
             />
             <Button className="mt-3" onClick={handleApprove}>
-              {"Aprobar fondos"}
+              {"Approve"}
             </Button>
           </div>
         ) : !isConfirmingCreated ? (
@@ -195,6 +236,19 @@ const GiftCardOwnerPage = () => {
               Explorer
             </Link>
           </p>
+        )}
+         {appStatus.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900">App Status</h2>
+            <ul className="mt-4 space-y-2">
+              {appStatus.map((status, index) => (
+                <li key={index} className="flex items-center space-x-2">
+                  {status.icon}
+                  <span className="text-sm font-medium text-gray-900">{status.status}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </>

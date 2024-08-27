@@ -9,6 +9,7 @@ import { ISuccessResult } from "@worldcoin/idkit";
 import { useIDKit } from "@worldcoin/idkit";
 import { ethers } from "ethers";
 import { ZeroAddress, hexlify, toBeHex, toBigInt, zeroPadValue } from "ethers";
+import { CheckIcon, TimerIcon } from "lucide-react";
 import { parseUnits } from "viem";
 import { UseReadContractReturnType } from "wagmi";
 import { useReadContract } from "wagmi";
@@ -51,6 +52,13 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
     void getProvingKey();
   }, []);
 
+  const [appStatus, setAppStatus] = useState<
+    {
+      status: string;
+      icon: React.ReactNode;
+    }[]
+  >([]);
+
   const { data: returnedData }: { data?: string } = useReadContract({
     abi: GiftCardAbi.abi,
     address: GiftCardAddress[OptimismSepoliaChainId],
@@ -68,6 +76,7 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
 
   const submitTx = async () => {
     try {
+      setAppStatus(prevState => [...prevState, { status: "Generating proof...", icon: <TimerIcon size={24} /> }]);
       console.log("Generating markle tree");
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
@@ -95,12 +104,26 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
       const { proof } = websnarkUtils.toSolidityInput(proofData);
       const root = zeroPadValue(toBeHex(input.root), 32);
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32);
+
+      setAppStatus(prevState => {
+        prevState[0].icon = <CheckIcon size={24} />;
+        prevState[0].status = "Proof generated successfully";
+        return [...prevState, { status: "Submitting proof to the contract...", icon: <TimerIcon size={24} /> }];
+      });
+
       const result = await writeContractAsync({
         address: GiftCardAddress[chainId],
         account: account.address,
         abi: GiftCardAbi.abi,
         functionName: "consumeGiftCard",
         args: [decodedparams.commitment, proof, root, nullifierHash, account.address, []],
+      });
+      setAppStatus(prevState => {
+        prevState[1] = {
+          status: "Proof submitted successfully",
+          icon: <CheckIcon size={24} />,
+        };
+        return prevState;
       });
       console.log("RESULT", result);
       setIsSigned(true);
@@ -196,6 +219,19 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
           </>
         ) : (
           <Button disabled>Please connect your wallet to continue</Button>
+        )}
+        {appStatus.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900">App Status</h2>
+            <ul className="mt-4 space-y-2">
+              {appStatus.map((status, index) => (
+                <li key={index} className="flex items-center space-x-2">
+                  {status.icon}
+                  <span className="text-sm font-medium text-gray-900">{status.status}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </Card>
     </div>

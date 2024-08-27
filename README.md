@@ -1,81 +1,61 @@
-# 🏗 Scaffold-ETH 2
+# TornadoCodes
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+**TornadoCodes: Secure, Configurable Access-Management Without the Hassle of Wallet Addresses**
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+TornadoCodes offers a secure, address-free access-management solution that leverages commitment-based systems linked to nullifiers. Our platform is designed to address the challenges of using wallet addresses for crypto transactions, providing a flexible and customizable approach to managing access for a wide range of applications, from early access codes to subscription payments.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+## Overview
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+TornadoCodes is inspired by privacy-preserving solutions like Tornado Cash but is designed with a distinct focus on flexibility and configurability rather than privacy. By using commitment schemes linked to nullifiers, TornadoCodes enables a variety of secure, permission-based interactions on the blockchain, making it easier for developers to implement access management without the need for wallet addresses.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+## Features
 
-## Requirements
+- **Address-Free Transactions**: Simplifies the user experience by eliminating the need for wallet addresses in many crypto transactions.
+- **Configurable Access Management**: Provides a flexible system where permissions can be customized for a wide range of use cases.
+- **Modular Design**: Built with Pedersen hashes, Merkle trees, and a modular architecture, allowing easy integration with existing protocols.
+- **Supports Multiple Standards**: Compatible with ERC20, ERC721, ERC1155, and other token standards, as well as DEFI and RWA.
+- **Validation Modules**: Incorporates validation modules like Worldcoin Personhood Validator and Privado ID ZKProof Validator for enhanced functionality.
+- **Scalable & Efficient**: Low maintenance costs with no need for large backends or databases.
 
-Before you begin, you need to install the following tools:
+## Use Cases
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+TornadoCodes can be applied to a wide range of scenarios, including but not limited to:
 
-## Quickstart
+1. **Early Access Codes**: Grant early access to events, products, or services without requiring users to provide wallet addresses.
+2. **Gift Cards**: Issue digital gift cards that can be redeemed without linking to a wallet address.
+3. **Airdrops**: Distribute tokens or NFTs without needing the recipient's wallet address upfront.
+4. **Event Tickets**: Manage ticket distribution and validation for events securely and efficiently.
+5. **Identification Checks**: Validate user identities using various modules without compromising privacy.
+6. **Bridges**: Facilitate cross-chain asset transfers where the swap can be processed later when liquidity is available.
+7. **Subscription Payments**: Implement recurring payments without storing sensitive user data.
+8. **Checks**: Issue digital checks that can be cashed in later by the recipient.
 
-To get started with Scaffold-ETH 2, follow the steps below:
+## How It Works
 
-1. Clone this repo & install dependencies
+### Core Components
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
+- **Commitments and Nullifiers**: TornadoCodes relies on a system of commitments linked to nullifiers. When a transaction or action is initiated, a commitment is created. Later, this commitment can be nullified (or spent) by presenting a corresponding nullifier.
+- **Pedersen Hashes**: Used for generating cryptographic commitments that are secure and efficient.
+- **Merkle Trees**: Provides a scalable way to manage large sets of commitments, enabling quick verification and validation.
+- **Modular Design**: TornadoCodes is built with modularity in mind, allowing for easy integration of new validation modules and other enhancements.
+
+### Example Flow
+
+1. **Setup**: A user or service generates a commitment for an action or asset.
+2. **Configuration**: The commitment is configured with specific permissions or rules (e.g., who can spend it, when, and under what conditions).
+3. **Execution**: The recipient interacts with the system, presenting the required information to nullify the commitment and execute the action (e.g., claiming a gift card, receiving an airdrop).
+4. **Validation**: The system validates the nullifier against the commitment, ensuring that the rules have been followed.
+
+## Installation
+
+To get started with TornadoCodes, clone the repository and install the necessary dependencies:
+
+```bash
+git clone https://github.com/mgrabina/commit
+cd commit
 yarn install
 ```
+Then, follow instructions in each package.
 
-2. Run a local network in the first terminal:
 
-```
-yarn chain
-```
-
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
-yarn start
-```
-
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
-
-**What's next**:
-
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
-- Edit your smart contract test in: `packages/hardhat/test`. To run test use `yarn hardhat:test`
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+Contact x.com/mgrabina, x.com/th0rOdinson, x.com/nicolaslebovits

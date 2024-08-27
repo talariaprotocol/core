@@ -14,11 +14,15 @@ export const NumberContractAddress: Record<number, Address> = {
 export const EarlyAccessCodeAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.EarlyAccessCodes as Address,
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.EarlyAccessCodes as Address,
+  [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodes as Address,
+  [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodes as Address,
 };
 
 export const EarlyAccesCodeTestAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.EarlyAccessCodesTestContract as Address,
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.EarlyAccessCodesTestContract as Address,
+  [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodesTestContract as Address,
+  [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodesTestContract as Address,
 };
 
 export const GiftCardAddress: Record<number, Address> = {

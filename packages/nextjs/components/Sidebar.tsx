@@ -82,16 +82,16 @@ const CustomSidebar = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="/poap-airdrop"
+              href="/aleph-nft"
               className={`${
-                pathname === "/poap-airdrop" ? "bg-accent" : ""
+                pathname === "/aleph-nft" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
               <AwardIcon className="h-5 w-5" />
-              <span className="sr-only">POAP Airdrop</span>
+              <span className="sr-only">Aleph NFT</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">POAP Airdrop</TooltipContent>
+          <TooltipContent side="right">Aleph NFT</TooltipContent>
         </Tooltip>
       </nav>
     </>

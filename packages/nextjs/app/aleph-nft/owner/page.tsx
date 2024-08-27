@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json"
 import { Address, erc721Abi, parseUnits } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
@@ -9,6 +8,7 @@ import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
+import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { AirNftContractAddress, AirNftDropperContractAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
@@ -35,14 +35,16 @@ const AlephNftOwnerPage = () => {
   const { isLoading: isConfirmingCreated, isSuccess: isConfirmedCreated } = useWaitForTransactionReceipt({
     hash: createGiftcardHash,
   });
-  
+
+  const chainId = account.chainId || OptimismSepoliaChainId;
+
   const handleApprove = async () => {
     try {
       const result = await writeApprovalAsync({
-        address: AirNftContractAddress[OptimismSepoliaChainId] as Address,
+        address: AirNftContractAddress[chainId] as Address,
         abi: erc721Abi,
         functionName: "approve",
-        args: [AirNftDropperContractAddress[OptimismSepoliaChainId], BigInt(id)],
+        args: [AirNftDropperContractAddress[chainId], BigInt(id)],
       });
       console.log(result);
     } catch (error) {
@@ -55,7 +57,7 @@ const AlephNftOwnerPage = () => {
 
   const createAirdropCode = async (commitment: string) => {
     return await writeCreateAlephNftAsync({
-      address: AirNftDropperContractAddress[OptimismSepoliaChainId],
+      address: AirNftDropperContractAddress[chainId],
       account: account.address,
       abi: AlephNftDropperAbi.abi,
       functionName: "createAlephNFTAirdrop",
@@ -128,13 +130,13 @@ const AlephNftOwnerPage = () => {
           {/* Additional Decorative Element */}
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
         </div>
-          {isConfirmedCreated && (
-        <div>
-          <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto w-96 h-56 mb-8">
-            <code className="font-mono">{encryptedObject}</code>
-          </pre>
-        </div>
-          ) }
+        {isConfirmedCreated && (
+          <div>
+            <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto w-96 h-56 mb-8">
+              <code className="font-mono">{encryptedObject}</code>
+            </pre>
+          </div>
+        )}
         {!isConfirmed ? (
           <div className="w-96 h-56 mb-8">
             <Input
@@ -164,7 +166,7 @@ const AlephNftOwnerPage = () => {
                 {"Airdrop Nft"}
               </Button>
             </div>
-          ) 
+          )
         ) : (
           <div>
             <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto grid-cols-3">

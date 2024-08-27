@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { useWaitForTransactionReceipt } from "wagmi";
-import { useAccount, useWriteContract } from "wagmi";
+import { CheckIcon, TimerIcon } from "lucide-react";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
@@ -11,20 +12,29 @@ import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismS
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { EarlyAccessCodeAddress, NumberContractAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
+import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 const GenerateForm = () => {
   const [compressObject, setCompressObject] = React.useState<string>("");
   const account = useAccount();
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: hash });
+  const [appStatus, setAppStatus] = React.useState<
+    {
+      status: string;
+      icon: React.ReactNode;
+    }[]
+  >([]);
 
   React.useEffect(() => {
     console.log("MINIKIT Is installed:", MiniKit.isInstalled());
   }, []);
 
+  const chainId = account.chainId || OptimismSepoliaChainId;
+
   const createEarlyAccessCode = async (commitment: string) => {
     return await writeContractAsync({
-      address: EarlyAccessCodeAddress[OptimismSepoliaChainId],
+      address: EarlyAccessCodeAddress[chainId],
       account: account.address,
       abi: EarlyAccessCodesContractAbi.abi,
       functionName: "createEarlyAccessCode",
@@ -38,7 +48,7 @@ const GenerateForm = () => {
     //   alert("Please enter a valid number");
     //   return;
     // }
-
+    setAppStatus(prevState => [...prevState, { status: "Generating codes...", icon: <TimerIcon size={24} /> }]);
     const transfer = generateTransfer();
     const { commitment, nullifier, secret } = transfer;
     const responseObject = {
@@ -51,8 +61,20 @@ const GenerateForm = () => {
     setCompressObject(resultObject);
     console.log("compress object", resultObject);
     try {
+      setAppStatus(prevState => {
+        prevState[0].icon = <CheckIcon size={24} />;
+        prevState[0].status = "Codes generated";
+        return [...prevState, { status: "Submitting commitment to the contract...", icon: <TimerIcon size={24} /> }];
+      });
       const result = await createEarlyAccessCode(commitment);
       console.log("ReturnedResult", result);
+      setAppStatus(prevState => {
+        prevState[1] = {
+          status: "Commitment submitted",
+          icon: <CheckIcon size={24} />,
+        };
+        return prevState;
+      });
     } catch (e) {
       console.error("Error creating early access code", e);
     } finally {
@@ -61,6 +83,9 @@ const GenerateForm = () => {
       console.log("error", error);
     }
   };
+
+  // @ts-expect-error
+  const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   return (
     <main className="mt-8 w-full max-w-4xl">
@@ -90,7 +115,28 @@ const GenerateForm = () => {
             </pre>
           </div>
         )}
+        {hash && (
+          <p>
+            See transaction in
+            <Link className="cursor-pointer text-blue-500" target="_blank" href={`${explorerUrl}${hash}`}>
+              Explorer
+            </Link>
+          </p>
+        )}
       </div>
+      {appStatus.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-lg font-medium text-gray-900">App Status</h2>
+          <ul className="mt-4 space-y-2">
+            {appStatus.map((status, index) => (
+              <li key={index} className="flex items-center space-x-2">
+                {status.icon}
+                <span className="text-sm font-medium text-gray-900">{status.status}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </main>
   );
 };

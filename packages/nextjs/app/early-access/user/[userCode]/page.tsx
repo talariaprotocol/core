@@ -7,6 +7,7 @@ import { ISuccessResult } from "@worldcoin/idkit";
 import { useIDKit } from "@worldcoin/idkit";
 import { IDKitWidget } from "@worldcoin/idkit";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
+import { CheckIcon, TimerIcon } from "lucide-react";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { BaseError } from "wagmi";
 import { Button } from "~~/components/ui/button";
@@ -26,6 +27,7 @@ import {
 } from "~~/contracts-data/helpers/helpers";
 import { EarlyAccesCodeTestAddress, NumberContractAddress } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
+import { OptimismSepoliaChainId, TransactionExplorerBaseUrl } from "~~/utils/explorer";
 import { generateWorldIdOnChainParameter } from "~~/worldcoin/utils";
 
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -68,10 +70,18 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
   //   address: EarlyAccesCodeTestAddress[11155420],
   //   functionName: "number",
   // });
+  const [appStatus, setAppStatus] = useState<
+    {
+      status: string;
+      icon: React.ReactNode;
+    }[]
+  >([]);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
   // const [userContractNumber, setUserContractNumber] = useState<string>("");
+
+  const chainId = account.chainId || OptimismSepoliaChainId;
 
   const submitTx = async () => {
     if (!account.address) {
@@ -80,6 +90,8 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
     try {
       console.log("Generating markle tree");
       console.log("decodedparams", decodedparams);
+      setAppStatus(prevState => [...prevState, { status: "Generating proof...", icon: <TimerIcon size={24} /> }]);
+
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
 
@@ -125,14 +137,25 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
 
       const worldIdParameters = generateWorldIdOnChainParameter(worldCoinProof, account.address);
       console.log("worldIdParameters", worldIdParameters);
+      setAppStatus(prevState => {
+        prevState[0].icon = <CheckIcon size={24} />;
+        prevState[0].status = "Proof generated successfully";
+        return [...prevState, { status: "Submitting proof to the contract...", icon: <TimerIcon size={24} /> }];
+      });
       const result = await writeContractAsync({
-        address: EarlyAccesCodeTestAddress[11155420],
+        address: EarlyAccesCodeTestAddress[chainId],
         account: account.address,
         abi: EarlyAccessCodesTestContractAbi.abi,
         functionName: "testFunction",
         args: [decodedparams.commitment, proof, root, nullifierHash, []],
       });
-
+      setAppStatus(prevState => {
+        prevState[1] = {
+          status: "Proof submitted successfully",
+          icon: <CheckIcon size={24} />,
+        };
+        return prevState;
+      });
       console.log("RESULT", result);
       setIsSigned(true);
     } catch (e) {
@@ -157,6 +180,9 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
       });
     }
   };
+
+  // @ts-expect-error
+  const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   return (
     <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
@@ -197,13 +223,9 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
             )}
             {hash && (
               <p>
-                See transaction in{" "}
-                <Link
-                  className="cursor-pointer text-blue-500"
-                  target="_blank"
-                  href={`https://optimism-sepolia.blockscout.com/tx/${hash}`}
-                >
-                  Blockscout
+                See transaction in
+                <Link className="cursor-pointer text-blue-500" target="_blank" href={`${explorerUrl}${hash}`}>
+                  Explorer
                 </Link>
               </p>
             )}
@@ -218,6 +240,19 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
           <h3 className="text-lg font-bold">Current contract number</h3>
           <p>{fetchedNumber as string}</p>
         </Card> */}
+        {appStatus.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900">App Status</h2>
+            <ul className="mt-4 space-y-2">
+              {appStatus.map((status, index) => (
+                <li key={index} className="flex items-center space-x-2">
+                  {status.icon}
+                  <span className="text-sm font-medium text-gray-900">{status.status}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </Card>
     </div>
   );
