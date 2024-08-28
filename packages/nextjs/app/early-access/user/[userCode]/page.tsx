@@ -73,6 +73,15 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
   const { toast } = useToast();
   // const [userContractNumber, setUserContractNumber] = useState<string>("");
 
+
+
+  const { data: nextTreeIndexData }: { data?: number } = useReadContract({
+    abi: EarlyAccessCodesTestContractAbi.abi,
+    address: EarlyAccesCodeTestAddress[11155420],
+    functionName: "nextIndex",
+    args: [],
+  });
+
   const submitTx = async () => {
     if (!account.address) {
       return;
@@ -83,7 +92,7 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
 
-      const { pathElements, pathIndices } = tree.path(0);
+      const { pathElements, pathIndices } = tree.path(Number(nextTreeIndexData) - 1);
       const input = stringifyBigInts({
         // public
         root: tree.root(),

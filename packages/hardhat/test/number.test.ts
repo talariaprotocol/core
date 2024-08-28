@@ -39,7 +39,7 @@ describe('EarlyAccessCodes', function () {
   let Hasher: Hasher__factory, hasher: Hasher
   let EarlyAccessCodes: EarlyAccessCodes__factory,
     earlyAccessCodes: EarlyAccessCodes,
-    Number: NumberContract__factory,
+    NumberFactory: NumberContract__factory,
     number: NumberContract
 
   let TestValidatorModule: TestValidatorModule__factory, testValidatorModule: TestValidatorModule
@@ -74,8 +74,8 @@ describe('EarlyAccessCodes', function () {
       levels, // merkle tree height
     )
 
-    Number = await ethers.getContractFactory('NumberContract')
-    number = await Number.deploy(await earlyAccessCodes.getAddress())
+    NumberFactory = await ethers.getContractFactory('NumberContract')
+    number = await NumberFactory.deploy(await earlyAccessCodes.getAddress())
 
     TestValidatorModule = await ethers.getContractFactory('TestValidatorModule')
     testValidatorModule = await TestValidatorModule.deploy()
@@ -117,7 +117,7 @@ describe('EarlyAccessCodes', function () {
     ).to.emit(earlyAccessCodes, 'NewCode')
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(0)
+    const { pathElements, pathIndices } = tree.path(Number(await earlyAccessCodes.nextIndex()) - 1)
     const input = stringifyBigInts({
       // public
       root: tree.root(),

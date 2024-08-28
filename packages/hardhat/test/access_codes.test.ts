@@ -79,7 +79,6 @@ describe('EarlyAccessCodes', function () {
 
     TestValidatorModule = await ethers.getContractFactory('TestValidatorModule')
     testValidatorModule = await TestValidatorModule.deploy()
-
     ;[owner, addr1, addr2] = await ethers.getSigners()
   })
 
@@ -104,22 +103,21 @@ describe('EarlyAccessCodes', function () {
     )
   })
 
-  it.only('Debe consumir un código correctamente', async function () {
+  it('Debe consumir un código correctamente', async function () {
     // Generate pedersen hashes and add to the tree
     const transfer = generateTransfer()
     tree.insert(transfer.commitment)
     let recipient = getRandomRecipient()
 
     // Create Code with test validator module
-    await expect(earlyAccessCodes.connect(owner).createEarlyAccessCode(transfer.commitment, [
-      await testValidatorModule.getAddress()
-    ])).to.emit(
-      earlyAccessCodes,
-      'NewCode',
-    )
+    await expect(
+      earlyAccessCodes
+        .connect(owner)
+        .createEarlyAccessCode(transfer.commitment, [await testValidatorModule.getAddress()]),
+    ).to.emit(earlyAccessCodes, 'NewCode')
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(0)
+    const { pathElements, pathIndices } = tree.path(Number(await earlyAccessCodes.nextIndex()) - 1)
     const input = stringifyBigInts({
       // public
       root: tree.root(),
@@ -144,7 +142,100 @@ describe('EarlyAccessCodes', function () {
 
     // Execute the test function!
     await expect(
-      earlyAccessCodesTestContract.connect(owner).testFunction(transfer.commitment, proof, root, nullifierHash, ["0x"]),
+      earlyAccessCodesTestContract
+        .connect(owner)
+        .testFunction(transfer.commitment, proof, root, nullifierHash, ['0x']),
+    ).to.emit(earlyAccessCodesTestContract, 'Success')
+  })
+
+  it.only('Debe consumir dos códigos correctamente', async function () {
+    // Generate pedersen hashes and add to the tree
+    const transfer = generateTransfer()
+    tree.insert(transfer.commitment)
+    let recipient = getRandomRecipient()
+
+    // Create Code with test validator module
+    await expect(
+      earlyAccessCodes
+        .connect(owner)
+        .createEarlyAccessCode(transfer.commitment, [await testValidatorModule.getAddress()]),
+    ).to.emit(earlyAccessCodes, 'NewCode')
+
+    // Create parameters for the consumption
+    const { pathElements, pathIndices } = tree.path(Number(await earlyAccessCodes.nextIndex()) - 1)
+    const input = stringifyBigInts({
+      // public
+      root: tree.root(),
+      nullifierHash: pedersenHash(transfer.nullifier.leInt2Buff(31)),
+      relayer: ZeroAddress,
+      recipient: await owner.getAddress(),
+      fee: 0,
+      refund: 0,
+
+      // private
+      nullifier: transfer.nullifier,
+      secret: transfer.secret,
+      pathElements: pathElements,
+      pathIndices: pathIndices,
+    })
+
+    const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, proving_key)
+    const { proof } = websnarkUtils.toSolidityInput(proofData)
+
+    const root = zeroPadValue(toBeHex(input.root), 32)
+    const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32)
+
+    // Execute the test function!
+    await expect(
+      earlyAccessCodesTestContract
+        .connect(owner)
+        .testFunction(transfer.commitment, proof, root, nullifierHash, ['0x']),
+    ).to.emit(earlyAccessCodesTestContract, 'Success')
+
+    // Second
+    const transfer2 = generateTransfer()
+    tree.insert(transfer2.commitment)
+    let recipient2 = getRandomRecipient()
+
+    // Create Code with test validator module
+    await expect(
+      earlyAccessCodes
+        .connect(owner)
+        .createEarlyAccessCode(transfer2.commitment, [await testValidatorModule.getAddress()]),
+    ).to.emit(earlyAccessCodes, 'NewCode')
+
+    const nextIndex: number = Number(await earlyAccessCodes.nextIndex())
+    console.log('nextIndex', nextIndex)
+
+    // Create parameters for the consumption
+    const { pathElements: pathElements2, pathIndices: pathIndices2 } = tree.path(nextIndex - 1)
+    const input2 = stringifyBigInts({
+      // public
+      root: tree.root(),
+      nullifierHash: pedersenHash(transfer2.nullifier.leInt2Buff(31)),
+      relayer: ZeroAddress,
+      recipient: await owner.getAddress(),
+      fee: 0,
+      refund: 0,
+
+      // private
+      nullifier: transfer2.nullifier,
+      secret: transfer2.secret,
+      pathElements: pathElements2,
+      pathIndices: pathIndices2,
+    })
+
+    const proofData2 = await websnarkUtils.genWitnessAndProve(groth16, input2, circuit, proving_key)
+    const { proof: proof2 } = websnarkUtils.toSolidityInput(proofData2)
+
+    const root2 = zeroPadValue(toBeHex(input2.root), 32)
+    const nullifierHash2 = zeroPadValue(toBeHex(input2.nullifierHash), 32)
+
+    // Execute the test function!
+    await expect(
+      earlyAccessCodesTestContract
+        .connect(owner)
+        .testFunction(transfer2.commitment, proof2, root2, nullifierHash2, ['0x']),
     ).to.emit(earlyAccessCodesTestContract, 'Success')
   })
 })

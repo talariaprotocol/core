@@ -68,7 +68,7 @@ describe('Airdropper', function () {
     alephNFT = (await AlephNFT.deploy(owner)) as AlephNFT
 
     // Send some tokens to the owner
-    await alephNFT.safeMint(await owner.getAddress(), 1, "")
+    await alephNFT.safeMint(await owner.getAddress(), 1, '')
 
     AlephAirdropper = await ethers.getContractFactory('AlephNFTAirdropper')
     alephAirdropper = await AlephAirdropper.deploy(
@@ -83,7 +83,7 @@ describe('Airdropper', function () {
     ;[owner, addr1, addr2] = await ethers.getSigners()
   })
 
-  it.only('Should correctly consume a gift card', async function () {
+  it('Should correctly consume a gift card', async function () {
     // Generate pedersen hashes and add to the tree
     const transfer = generateTransfer()
     tree.insert(transfer.commitment)
@@ -102,15 +102,16 @@ describe('Airdropper', function () {
     console.log('gifts balance', await alephNFT.balanceOf(await alephAirdropper.getAddress()))
     console.log('owner balance', await alephNFT.balanceOf(await owner.getAddress()))
     // Create gift card with test validator module
-    await expect(
-      alephAirdropper.connect(owner).createAlephNFTAirdrop(transfer.commitment, [], 1, 1),
-    ).to.emit(alephAirdropper, 'NewCode')
+    await expect(alephAirdropper.connect(owner).createAlephNFTAirdrop(transfer.commitment, [], 1, 1)).to.emit(
+      alephAirdropper,
+      'NewCode',
+    )
 
     console.log('gifts balance', await alephNFT.balanceOf(await alephAirdropper.getAddress()))
     console.log('owner balance', await alephNFT.balanceOf(await owner.getAddress()))
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(0)
+    const { pathElements, pathIndices } = tree.path(Number(await alephAirdropper.nextIndex()) - 1)
     const input = stringifyBigInts({
       // public
       root: tree.root(),
@@ -135,9 +136,14 @@ describe('Airdropper', function () {
 
     // Execute the test function!
     await expect(
-      alephAirdropper.consumeAlephNFTAirdrop(transfer.commitment, proof, root, nullifierHash, await owner.getAddress(), [
-        '0x',
-      ]),
+      alephAirdropper.consumeAlephNFTAirdrop(
+        transfer.commitment,
+        proof,
+        root,
+        nullifierHash,
+        await owner.getAddress(),
+        ['0x'],
+      ),
     ).to.emit(alephAirdropper, 'Success')
   })
 })

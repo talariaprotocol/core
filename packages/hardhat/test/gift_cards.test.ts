@@ -106,7 +106,7 @@ describe('GiftCards', function () {
     console.log('owner balance', await morfi.balanceOf(await owner.getAddress()))
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(0)
+    const { pathElements, pathIndices } = tree.path(Number(await giftCards.nextIndex()) - 1)
     const input = stringifyBigInts({
       // public
       root: tree.root(),
