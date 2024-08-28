@@ -3,23 +3,26 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json"
 import { ethers } from "ethers";
 import { ZeroAddress, hexlify, toBeHex, toBigInt, zeroPadValue } from "ethers";
+import QRCode from "qrcode.react";
 import { useReadContract } from "wagmi";
 import { useAccount, useSignMessage, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { BaseError } from "wagmi";
+import { useRole } from "~~/components/ScaffoldEthAppWithProviders";
 import { Button } from "~~/components/ui/button";
 import { Card } from "~~/components/ui/card";
 import { CardHeader } from "~~/components/ui/card";
 import { CardDescription } from "~~/components/ui/card";
 import { CardTitle } from "~~/components/ui/card";
 import { useToast } from "~~/components/ui/use-toast";
+import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 import { AirNftDropperContractAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
-import { useRole } from "~~/components/ScaffoldEthAppWithProviders";
-import QRCode from "qrcode.react";
+import { Role, getRoleCredentialProofRequest } from "~~/utils/privadoId/identities";
+
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 
@@ -47,11 +50,6 @@ const websnarkUtils = require("websnark/src/utils");
 const buildGroth16 = require("websnark/src/groth16");
 const circuit = require("../../../../contracts-data/helpers/withdraw.json");
 const levels = 20;
-
-import {
-  Role,
-  getRoleCredentialProofRequest,
-} from "~~/utils/privadoId/identities";
 
 const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => {
   console.log(params.userCode);
@@ -113,7 +111,7 @@ const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => 
         console.error("Error fetching roles: ", error);
       });
   };
-  
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
@@ -128,14 +126,21 @@ const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => 
   }, [polling]);
 
   useEffect(() => {
-      setPolling(true);
+    setPolling(true);
   }, []);
-  
+
   const { data: returnedData }: { data?: string } = useReadContract({
     abi: AlephNftDropperAbi.abi,
     address: AirNftDropperContractAddress[OptimismSepoliaChainId],
     functionName: "TransferId",
     args: [decodedparams.commitment],
+  });
+
+  const { data: nextTreeIndexData }: { data?: number } = useReadContract({
+    abi: AlephNftDropperAbi.abi,
+    address: AirNftDropperContractAddress[OptimismSepoliaChainId],
+    functionName: "nextIndex",
+    args: [],
   });
 
   const submitTx = async () => {
@@ -144,7 +149,7 @@ const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => 
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
 
-      const { pathElements, pathIndices } = tree.path(0);
+      const { pathElements, pathIndices } = tree.path((nextTreeIndexData ?? 0) - 1);
       const input = stringifyBigInts({
         // public
         root: tree.root(),
@@ -186,8 +191,8 @@ const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => 
 
   return (
     <>
-    {!proof ? (
-      <div>
+      {!proof ? (
+        <div>
           <h1>🇦🇷 Welcome Aleph Citizens! - Please Verify yourself to get your badge. 🇦🇷</h1>
           <QRCode
             // size={256}
@@ -198,93 +203,94 @@ const AirdropperNftUserPage = ({ params }: { params: { userCode: string } }) => 
             viewBox={`0 0 256 256`}
           />
         </div>
-    ) : (
-      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
-      <Card x-chunk="dashboard-05-chunk-3">
-        <CardHeader className="px-7 grid grid-cols-12">
-          <div className="col-span-10">
-            <CardTitle>Claim your aidrop</CardTitle>
-            <CardDescription>You have received an invitation to reclaim the airdrop.</CardDescription>
-          </div>
-        </CardHeader>
-        {account.isConnected ? (
-          <>
-            {!isSigned ? (
-              <Button onClick={submitTx}>{isPending ? "Pending, please check your wallet..." : "Sign Document"}</Button>
-            ) : (
-              <Button disabled>Document signed successfully</Button>
-            )}
-            {hash && (
-              <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
-                <div className="relative w-96 h-56 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden mb-8">
-                  {/* Decorative Background Elements */}
-                  <div className="absolute inset-0 bg-opacity-20 bg-white pointer-events-none">
-                    <svg
-                      className="absolute top-0 right-0 w-32 h-32 opacity-50"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 500 500"
-                    >
-                      <circle cx="250" cy="250" r="250" fill="url(#paint0_linear)" />
-                      <defs>
-                        <linearGradient
-                          id="paint0_linear"
-                          x1="250"
-                          y1="0"
-                          x2="250"
-                          y2="500"
-                          gradientUnits="userSpaceOnUse"
-                        >
-                          <stop stopColor="#fff" stopOpacity="0.5" />
-                          <stop offset="1" stopColor="#fff" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </div>
-
-                  {/* Gift Card Content */}
-                  <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-                    {/* Gift Card Title */}
-                    <div>
-                      <h2 className="text-white text-3xl font-bold">NFT</h2>
-                      <p className="text-white text-sm">A special Nft just for you</p>
-                    </div>
-
-                    {/* Gift Card Amount */}
-                    <div className="text-center">
-                      <p className="text-white text-lg">Nft</p>
-                      <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                        {returnedData && ethers.formatEther(BigInt(returnedData))}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Additional Decorative Element */}
-                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
-                </div>
-                <p>
-                  See transaction in{"optimism-sepolia"}
-                  <Link
-                    className="cursor-pointer text-blue-500"
-                    target="_blank"
-                    href={`https://optimism-sepolia.blockscout.com/tx/${hash}`}
-                  >
-                    Blockscout
-                  </Link>
-                </p>
+      ) : (
+        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
+          <Card x-chunk="dashboard-05-chunk-3">
+            <CardHeader className="px-7 grid grid-cols-12">
+              <div className="col-span-10">
+                <CardTitle>Claim your aidrop</CardTitle>
+                <CardDescription>You have received an invitation to reclaim the airdrop.</CardDescription>
               </div>
+            </CardHeader>
+            {account.isConnected ? (
+              <>
+                {!isSigned ? (
+                  <Button onClick={submitTx}>
+                    {isPending ? "Pending, please check your wallet..." : "Sign Document"}
+                  </Button>
+                ) : (
+                  <Button disabled>Document signed successfully</Button>
+                )}
+                {hash && (
+                  <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-4">
+                    <div className="relative w-96 h-56 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden mb-8">
+                      {/* Decorative Background Elements */}
+                      <div className="absolute inset-0 bg-opacity-20 bg-white pointer-events-none">
+                        <svg
+                          className="absolute top-0 right-0 w-32 h-32 opacity-50"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 500 500"
+                        >
+                          <circle cx="250" cy="250" r="250" fill="url(#paint0_linear)" />
+                          <defs>
+                            <linearGradient
+                              id="paint0_linear"
+                              x1="250"
+                              y1="0"
+                              x2="250"
+                              y2="500"
+                              gradientUnits="userSpaceOnUse"
+                            >
+                              <stop stopColor="#fff" stopOpacity="0.5" />
+                              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                      </div>
+
+                      {/* Gift Card Content */}
+                      <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+                        {/* Gift Card Title */}
+                        <div>
+                          <h2 className="text-white text-3xl font-bold">NFT</h2>
+                          <p className="text-white text-sm">A special Nft just for you</p>
+                        </div>
+
+                        {/* Gift Card Amount */}
+                        <div className="text-center">
+                          <p className="text-white text-lg">Nft</p>
+                          <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
+                            {returnedData && ethers.formatEther(BigInt(returnedData))}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Additional Decorative Element */}
+                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
+                    </div>
+                    <p>
+                      See transaction in{"optimism-sepolia"}
+                      <Link
+                        className="cursor-pointer text-blue-500"
+                        target="_blank"
+                        href={`https://optimism-sepolia.blockscout.com/tx/${hash}`}
+                      >
+                        Blockscout
+                      </Link>
+                    </p>
+                  </div>
+                )}
+                {isConfirming && <p>Waiting for confirmation...</p>}
+                {isConfirmed && <p>Transaction confirmed.</p>}
+                {error && <p>Error: {(error as BaseError).message}</p>}
+              </>
+            ) : (
+              <Button disabled>Please connect your wallet to continue</Button>
             )}
-            {isConfirming && <p>Waiting for confirmation...</p>}
-            {isConfirmed && <p>Transaction confirmed.</p>}
-            {error && <p>Error: {(error as BaseError).message}</p>}
-          </>
-        ) : (
-          <Button disabled>Please connect your wallet to continue</Button>
-        )}
-      </Card>
-    </div>
-    )}
-      
+          </Card>
+        </div>
+      )}
     </>
   );
 };

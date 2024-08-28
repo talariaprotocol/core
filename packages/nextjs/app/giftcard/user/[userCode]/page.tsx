@@ -26,6 +26,8 @@ import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { GiftCardAddress } from "~~/contracts/addresses";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 const snarkjs = require("snarkjs");
 const path = require("path");
 const crypto = require("crypto");
@@ -74,6 +76,14 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
 
   const chainId = account.chainId || OptimismSepoliaChainId;
 
+
+  const { data: nextTreeIndexData }: { data?: number } = useReadContract({
+    abi: GiftCardAbi.abi,
+    address: GiftCardAddress[chainId],
+    functionName: "nextIndex",
+    args: [],
+  });
+
   const submitTx = async () => {
     try {
       setAppStatus(prevState => [...prevState, { status: "Generating proof...", icon: <TimerIcon size={24} /> }]);
@@ -81,7 +91,7 @@ const GiftCardUserPage = ({ params }: { params: { userCode: string } }) => {
       const tree = new MerkleTree(levels);
       tree.insert(decodedparams.commitment);
 
-      const { pathElements, pathIndices } = tree.path(0);
+      const { pathElements, pathIndices } = tree.path(Number(nextTreeIndexData) - 1);
       const input = stringifyBigInts({
         // public
         root: tree.root(),
