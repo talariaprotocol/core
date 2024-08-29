@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import GiftCardAbi from "../../../contracts-data/deployments/polygonAmoy/GiftCards.json";
-import { CheckIcon, TimerIcon } from "lucide-react";
-import { Address, parseUnits } from "viem";
+import { CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon, TimerIcon } from "lucide-react";
+import { Address, Hash, parseUnits } from "viem";
 import { erc20Abi } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
@@ -19,8 +19,52 @@ import { GiftCardAddress } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
+enum TxStatusEnum {
+  NOT_STARTED = "NOT_STARTED",
+  PENDING = "PENDING",
+  DONE = "DONE",
+}
+
+enum TxStepsEnum {
+  APPROVE,
+  GENERATE_CODES,
+  CREATE,
+}
+
+const TransactionStepsOrder = [TxStepsEnum.APPROVE, TxStepsEnum.GENERATE_CODES, TxStepsEnum.CREATE];
+
+const statusIconMap: Record<TxStatusEnum, React.ReactElement> = {
+  [TxStatusEnum.NOT_STARTED]: <CircleDotDashedIcon size="24px" />,
+  [TxStatusEnum.PENDING]: <ClockIcon size="24px" />,
+  [TxStatusEnum.DONE]: <CheckIcon size="24px" />,
+};
+
+type TxStep = {
+  id: TxStepsEnum;
+  status: TxStatusEnum;
+  message: string;
+  txHash?: Hash;
+};
+
+const TX_STEPS: Record<TxStepsEnum, TxStep> = {
+  [TxStepsEnum.APPROVE]: {
+    id: TxStepsEnum.APPROVE,
+    status: TxStatusEnum.NOT_STARTED,
+    message: "Approve funds",
+  },
+  [TxStepsEnum.GENERATE_CODES]: {
+    id: TxStepsEnum.GENERATE_CODES,
+    status: TxStatusEnum.NOT_STARTED,
+    message: "Generate Tornado Codes",
+  },
+  [TxStepsEnum.CREATE]: {
+    id: TxStepsEnum.CREATE,
+    status: TxStatusEnum.NOT_STARTED,
+    message: "Create Giftcard",
+  },
+};
+
 const GiftCardOwnerPage = () => {
-  //SmartContract stuff
   const {
     data: approvalHash,
     isPending: isPendingApproval,
@@ -36,24 +80,28 @@ const GiftCardOwnerPage = () => {
   const account = useAccount();
   const { toast } = useToast();
   const [amount, setAmount] = useState("");
-  const [compressObject, setCompressObject] = useState<string>("");
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash: approvalHash });
-  const { isLoading: isConfirmingCreated, isSuccess: isConfirmedCreated } = useWaitForTransactionReceipt({
+  const [compressObject, setCompressObject] = useState("");
+  const { isLoading: isLoadingApproval, isSuccess: isSuccessApproval } = useWaitForTransactionReceipt({
+    hash: approvalHash,
+  });
+  const { isLoading: isLoadingCreate, isSuccess: isSuccessCreate } = useWaitForTransactionReceipt({
     hash: createGiftcardHash,
   });
 
-  const [appStatus, setAppStatus] = useState<
-    {
-      status: string;
-      icon: React.ReactNode;
-    }[]
-  >([]);
+  const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
 
   const chainId = account.chainId || OptimismSepoliaChainId;
 
   const handleApprove = async () => {
     try {
-      setAppStatus(prevState => [...prevState, { status: "Sending approval...", icon: <TimerIcon size={24} /> }]);
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Sending approval...",
+          status: TxStatusEnum.PENDING,
+        },
+      }));
       const result = await writeApprovalAsync({
         address: MorfiAddress[chainId] as Address,
         abi: erc20Abi,
@@ -61,20 +109,18 @@ const GiftCardOwnerPage = () => {
         args: [GiftCardAddress[chainId], parseUnits(amount, 18)],
       });
 
-      setAppStatus(prevState => {
-        prevState[0].icon = <CheckIcon size={24} />;
-        prevState[0].status = "Approval sent";
-        prevState[1] = {
-          status: "Time to create giftcard!",
-          icon: <TimerIcon size={24} />,
-        };
-        return prevState;
-      });
-      console.log(result);
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Approval submitted! Waiting for receipt...",
+          txHash: result,
+        },
+      }));
     } catch (error) {
       console.log(error);
       toast({
-        description: "Error approving document",
+        description: "Error submitting approval",
       });
     }
   };
@@ -90,10 +136,14 @@ const GiftCardOwnerPage = () => {
   };
 
   const onSubmit = async () => {
-    setAppStatus(prevState => {
-      prevState[1].status = "Generating codes...";
-      return prevState;
-    });
+    setTransactionSteps(prev => ({
+      ...prev,
+      [TxStepsEnum.GENERATE_CODES]: {
+        ...prev[TxStepsEnum.GENERATE_CODES],
+        message: "Generating Tornado Codes...",
+        status: TxStatusEnum.PENDING,
+      },
+    }));
     const parsedNumber = Number(amount);
     if (isNaN(parsedNumber) || parsedNumber <= 0) {
       alert("Please enter a valid number");
@@ -107,38 +157,82 @@ const GiftCardOwnerPage = () => {
       secret: secret,
     };
     const compressedObject = compressEncryptAndEncode(responseObject);
-    console.log(compressedObject);
+
+    // Fake delay for generating the codes:
+    await new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+
+    setTransactionSteps(prev => ({
+      ...prev,
+      [TxStepsEnum.GENERATE_CODES]: {
+        ...prev[TxStepsEnum.GENERATE_CODES],
+        message: "Tornado Codes generated!",
+        status: TxStatusEnum.DONE,
+      },
+    }));
+
+    console.log("Sharing tornado code:", compressedObject);
     setCompressObject(compressedObject);
 
     try {
-      setAppStatus(prevState => {
-        prevState[1] = {
-          status: "Codes generated!",
-          icon: <CheckIcon size={24} />,
-        };
-        prevState[2] = {
-          status: "Submitting commitment to the contract...",
-          icon: <TimerIcon size={24} />,
-        };
-        return prevState;
-      });
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.CREATE]: {
+          ...prev[TxStepsEnum.CREATE],
+          message: "Submitting commitment and creating Giftcard...",
+          status: TxStatusEnum.PENDING,
+        },
+      }));
+
       const result = await createGiftCardCode(commitment);
-      setAppStatus(prevState => {
-        prevState[2] = {
-          status: "Commitment submitted",
-          icon: <CheckIcon size={24} />,
-        };
-        return prevState;
-      });
-      console.log("ReturnedResult", result);
+
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.CREATE]: {
+          ...prev[TxStepsEnum.CREATE],
+          message: "Commitment submited! Waiting for receipt...",
+          txHash: result,
+        },
+      }));
     } catch (e) {
       console.error("Error creating giftcard", e);
+      toast({
+        description: "Error submitting giftcard creation",
+      });
     } finally {
-      console.log("createGiftcardHash", createGiftcardHash);
       console.log("isPendingCreateGiftcard", isPendingCreateGiftcard);
       console.log("createGiftcardError", createGiftcardError);
     }
   };
+
+  React.useEffect(() => {
+    if (isSuccessApproval && transactionSteps[TxStepsEnum.APPROVE].status !== TxStatusEnum.DONE) {
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Approval transaction confirmed",
+          status: TxStatusEnum.DONE,
+        },
+      }));
+    }
+  }, [isSuccessApproval]);
+
+  React.useEffect(() => {
+    if (isSuccessCreate && transactionSteps[TxStepsEnum.CREATE].status !== TxStatusEnum.DONE) {
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.CREATE]: {
+          ...prev[TxStepsEnum.CREATE],
+          message: "Giftcard creation confirmed",
+          status: TxStatusEnum.DONE,
+        },
+      }));
+    }
+  }, [isSuccessCreate]);
 
   // @ts-expect-error
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
@@ -146,8 +240,8 @@ const GiftCardOwnerPage = () => {
   //Render stuff
   return (
     <>
-      <div className="grid items-start gap-4 md:gap-8 lg:col-span-4">
-        <div className="relative w-96 h-56 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden">
+      <div className="flex flex-col gap-12">
+        <div className="relative w-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg overflow-hidden">
           {/* Decorative Background Elements */}
           <div className="absolute inset-0 bg-opacity-20 bg-white pointer-events-none">
             <svg
@@ -167,7 +261,7 @@ const GiftCardOwnerPage = () => {
           </div>
 
           {/* Gift Card Content */}
-          <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div className="relative z-10 p-6 gap-8 flex flex-col justify-between">
             {/* Gift Card Title */}
             <div>
               <h2 className="text-white text-3xl font-bold">Gift Card</h2>
@@ -185,71 +279,68 @@ const GiftCardOwnerPage = () => {
           {/* Additional Decorative Element */}
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
         </div>
-        {isConfirmedCreated && (
-          <div>
-            <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto w-96 h-56 mb-8">
-              <code className="font-mono">{compressObject}</code>
-            </pre>
-          </div>
-        )}
-        {!isConfirmed ? (
-          <div className="w-96 h-56 mb-8">
-            <Input
-              id="amount"
-              type="number"
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Amount"
-            />
-            <Button className="mt-3" onClick={handleApprove}>
-              {"Approve"}
+        <div className="flex flex-col gap-2">
+          <Input
+            id="amount"
+            type="number"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+            className="border p-2 rounded"
+            placeholder="Amount"
+          />
+          {transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
+            <Button onClick={handleApprove} disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}>
+              Approve
             </Button>
-          </div>
-        ) : !isConfirmingCreated ? (
-          !isConfirmedCreated && (
-            <div className="w-96 h-56 mb-8">
-              <Input
-                id="amount"
-                type="number"
-                value={amount}
-                disabled={true}
-                className="border p-2 rounded"
-                placeholder="Amount"
+          ) : (
+            <Button onClick={onSubmit} disabled={isPendingCreateGiftcard || isLoadingCreate || isSuccessCreate}>
+              Create giftcard
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-lg font-bold">Transaction status</p>
+          {TransactionStepsOrder.map((status, index) => {
+            const step = transactionSteps[status];
+            return (
+              <div className="flex items-center gap-2">
+                <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10">
+                  {statusIconMap[step.status]}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <p className="text-sm font-semibold text-gray-900">{step.message}</p>
+                  {step.txHash && (
+                    <Link
+                      className="cursor-pointer text-xs font-light text-blue-500"
+                      target="_blank"
+                      href={`${explorerUrl}${step.txHash}`}
+                    >
+                      See transaction in Explorer
+                    </Link>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          {compressObject && isSuccessCreate && (
+            <div className="flex gap-4 justify-center items-center">
+              <CopyIcon
+                className="cursor-pointer"
+                onClick={() => {
+                  navigator.clipboard.writeText(compressObject);
+                  toast({ description: "Code copied to clipboard" });
+                }}
               />
-              <Button className="mt-3" onClick={onSubmit}>
-                {"Crear giftcard"}
-              </Button>
+              <Link
+                href={`/giftcard/user/${compressObject}`}
+                className="flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                Redeem code
+              </Link>
             </div>
-          )
-        ) : (
-          <div>
-            <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto grid-cols-3">
-              <code className="font-mono">Waiting for confirmation</code>
-            </pre>
-          </div>
-        )}
-        {createGiftcardHash && (
-          <p>
-            See transaction in{" "}
-            <Link className="cursor-pointer text-blue-500" target="_blank" href={`${explorerUrl}${createGiftcardHash}`}>
-              Explorer
-            </Link>
-          </p>
-        )}
-         {appStatus.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-lg font-medium text-gray-900">App Status</h2>
-            <ul className="mt-4 space-y-2">
-              {appStatus.map((status, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  {status.icon}
-                  <span className="text-sm font-medium text-gray-900">{status.status}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );

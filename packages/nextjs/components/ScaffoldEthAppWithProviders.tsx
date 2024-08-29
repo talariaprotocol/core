@@ -111,9 +111,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
                   </Tooltip>
                 </nav> */}
               </aside>
-              <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+              <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 min-h-screen">
                 <Header></Header>
-                <main className="container flex-1">
+                <main className="container flex-1 flex justify-center">
                   {children}
                   <Toaster></Toaster>
                 </main>
