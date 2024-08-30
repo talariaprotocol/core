@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { AwardIcon, GiftIcon, TrendingUp } from "lucide-react";
+import { AwardIcon, GiftIcon } from "lucide-react";
 import { FileKey2Icon } from "lucide-react";
 import { NextPage } from "next";
-import { Bar, BarChart, LabelList, XAxis } from "recharts";
-import { Pie, PieChart } from "recharts";
-import { useRole } from "~~/components/ScaffoldEthAppWithProviders";
-import { Badge } from "~~/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "~~/components/ui/chart";
-import { Progress } from "~~/components/ui/progress";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~~/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
 
 const Home: NextPage = () => {
   return (
@@ -30,7 +22,7 @@ const Home: NextPage = () => {
         </div>
         <div className="grid sm:grid-cols-4 gap-4">
           <Link href="/early-access">
-            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1">
+            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1" className="h-full">
               <CardHeader className="pb-4 flex flex-col gap-2">
                 <CardTitle className="text-2xl">Early access</CardTitle>
                 <FileKey2Icon className="w-32 h-32" />
@@ -44,7 +36,7 @@ const Home: NextPage = () => {
             </Card>
           </Link>
           <Link href="/giftcard">
-            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1">
+            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1" className="h-full">
               <CardHeader className="pb-4 flex flex-col gap-2">
                 <CardTitle className="text-2xl">Giftcard</CardTitle>
                 <GiftIcon className="w-32 h-32" />
@@ -54,14 +46,14 @@ const Home: NextPage = () => {
               </CardContent>
             </Card>
           </Link>
-          <Link href="/aleph-nft">
-            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1">
+          <Link href="/airdrop-nft">
+            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1" className="h-full">
               <CardHeader className="pb-4 flex flex-col gap-2">
-                <CardTitle className="text-2xl">Aleph Badge Airdrop</CardTitle>
+                <CardTitle className="text-2xl">NFT Airdrop</CardTitle>
                 <AwardIcon className="w-32 h-32" />
               </CardHeader>
               <CardContent>
-                <div className="text-xs text-muted-foreground">Get a Aleph Badge for your early adopters</div>
+                <div className="text-xs text-muted-foreground">Get an NFT Airdrop for your early adopters</div>
               </CardContent>
             </Card>
           </Link>

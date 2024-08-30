@@ -2,17 +2,19 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { MiniKit } from "@worldcoin/minikit-js";
-import { CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon, FileKey2Icon, TimerIcon } from "lucide-react";
-import { Hash } from "viem";
+import { AwardIcon, CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon } from "lucide-react";
+import { erc721Abi } from "viem";
+import { Address, Hash } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
+import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
-import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
+import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
-import { EarlyAccessCodeAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
+import { AirNftContractAddress, AirNftDropperContractAddress } from "~~/contracts/addresses";
+import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
@@ -23,11 +25,12 @@ enum TxStatusEnum {
 }
 
 enum TxStepsEnum {
+  APPROVE,
   GENERATE_CODES,
   CREATE,
 }
 
-const TransactionStepsOrder = [TxStepsEnum.GENERATE_CODES, TxStepsEnum.CREATE];
+const TransactionStepsOrder = [TxStepsEnum.APPROVE, TxStepsEnum.GENERATE_CODES, TxStepsEnum.CREATE];
 
 const statusIconMap: Record<TxStatusEnum, React.ReactElement> = {
   [TxStatusEnum.NOT_STARTED]: <CircleDotDashedIcon size="24px" />,
@@ -43,6 +46,11 @@ type TxStep = {
 };
 
 const TX_STEPS: Record<TxStepsEnum, TxStep> = {
+  [TxStepsEnum.APPROVE]: {
+    id: TxStepsEnum.APPROVE,
+    status: TxStatusEnum.NOT_STARTED,
+    message: "Approve funds",
+  },
   [TxStepsEnum.GENERATE_CODES]: {
     id: TxStepsEnum.GENERATE_CODES,
     status: TxStatusEnum.NOT_STARTED,
@@ -51,32 +59,79 @@ const TX_STEPS: Record<TxStepsEnum, TxStep> = {
   [TxStepsEnum.CREATE]: {
     id: TxStepsEnum.CREATE,
     status: TxStatusEnum.NOT_STARTED,
-    message: "Create Early Access Code",
+    message: "Create NFT Airdrop",
   },
 };
 
-const EarlyAccessOwnerPage = () => {
+const AirdropNFTOwnerPage = () => {
+  const {
+    data: approvalHash,
+    isPending: isPendingApproval,
+    error: approvalError,
+    writeContractAsync: writeApprovalAsync,
+  } = useWriteContract();
+  const {
+    data: createNFTAirdropHash,
+    isPending: isPendingCreateNFTAirdrop,
+    error: createNFTAirdropError,
+    writeContractAsync: writeCreateNFTAirdropAsync,
+  } = useWriteContract();
+
   const account = useAccount();
   const { toast } = useToast();
+  const [idNFT, setIdNFT] = useState("");
   const [compressObject, setCompressObject] = useState("");
-  const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
-  const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash: hash });
+  const { isLoading: isLoadingApproval, isSuccess: isSuccessApproval } = useWaitForTransactionReceipt({
+    hash: approvalHash,
+  });
+  const { isLoading: isLoadingCreate, isSuccess: isSuccessCreate } = useWaitForTransactionReceipt({
+    hash: createNFTAirdropHash,
+  });
 
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
 
-  React.useEffect(() => {
-    console.log("MINIKIT Is installed:", MiniKit.isInstalled());
-  }, []);
-
   const chainId = account.chainId || OptimismSepoliaChainId;
 
-  const createEarlyAccessCode = async (commitment: string) => {
-    return await writeContractAsync({
-      address: EarlyAccessCodeAddress[chainId],
+  const handleApprove = async () => {
+    try {
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Sending approval...",
+          status: TxStatusEnum.PENDING,
+        },
+      }));
+      const result = await writeApprovalAsync({
+        address: AirNftContractAddress[chainId] as Address,
+        abi: erc721Abi,
+        functionName: "approve",
+        args: [AirNftDropperContractAddress[chainId], BigInt(idNFT)],
+      });
+
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Approval submitted! Waiting for receipt...",
+          txHash: result,
+        },
+      }));
+    } catch (error) {
+      console.log(error);
+      toast({
+        description: "Error submitting approval",
+      });
+    }
+  };
+
+  const createNFTAirdropCode = async (commitment: string) => {
+    return await writeCreateNFTAirdropAsync({
+      address: AirNftDropperContractAddress[chainId],
       account: account.address,
-      abi: EarlyAccessCodesContractAbi.abi,
-      functionName: "createEarlyAccessCode",
-      args: [commitment, []],
+      abi: AlephNftDropperAbi.abi,
+      functionName: "createAlephNFTAirdrop",
+      args: [commitment, [], BigInt(idNFT), BigInt(1000)],
     });
   };
 
@@ -89,6 +144,11 @@ const EarlyAccessOwnerPage = () => {
         status: TxStatusEnum.PENDING,
       },
     }));
+    const parsedNumber = Number(idNFT);
+    if (isNaN(parsedNumber) || parsedNumber <= 0) {
+      alert("Please enter a valid id");
+      return;
+    }
     const transfer = generateTransfer();
     const { commitment, nullifier, secret } = transfer;
     const responseObject = {
@@ -122,12 +182,12 @@ const EarlyAccessOwnerPage = () => {
         ...prev,
         [TxStepsEnum.CREATE]: {
           ...prev[TxStepsEnum.CREATE],
-          message: "Submitting commitment and creating early access code...",
+          message: "Submitting commitment and creating NFT Airdrop...",
           status: TxStatusEnum.PENDING,
         },
       }));
 
-      const result = await createEarlyAccessCode(commitment);
+      const result = await createNFTAirdropCode(commitment);
 
       setTransactionSteps(prev => ({
         ...prev,
@@ -138,42 +198,75 @@ const EarlyAccessOwnerPage = () => {
         },
       }));
     } catch (e) {
-      console.error("Error submitting commitment", e);
+      console.error("Error creating NFT Airdrop", e);
       toast({
-        description: "Error submitting commitment",
+        description: "Error submitting NFT Airdrop creation",
       });
+    } finally {
+      console.log("isPendingCreateNFTAirdrop", isPendingCreateNFTAirdrop);
+      console.log("createNFTAirdropError", createNFTAirdropError);
     }
   };
 
   React.useEffect(() => {
-    if (isSuccess && transactionSteps[TxStepsEnum.CREATE].status !== TxStatusEnum.DONE) {
+    if (isSuccessApproval && transactionSteps[TxStepsEnum.APPROVE].status !== TxStatusEnum.DONE) {
       setTransactionSteps(prev => ({
         ...prev,
-        [TxStepsEnum.CREATE]: {
-          ...prev[TxStepsEnum.CREATE],
-          message: "Commitment successfully submited!",
+        [TxStepsEnum.APPROVE]: {
+          ...prev[TxStepsEnum.APPROVE],
+          message: "Approval transaction confirmed",
           status: TxStatusEnum.DONE,
         },
       }));
     }
-  }, [isSuccess]);
+  }, [isSuccessApproval]);
+
+  React.useEffect(() => {
+    if (isSuccessCreate && transactionSteps[TxStepsEnum.CREATE].status !== TxStatusEnum.DONE) {
+      setTransactionSteps(prev => ({
+        ...prev,
+        [TxStepsEnum.CREATE]: {
+          ...prev[TxStepsEnum.CREATE],
+          message: "NFT Airdrop creation confirmed",
+          status: TxStatusEnum.DONE,
+        },
+      }));
+    }
+  }, [isSuccessCreate]);
 
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   //Render stuff
   return (
     <>
-      <div className="flex flex-col gap-12 w-96 self-center">
-        <div className="flex flex-col gap-2 items-center">
-          <FileKey2Icon size="48px" />
-          <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight">Create Early Access Code</h1>
-            <p className="mt-2 text-muted-foreground">Create a code and submit to the blockchain</p>
+      <div className="flex flex-col gap-12 justify-center">
+        <div className="flex flex-col gap-4">
+          <div className="w-96 flex gap-4 items-center">
+            <AwardIcon size="44px" />
+            <div>
+              <h1>Create NFT Airdrop</h1>
+              <p className="text-muted-foreground">Enter your NFT ID to get started</p>
+            </div>
           </div>
+          <Input
+            id="nftId"
+            type="number"
+            value={idNFT}
+            onChange={e => setIdNFT(e.target.value)}
+            disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+            className="border p-2 rounded"
+            placeholder="NFT ID"
+          />
+          {transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
+            <Button onClick={handleApprove} disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}>
+              Approve
+            </Button>
+          ) : (
+            <Button onClick={onSubmit} disabled={isPendingCreateNFTAirdrop || isLoadingCreate || isSuccessCreate}>
+              Create NFT Airdrop
+            </Button>
+          )}
         </div>
-        <Button onClick={onSubmit} disabled={isPending || isLoading || isSuccess}>
-          Create Code
-        </Button>
         <div className="flex flex-col gap-2">
           <p className="text-lg font-bold">Transaction status</p>
           {TransactionStepsOrder.map((status, index) => {
@@ -198,7 +291,7 @@ const EarlyAccessOwnerPage = () => {
               </div>
             );
           })}
-          {compressObject && isSuccess && (
+          {compressObject && isSuccessCreate && (
             <div className="flex gap-4 justify-center items-center">
               <CopyIcon
                 className="cursor-pointer"
@@ -208,7 +301,7 @@ const EarlyAccessOwnerPage = () => {
                 }}
               />
               <Link
-                href={`/early-access/user/${compressObject}`}
+                href={`/giftcard/user/${compressObject}`}
                 className="flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Redeem code
@@ -221,4 +314,4 @@ const EarlyAccessOwnerPage = () => {
   );
 };
 
-export default EarlyAccessOwnerPage;
+export default AirdropNFTOwnerPage;

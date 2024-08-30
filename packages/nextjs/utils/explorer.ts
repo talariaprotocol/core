@@ -4,7 +4,7 @@ export const polygonTestnet = 80001;
 export const AvalancheFujiChainId = 43113;
 export const ArbitrumSepoliaChainId = 421614;
 
-export const TransactionExplorerBaseUrl = {
+export const TransactionExplorerBaseUrl: Record<number, string> = {
   [OptimismSepoliaChainId]: "https://optimism-sepolia.blockscout.com/tx/",
   [zkSyncTestNetCode]: "https://sepolia-era.zksync.network/tx/",
   [polygonTestnet]: "https://amoy.polygonscan.com/tx/",

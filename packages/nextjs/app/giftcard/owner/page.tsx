@@ -234,7 +234,6 @@ const GiftCardOwnerPage = () => {
     }
   }, [isSuccessCreate]);
 
-  // @ts-expect-error
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   //Render stuff
@@ -272,7 +271,7 @@ const GiftCardOwnerPage = () => {
             <div className="text-center">
               <p className="text-white text-lg">Amount:</p>
               <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                {amount} Morfi
+                {amount} MORFI
               </p>
             </div>
           </div>
