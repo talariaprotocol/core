@@ -19,6 +19,7 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
       subTitle="You have an NFT Airdrop ready to be claimed! Enter the code and submit it to the blockchain"
       toastSuccessfullText="NFT Airdrop claimed successfully!"
       userCode={params.userCode[0]}
+      sendRecipient
     />
   );
 };

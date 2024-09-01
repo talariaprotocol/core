@@ -5,12 +5,20 @@ import Link from "next/link";
 import { Input } from "./input";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClipboardPasteIcon, ClockIcon, LockOpenIcon } from "lucide-react";
-import { Abi, Address, Hash } from "viem";
-import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { Abi, Address, Client, Hash } from "viem";
+import {
+  useAccount,
+  useClient,
+  usePublicClient,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 import { decodeDecryptAndDecompress } from "~~/helper";
+import ContractService from "~~/services/contractService";
 import { OptimismSepoliaChainId, TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 const snarkjs = require("snarkjs");
@@ -74,6 +82,7 @@ interface UserPageProps {
   toastSuccessfullText: string;
   title: string;
   subTitle: string;
+  sendRecipient?: boolean;
 }
 
 const UserPage = ({
@@ -85,6 +94,7 @@ const UserPage = ({
   toastSuccessfullText,
   title,
   subTitle,
+  sendRecipient,
 }: UserPageProps) => {
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
   const account = useAccount();
@@ -94,6 +104,9 @@ const UserPage = ({
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
+  const chainId = account.chainId || OptimismSepoliaChainId;
+  const client = useClient();
+  const publicClient = usePublicClient();
 
   useEffect(() => {
     const getProvingKey = async () => {
@@ -112,22 +125,11 @@ const UserPage = ({
     console.log("decodedparams", decodedparams);
   }, [inputCode]);
 
-  const chainId = account.chainId || OptimismSepoliaChainId;
-
-  const { data: nextTreeIndexData }: { data?: number } = useReadContract({
-    abi: contractAbi,
-    address: contractAddressMap[chainId],
-    functionName: "nextIndex",
-    args: [],
-  });
-
   const submitTx = async () => {
-    if (!account.address) {
+    if (!account.address || !client || !publicClient) {
       return;
     }
     try {
-      console.log("Generating markle tree");
-
       setTransactionSteps(prev => ({
         ...prev,
         [TxStepsEnum.GENERATE_CODES]: {
@@ -137,14 +139,18 @@ const UserPage = ({
         },
       }));
 
-      const tree = new MerkleTree(levels);
-      console.log("Merkle tree", tree);
-      tree.insert(processedCode.commitment);
-      console.log("Mutated merkle tree", tree);
+      // Reconstruct tree:
+      const contractService = new ContractService();
+      const commitments = await contractService.getPastCommitments({
+        client: publicClient,
+        abi: contractAbi,
+        contractAddress: contractAddressMap[chainId],
+      });
+      const tree = new MerkleTree(levels, commitments);
 
-      console.log("nextTreeIndexData", nextTreeIndexData);
-
-      const { pathElements, pathIndices } = tree.path(Number(nextTreeIndexData) - 1);
+      const commitmentIndex = commitments.indexOf(processedCode.commitment);
+      console.log("commitmentIndex", commitmentIndex);
+      const { pathElements, pathIndices } = tree.path(commitmentIndex);
       const input = stringifyBigInts({
         // public
         root: tree.root(),
@@ -195,7 +201,7 @@ const UserPage = ({
         account: account.address,
         abi: extendedContract?.abi || contractAbi,
         functionName: contractRestrictedFunction,
-        args: [processedCode.commitment, proof, root, nullifierHash, []],
+        args: [processedCode.commitment, proof, root, nullifierHash, ...(sendRecipient ? [account.address] : []), []],
       });
 
       setTransactionSteps(prev => ({
