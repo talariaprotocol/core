@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
+import ShareCode from "~~/components/ui/share-code";
 import { useToast } from "~~/components/ui/use-toast";
 import AlephNftDropperAbi from "~~/contracts-data/deployments/optimismSepolia/AlephNFTAirdropper.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
@@ -17,6 +18,7 @@ import { AirNftContractAddress, AirNftDropperContractAddress } from "~~/contract
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
+import { BASE_URL } from "~~/constants";
 
 enum TxStatusEnum {
   NOT_STARTED = "NOT_STARTED",
@@ -257,7 +259,9 @@ const AirdropNFTOwnerPage = () => {
             className="border p-2 rounded"
             placeholder="NFT ID"
           />
-          {transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
+          {!account.isConnected ? (
+            <Button disabled>Connect Wallet</Button>
+          ) : transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
             <Button onClick={handleApprove} disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}>
               Approve
             </Button>
@@ -292,21 +296,7 @@ const AirdropNFTOwnerPage = () => {
             );
           })}
           {compressObject && isSuccessCreate && (
-            <div className="flex gap-4 justify-center items-center">
-              <CopyIcon
-                className="cursor-pointer"
-                onClick={() => {
-                  navigator.clipboard.writeText(compressObject);
-                  toast({ description: "Code copied to clipboard" });
-                }}
-              />
-              <Link
-                href={`/giftcard/user/${compressObject}`}
-                className="flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                Redeem code
-              </Link>
-            </div>
+            <ShareCode code={compressObject} url={`${BASE_URL}/airdrop-nft/user/${compressObject}`} />
           )}
         </div>
       </div>

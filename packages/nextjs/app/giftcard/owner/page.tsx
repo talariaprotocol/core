@@ -4,20 +4,23 @@ import React, { useState } from "react";
 import Link from "next/link";
 import GiftCardAbi from "../../../contracts-data/deployments/polygonAmoy/GiftCards.json";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon, TimerIcon } from "lucide-react";
-import { Address, Hash, parseUnits } from "viem";
+import { Address, Hash, formatUnits, parseUnits } from "viem";
 import { erc20Abi } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
+import ShareCode from "~~/components/ui/share-code";
 import { useToast } from "~~/components/ui/use-toast";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { MorfiAddress } from "~~/contracts/addresses";
 import { GiftCardAddress } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
+import useTokenBalance from "~~/hooks/useTokenBalance";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
+import { BASE_URL } from "~~/constants";
 
 enum TxStatusEnum {
   NOT_STARTED = "NOT_STARTED",
@@ -68,7 +71,6 @@ const GiftCardOwnerPage = () => {
   const {
     data: approvalHash,
     isPending: isPendingApproval,
-    error: approvalError,
     writeContractAsync: writeApprovalAsync,
   } = useWriteContract();
   const {
@@ -87,10 +89,11 @@ const GiftCardOwnerPage = () => {
   const { isLoading: isLoadingCreate, isSuccess: isSuccessCreate } = useWaitForTransactionReceipt({
     hash: createGiftcardHash,
   });
+  const chainId = account.chainId || OptimismSepoliaChainId;
+  const tokenAddress = MorfiAddress[chainId];
+  const { balance, symbol, decimals } = useTokenBalance(tokenAddress);
 
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
-
-  const chainId = account.chainId || OptimismSepoliaChainId;
 
   const handleApprove = async () => {
     try {
@@ -271,7 +274,7 @@ const GiftCardOwnerPage = () => {
             <div className="text-center">
               <p className="text-white text-lg">Amount:</p>
               <p id="previewAmount" className="text-4xl font-bold text-yellow-400">
-                {amount} MORFI
+                {amount} {symbol}
               </p>
             </div>
           </div>
@@ -279,16 +282,23 @@ const GiftCardOwnerPage = () => {
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-600 bg-opacity-30 rounded-full transform translate-y-16 -translate-x-16"></div>
         </div>
         <div className="flex flex-col gap-2">
-          <Input
-            id="amount"
-            type="number"
-            value={amount}
-            onChange={e => setAmount(e.target.value)}
-            disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
-            className="border p-2 rounded"
-            placeholder="Amount"
-          />
-          {transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
+          <div className="flex flex-col gap-1">
+            <Input
+              id="amount"
+              type="number"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+              className="border p-2 rounded"
+              placeholder="Amount"
+            />
+            <p className="text-sm text-muted-foreground">
+              Balance: {formatUnits(balance || 0n, decimals)} {symbol}
+            </p>
+          </div>
+          {!account.isConnected ? (
+            <Button disabled>Connect wallet</Button>
+          ) : transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
             <Button onClick={handleApprove} disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}>
               Approve
             </Button>
@@ -303,7 +313,7 @@ const GiftCardOwnerPage = () => {
           {TransactionStepsOrder.map((status, index) => {
             const step = transactionSteps[status];
             return (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" key={index}>
                 <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10">
                   {statusIconMap[step.status]}
                 </div>
@@ -323,21 +333,7 @@ const GiftCardOwnerPage = () => {
             );
           })}
           {compressObject && isSuccessCreate && (
-            <div className="flex gap-4 justify-center items-center">
-              <CopyIcon
-                className="cursor-pointer"
-                onClick={() => {
-                  navigator.clipboard.writeText(compressObject);
-                  toast({ description: "Code copied to clipboard" });
-                }}
-              />
-              <Link
-                href={`/giftcard/user/${compressObject}`}
-                className="flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                Redeem code
-              </Link>
-            </div>
+            <ShareCode code={compressObject} url={`${BASE_URL}/giftcard/user/${compressObject}`} />
           )}
         </div>
       </div>

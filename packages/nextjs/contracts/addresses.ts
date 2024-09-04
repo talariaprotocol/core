@@ -16,6 +16,7 @@ export const EarlyAccessCodeAddress: Record<number, Address> = {
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.EarlyAccessCodes as Address,
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodes as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodes as Address,
+  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodes as Address,
 };
 
 export const EarlyAccesCodeTestAddress: Record<number, Address> = {
@@ -23,6 +24,7 @@ export const EarlyAccesCodeTestAddress: Record<number, Address> = {
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.EarlyAccessCodesTestContract as Address,
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodesTestContract as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodesTestContract as Address,
+  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodesTestContract as Address,
 };
 
 export const GiftCardAddress: Record<number, Address> = {

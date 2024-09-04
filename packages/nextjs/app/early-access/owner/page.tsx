@@ -9,12 +9,14 @@ import { useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
+import ShareCode from "~~/components/ui/share-code";
 import { useToast } from "~~/components/ui/use-toast";
 import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { EarlyAccessCodeAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
+import { BASE_URL } from "~~/constants";
 
 enum TxStatusEnum {
   NOT_STARTED = "NOT_STARTED",
@@ -171,15 +173,19 @@ const EarlyAccessOwnerPage = () => {
             <p className="mt-2 text-muted-foreground">Create a code and submit to the blockchain</p>
           </div>
         </div>
-        <Button onClick={onSubmit} disabled={isPending || isLoading || isSuccess}>
-          Create Code
-        </Button>
+        {!account.isConnected ? (
+          <Button disabled>Connect wallet</Button>
+        ) : (
+          <Button onClick={onSubmit} disabled={isPending || isLoading || isSuccess}>
+            Create Code
+          </Button>
+        )}
         <div className="flex flex-col gap-2">
           <p className="text-lg font-bold">Transaction status</p>
           {TransactionStepsOrder.map((status, index) => {
             const step = transactionSteps[status];
             return (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" key={index}>
                 <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10">
                   {statusIconMap[step.status]}
                 </div>
@@ -199,21 +205,7 @@ const EarlyAccessOwnerPage = () => {
             );
           })}
           {compressObject && isSuccess && (
-            <div className="flex gap-4 justify-center items-center">
-              <CopyIcon
-                className="cursor-pointer"
-                onClick={() => {
-                  navigator.clipboard.writeText(compressObject);
-                  toast({ description: "Code copied to clipboard" });
-                }}
-              />
-              <Link
-                href={`/early-access/user/${compressObject}`}
-                className="flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                Redeem code
-              </Link>
-            </div>
+            <ShareCode code={compressObject} url={`${BASE_URL}/early-access/user/${compressObject}`} />
           )}
         </div>
       </div>

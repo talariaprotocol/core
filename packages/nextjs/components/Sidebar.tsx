@@ -10,19 +10,12 @@ import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowki
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   AwardIcon,
-  BuildingIcon,
-  DollarSignIcon,
   FileKey2Icon,
   GiftIcon,
-  GitGraphIcon,
-  GroupIcon,
-  Home,
-  LineChart,
-  Package,
-  Package2,
   ScanBarcodeIcon,
   Settings,
   ShoppingCart,
+  Tornado,
   Users2,
   UsersIcon,
   WalletIcon,
@@ -48,8 +41,8 @@ const CustomSidebar = () => {
           href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <ScanBarcodeIcon className="h-4 w-4 transition-all group-hover:scale-110" />
-          <span className="sr-only">Commit Protocol</span>
+          <Tornado className="h-4 w-4 transition-all group-hover:scale-110" />
+          <span className="sr-only">Tornado Codes</span>
         </Link>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -88,10 +81,10 @@ const CustomSidebar = () => {
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
               <AwardIcon className="h-5 w-5" />
-              <span className="sr-only">Aleph NFT</span>
+              <span className="sr-only">Airdrop NFT</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Aleph NFT</TooltipContent>
+          <TooltipContent side="right">Airdrop NFT</TooltipContent>
         </Tooltip>
       </nav>
     </>
