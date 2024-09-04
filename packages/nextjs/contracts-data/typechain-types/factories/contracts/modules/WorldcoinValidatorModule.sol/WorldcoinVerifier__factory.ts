@@ -12,9 +12,34 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "bytes",
-        name: "args",
-        type: "bytes",
+        internalType: "uint256",
+        name: "root",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "groupId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "signalHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "nullifierHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "externalNullifierHash",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256[8]",
+        name: "proof",
+        type: "uint256[8]",
       },
     ],
     name: "verifyProof",

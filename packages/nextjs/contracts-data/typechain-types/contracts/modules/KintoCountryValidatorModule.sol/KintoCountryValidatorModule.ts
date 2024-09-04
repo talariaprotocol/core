@@ -3,7 +3,6 @@
 /* eslint-disable */
 import type {
   BaseContract,
-  BigNumberish,
   BytesLike,
   FunctionFragment,
   Result,
@@ -20,32 +19,31 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
-export interface WorldcoinVerifierInterface extends Interface {
-  getFunction(nameOrSignature: "verifyProof"): FunctionFragment;
+export interface KintoCountryValidatorModuleInterface extends Interface {
+  getFunction(
+    nameOrSignature: "KYCViewerAddress" | "country" | "validate"
+  ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "verifyProof",
-    values: [
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish,
-      BigNumberish[]
-    ]
+    functionFragment: "KYCViewerAddress",
+    values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "country", values?: undefined): string;
+  encodeFunctionData(functionFragment: "validate", values: [BytesLike]): string;
 
   decodeFunctionResult(
-    functionFragment: "verifyProof",
+    functionFragment: "KYCViewerAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "country", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "validate", data: BytesLike): Result;
 }
 
-export interface WorldcoinVerifier extends BaseContract {
-  connect(runner?: ContractRunner | null): WorldcoinVerifier;
+export interface KintoCountryValidatorModule extends BaseContract {
+  connect(runner?: ContractRunner | null): KintoCountryValidatorModule;
   waitForDeployment(): Promise<this>;
 
-  interface: WorldcoinVerifierInterface;
+  interface: KintoCountryValidatorModuleInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -84,37 +82,25 @@ export interface WorldcoinVerifier extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  verifyProof: TypedContractMethod<
-    [
-      root: BigNumberish,
-      groupId: BigNumberish,
-      signalHash: BigNumberish,
-      nullifierHash: BigNumberish,
-      externalNullifierHash: BigNumberish,
-      proof: BigNumberish[]
-    ],
-    [boolean],
-    "nonpayable"
-  >;
+  KYCViewerAddress: TypedContractMethod<[], [string], "view">;
+
+  country: TypedContractMethod<[], [bigint], "view">;
+
+  validate: TypedContractMethod<[arg: BytesLike], [boolean], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
   getFunction(
-    nameOrSignature: "verifyProof"
-  ): TypedContractMethod<
-    [
-      root: BigNumberish,
-      groupId: BigNumberish,
-      signalHash: BigNumberish,
-      nullifierHash: BigNumberish,
-      externalNullifierHash: BigNumberish,
-      proof: BigNumberish[]
-    ],
-    [boolean],
-    "nonpayable"
-  >;
+    nameOrSignature: "KYCViewerAddress"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "country"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "validate"
+  ): TypedContractMethod<[arg: BytesLike], [boolean], "nonpayable">;
 
   filters: {};
 }

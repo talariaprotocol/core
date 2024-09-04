@@ -38,9 +38,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC5267__factory>;
     getContractFactory(
+      name: "ERC1155",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC1155__factory>;
+    getContractFactory(
+      name: "ERC1155Burnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC1155Burnable__factory>;
+    getContractFactory(
+      name: "IERC1155MetadataURI",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155MetadataURI__factory>;
+    getContractFactory(
       name: "IERC1155",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC1155__factory>;
+    getContractFactory(
+      name: "IERC1155Receiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155Receiver__factory>;
     getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -170,6 +186,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IValidationModule__factory>;
     getContractFactory(
+      name: "KintoCountryValidatorModule",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.KintoCountryValidatorModule__factory>;
+    getContractFactory(
+      name: "KYCViewer",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.KYCViewer__factory>;
+    getContractFactory(
       name: "ICircuitValidator",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ICircuitValidator__factory>;
@@ -190,13 +214,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.WorldcoinVerifier__factory>;
     getContractFactory(
-      name: "AlephNFT",
+      name: "BCN",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AlephNFT__factory>;
-    getContractFactory(
-      name: "AlephNFTAirdropper",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AlephNFTAirdropper__factory>;
+    ): Promise<Contracts.BCN__factory>;
     getContractFactory(
       name: "EarlyAccessCodes",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -210,13 +230,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GiftCards__factory>;
     getContractFactory(
-      name: "MORFI",
+      name: "MatchTicket",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.MORFI__factory>;
+    ): Promise<Contracts.MatchTicket__factory>;
+    getContractFactory(
+      name: "MatchTicketAirdropper",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MatchTicketAirdropper__factory>;
     getContractFactory(
       name: "NumberContract",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NumberContract__factory>;
+    getContractFactory(
+      name: "WorldChampionNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.WorldChampionNFT__factory>;
+    getContractFactory(
+      name: "WorldChampionNFTAirdropper",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.WorldChampionNFTAirdropper__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -249,10 +281,30 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC5267>;
     getContractAt(
+      name: "ERC1155",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC1155>;
+    getContractAt(
+      name: "ERC1155Burnable",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC1155Burnable>;
+    getContractAt(
+      name: "IERC1155MetadataURI",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155MetadataURI>;
+    getContractAt(
       name: "IERC1155",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IERC1155>;
+    getContractAt(
+      name: "IERC1155Receiver",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155Receiver>;
     getContractAt(
       name: "ERC20",
       address: string | ethers.Addressable,
@@ -414,6 +466,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IValidationModule>;
     getContractAt(
+      name: "KintoCountryValidatorModule",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.KintoCountryValidatorModule>;
+    getContractAt(
+      name: "KYCViewer",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.KYCViewer>;
+    getContractAt(
       name: "ICircuitValidator",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -439,15 +501,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.WorldcoinVerifier>;
     getContractAt(
-      name: "AlephNFT",
+      name: "BCN",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.AlephNFT>;
-    getContractAt(
-      name: "AlephNFTAirdropper",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AlephNFTAirdropper>;
+    ): Promise<Contracts.BCN>;
     getContractAt(
       name: "EarlyAccessCodes",
       address: string | ethers.Addressable,
@@ -464,15 +521,30 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GiftCards>;
     getContractAt(
-      name: "MORFI",
+      name: "MatchTicket",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.MORFI>;
+    ): Promise<Contracts.MatchTicket>;
+    getContractAt(
+      name: "MatchTicketAirdropper",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MatchTicketAirdropper>;
     getContractAt(
       name: "NumberContract",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.NumberContract>;
+    getContractAt(
+      name: "WorldChampionNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.WorldChampionNFT>;
+    getContractAt(
+      name: "WorldChampionNFTAirdropper",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.WorldChampionNFTAirdropper>;
 
     deployContract(
       name: "Ownable",
@@ -499,9 +571,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC5267>;
     deployContract(
+      name: "ERC1155",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC1155>;
+    deployContract(
+      name: "ERC1155Burnable",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC1155Burnable>;
+    deployContract(
+      name: "IERC1155MetadataURI",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1155MetadataURI>;
+    deployContract(
       name: "IERC1155",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC1155>;
+    deployContract(
+      name: "IERC1155Receiver",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1155Receiver>;
     deployContract(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -631,6 +719,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IValidationModule>;
     deployContract(
+      name: "KintoCountryValidatorModule",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.KintoCountryValidatorModule>;
+    deployContract(
+      name: "KYCViewer",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.KYCViewer>;
+    deployContract(
       name: "ICircuitValidator",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ICircuitValidator>;
@@ -651,13 +747,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.WorldcoinVerifier>;
     deployContract(
-      name: "AlephNFT",
+      name: "BCN",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AlephNFT>;
-    deployContract(
-      name: "AlephNFTAirdropper",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AlephNFTAirdropper>;
+    ): Promise<Contracts.BCN>;
     deployContract(
       name: "EarlyAccessCodes",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -671,13 +763,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.GiftCards>;
     deployContract(
-      name: "MORFI",
+      name: "MatchTicket",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.MORFI>;
+    ): Promise<Contracts.MatchTicket>;
+    deployContract(
+      name: "MatchTicketAirdropper",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MatchTicketAirdropper>;
     deployContract(
       name: "NumberContract",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.NumberContract>;
+    deployContract(
+      name: "WorldChampionNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WorldChampionNFT>;
+    deployContract(
+      name: "WorldChampionNFTAirdropper",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WorldChampionNFTAirdropper>;
 
     deployContract(
       name: "Ownable",
@@ -710,10 +814,30 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC5267>;
     deployContract(
+      name: "ERC1155",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC1155>;
+    deployContract(
+      name: "ERC1155Burnable",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ERC1155Burnable>;
+    deployContract(
+      name: "IERC1155MetadataURI",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1155MetadataURI>;
+    deployContract(
       name: "IERC1155",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC1155>;
+    deployContract(
+      name: "IERC1155Receiver",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC1155Receiver>;
     deployContract(
       name: "ERC20",
       args: any[],
@@ -875,6 +999,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IValidationModule>;
     deployContract(
+      name: "KintoCountryValidatorModule",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.KintoCountryValidatorModule>;
+    deployContract(
+      name: "KYCViewer",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.KYCViewer>;
+    deployContract(
       name: "ICircuitValidator",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -900,15 +1034,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.WorldcoinVerifier>;
     deployContract(
-      name: "AlephNFT",
+      name: "BCN",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AlephNFT>;
-    deployContract(
-      name: "AlephNFTAirdropper",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.AlephNFTAirdropper>;
+    ): Promise<Contracts.BCN>;
     deployContract(
       name: "EarlyAccessCodes",
       args: any[],
@@ -925,15 +1054,30 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.GiftCards>;
     deployContract(
-      name: "MORFI",
+      name: "MatchTicket",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.MORFI>;
+    ): Promise<Contracts.MatchTicket>;
+    deployContract(
+      name: "MatchTicketAirdropper",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MatchTicketAirdropper>;
     deployContract(
       name: "NumberContract",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.NumberContract>;
+    deployContract(
+      name: "WorldChampionNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WorldChampionNFT>;
+    deployContract(
+      name: "WorldChampionNFTAirdropper",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.WorldChampionNFTAirdropper>;
 
     // default types
     getContractFactory(
