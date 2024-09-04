@@ -1,8 +1,11 @@
-export const OptimismSepoliaChainId = 11155420;
-export const zkSyncTestNetCode = 300;
-export const polygonTestnet = 80001;
-export const AvalancheFujiChainId = 43113;
-export const ArbitrumSepoliaChainId = 421614;
+import {
+  ArbitrumSepoliaChainId,
+  AvalancheFujiChainId,
+  KintoChainId,
+  OptimismSepoliaChainId,
+  polygonTestnet,
+  zkSyncTestNetCode,
+} from "~~/contracts/addresses";
 
 export const TransactionExplorerBaseUrl: Record<number, string> = {
   [OptimismSepoliaChainId]: "https://optimism-sepolia.blockscout.com/tx/",
@@ -10,4 +13,5 @@ export const TransactionExplorerBaseUrl: Record<number, string> = {
   [polygonTestnet]: "https://amoy.polygonscan.com/tx/",
   [AvalancheFujiChainId]: "https://testnet.snowtrace.io/tx/",
   [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/tx/",
+  [KintoChainId]: "https://kintoscan.io/tx/",
 };

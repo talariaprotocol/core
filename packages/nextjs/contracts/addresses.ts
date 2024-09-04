@@ -6,6 +6,7 @@ export const zkSyncTestNetCode = 300;
 export const polygonTestnet = 80001;
 export const AvalancheFujiChainId = 43113;
 export const ArbitrumSepoliaChainId = 421614;
+export const KintoChainId = 7887;
 
 export const NumberContractAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.NumberContract as Address,
@@ -55,4 +56,12 @@ export const AirNftContractAddress: Record<number, Address> = {
 export const AirNftDropperContractAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AlephNFTAirdropper as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.AlephNFTAirdropper as Address,
+};
+
+export const WorldChampionNFTContractAddress: Record<number, Address> = {
+  [KintoChainId]: DeployedAddresses.kinto.WorldChampionNFT as Address,
+};
+
+export const WorldChampionNFTAirdropperAddress: Record<number, Address> = {
+  [KintoChainId]: DeployedAddresses.kinto.WorldChampionNFTAirdropper as Address,
 };

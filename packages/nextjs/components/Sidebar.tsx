@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Header } from "./Header";
@@ -25,6 +26,7 @@ import { WagmiProvider, useAccount } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
+import KintoLogo from "~~/public/logos/kinto-logo.png";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import Iden3AuthComponent from "~~/utils/privadoId/iden3component";
@@ -52,7 +54,7 @@ const CustomSidebar = () => {
                 pathname === "/early-access" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
-              <FileKey2Icon className="h-5 w-5" />
+              <FileKey2Icon className="h-7 w-7" />
               <span className="sr-only">Early access</span>
             </Link>
           </TooltipTrigger>
@@ -66,7 +68,7 @@ const CustomSidebar = () => {
                 pathname === "/giftcard" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
-              <GiftIcon className="h-5 w-5" />
+              <GiftIcon className="h-7 w-7" />
               <span className="sr-only">Giftcard</span>
             </Link>
           </TooltipTrigger>
@@ -80,11 +82,25 @@ const CustomSidebar = () => {
                 pathname === "/airdrop-nft" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
-              <AwardIcon className="h-5 w-5" />
+              <AwardIcon className="h-7 w-7" />
               <span className="sr-only">Airdrop NFT</span>
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Airdrop NFT</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/kinto"
+              className={`${
+                pathname === "/kinto" ? "bg-accent" : ""
+              }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <Image className="h-7 w-7" src={KintoLogo} alt="kinto-logo" />
+              <span className="sr-only">Kinto</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Kinto</TooltipContent>
         </Tooltip>
       </nav>
     </>

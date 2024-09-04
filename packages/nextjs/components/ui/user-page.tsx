@@ -17,9 +17,10 @@ import {
 import { Button } from "~~/components/ui/button";
 import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
+import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
 import ContractService from "~~/services/contractService";
-import { OptimismSepoliaChainId, TransactionExplorerBaseUrl } from "~~/utils/explorer";
+import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 const snarkjs = require("snarkjs");
 const path = require("path");
@@ -56,21 +57,8 @@ type TxStep = {
   txHash?: Hash;
 };
 
-const TX_STEPS: Record<TxStepsEnum, TxStep> = {
-  [TxStepsEnum.GENERATE_CODES]: {
-    id: TxStepsEnum.GENERATE_CODES,
-    status: TxStatusEnum.NOT_STARTED,
-    message: "Generate Tornado Codes Proof",
-  },
-  [TxStepsEnum.SUBMIT]: {
-    id: TxStepsEnum.SUBMIT,
-    status: TxStatusEnum.NOT_STARTED,
-    message: "Execute early-access function",
-  },
-};
-
 interface UserPageProps {
-  userCode: string;
+  userCode?: string;
   contractAbi: Abi | readonly unknown[];
   contractAddressMap: Record<number, Address>;
   extendedContract?: {
@@ -80,6 +68,8 @@ interface UserPageProps {
   };
   contractRestrictedFunction: string;
   toastSuccessfullText: string;
+  h1Title?: string;
+  submitMessage?: string;
   title: string;
   subTitle: string;
   sendRecipient?: boolean;
@@ -92,6 +82,8 @@ const UserPage = ({
   extendedContract,
   contractRestrictedFunction,
   toastSuccessfullText,
+  h1Title = "You have been selected",
+  submitMessage = "Execute early-access function",
   title,
   subTitle,
   sendRecipient,
@@ -101,7 +93,18 @@ const UserPage = ({
   const { data: hash, isPending: isPendingSendNumber, error, writeContractAsync } = useWriteContract();
   const [inputCode, setInputCode] = useState(userCode);
   const [processedCode, setProcessedCode] = useState<any>();
-  const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
+  const [transactionSteps, setTransactionSteps] = useState<Record<TxStepsEnum, TxStep>>({
+    [TxStepsEnum.GENERATE_CODES]: {
+      id: TxStepsEnum.GENERATE_CODES,
+      status: TxStatusEnum.NOT_STARTED,
+      message: "Generate Tornado Codes Proof",
+    },
+    [TxStepsEnum.SUBMIT]: {
+      id: TxStepsEnum.SUBMIT,
+      status: TxStatusEnum.NOT_STARTED,
+      message: submitMessage,
+    },
+  });
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
   const chainId = account.chainId || OptimismSepoliaChainId;
@@ -243,7 +246,7 @@ const UserPage = ({
     <div className="flex flex-col gap-10 self-center">
       <div className="flex items-center gap-2">
         <LockOpenIcon size="32px" />
-        <h1 className="text-4xl font-bold">You have been selected</h1>
+        <h1 className="text-4xl font-bold">{h1Title}</h1>
       </div>
       <div className="max-w-md w-full space-y-6 p-6 rounded-lg shadow-lg bg-card">
         <div className="flex flex-col gap-2">

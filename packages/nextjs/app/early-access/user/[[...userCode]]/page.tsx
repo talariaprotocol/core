@@ -3,7 +3,7 @@ import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismS
 import EarlyAccessCodesTestContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodesTestContract.json";
 import { EarlyAccesCodeTestAddress, EarlyAccessCodeAddress } from "~~/contracts/addresses";
 
-const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
+const EarlyAccessUserPage = ({ params }: { params: { userCode?: string } }) => {
   return (
     <UserPage
       contractAbi={EarlyAccessCodesContractAbi.abi}
@@ -16,7 +16,7 @@ const EarlyAccessUserPage = ({ params }: { params: { userCode: string } }) => {
       title="Early access code"
       subTitle="Execute restricted function, only for selected people like you"
       toastSuccessfullText="Restricted function executed successfully!"
-      userCode={params.userCode[0]}
+      userCode={params.userCode?.[0]}
     />
   );
 };
