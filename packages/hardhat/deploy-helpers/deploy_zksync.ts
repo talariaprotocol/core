@@ -75,22 +75,22 @@ const deployAndVerify = async function (hre: HardhatRuntimeEnvironment) {
     await earlyAccessCodes.getAddress(),
   ])
 
-  const MORFI = await deployAndVerifyContract('MORFI', [deployer.zkWallet.address])
+  const BCN = await deployAndVerifyContract('BCN', [deployer.zkWallet.address])
 
-  const AlephNFT = await deployAndVerifyContract('AlephNFT', [deployer.zkWallet.address])
+  const WorldChampionNFT = await deployAndVerifyContract('WorldChampionNFT', [deployer.zkWallet.address])
 
   const giftCardsContract = await deployAndVerifyContract('GiftCards', [
     await verifier.getAddress(),
     await hasher.getAddress(),
     20,
-    await MORFI.getAddress(),
+    await BCN.getAddress(),
   ])
 
-  const AlephNFTAirdropperContract = await deployAndVerifyContract('AlephNFTAirdropper', [
+  const WorldChampionNFTAirdropperContract = await deployAndVerifyContract('WorldChampionNFTAirdropper', [
     await verifier.getAddress(),
     await hasher.getAddress(),
     20,
-    await MORFI.getAddress(),
+    await BCN.getAddress(),
   ])
 
   const testValidatorModule = await deployAndVerifyContract('TestValidatorModule')

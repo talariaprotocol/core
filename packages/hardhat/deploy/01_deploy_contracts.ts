@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ethers, run } from 'hardhat'
 import { readFileSync, writeFileSync } from 'fs'
 import path from 'path'
-import { AlephNFT, AlephNFT__factory, MORFI, MORFI__factory } from '../typechain-types'
+import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory } from '../typechain-types'
 
 const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre
@@ -60,14 +60,21 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     skipIfAlreadyDeployed: false,
   })
 
-  const MORFI = await deploy('MORFI', {
+  const BCN = await deploy('BCN', {
     from: deployer,
     log: true,
     args: [deployer],
     skipIfAlreadyDeployed: false,
   })
 
-  const AlephNFT = await deploy('AlephNFT', {
+  const WorldChampionNFT = await deploy('WorldChampionNFT', {
+    from: deployer,
+    log: true,
+    args: [deployer],
+    skipIfAlreadyDeployed: false,
+  })
+
+  const MatchTicket = await deploy('MatchTicket', {
     from: deployer,
     log: true,
     args: [deployer],
@@ -76,14 +83,21 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
 
   const giftCardsContract = await deploy('GiftCards', {
     from: deployer,
-    args: [verifier.address, hasher.address, levels, MORFI.address],
+    args: [verifier.address, hasher.address, levels, BCN.address],
     log: true,
     skipIfAlreadyDeployed: false,
   })
 
-  const AlephNFTAirdropperContract = await deploy('AlephNFTAirdropper', {
+  const WorldChampionNFTAirdropperContract = await deploy('WorldChampionNFTAirdropper', {
     from: deployer,
-    args: [verifier.address, hasher.address, levels, AlephNFT.address],
+    args: [verifier.address, hasher.address, levels, WorldChampionNFT.address],
+    log: true,
+    skipIfAlreadyDeployed: false,
+  })
+
+  const MatchTicketAirdropper = await deploy('MatchTicketAirdropper', {
+    from: deployer,
+    args: [verifier.address, hasher.address, levels, MatchTicket.address],
     log: true,
     skipIfAlreadyDeployed: false,
   })
@@ -95,6 +109,12 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   })
 
   const worldcoinValidatorModule = await deploy('WorldcoinValidatorModule', {
+    from: deployer,
+    log: true,
+    skipIfAlreadyDeployed: false,
+  })
+
+  const kintoCountryValidatorModule = await deploy('KintoCountryValidatorModule', {
     from: deployer,
     log: true,
     skipIfAlreadyDeployed: false,
@@ -141,11 +161,14 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     EarlyAccessCodesTestContract: earlyAccessCodesTestContract.address,
     NumberContract: numberContract.address,
     GiftCards: giftCardsContract.address,
-    MORFI: MORFI.address,
-    AlephNFT: AlephNFT.address,
-    AlephNFTAirdropper: AlephNFTAirdropperContract.address,
+    BCN: BCN.address,
+    WorldChampionNFT: WorldChampionNFT.address,
+    MatchTicket: MatchTicket.address,
+    WorldChampionNFTAirdropper: WorldChampionNFTAirdropperContract.address,
+    MatchTicketAirdropper: MatchTicketAirdropper.address,
     TestValidatorModule: testValidatorModule.address,
     WorldcoinValidatorModule: worldcoinValidatorModule.address,
+    KintoCountryValidatorModule: kintoCountryValidatorModule.address,
     PrivadoIDValidatorModule: privadoIdValidatorModule.address,
   }
 
@@ -199,8 +222,8 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   }
   try {
     await run('verify:verify', {
-      address: MORFI.address,
-      contract: 'contracts/useCases/MORFI.sol:MORFI',
+      address: BCN.address,
+      contract: 'contracts/useCases/BCN.sol:BCN',
       constructorArguments: [deployer],
     })
   } catch (error) {
@@ -208,31 +231,51 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   }
   try {
     await run('verify:verify', {
-      address: AlephNFT.address,
-      contract: 'contracts/useCases/AlephNFT.sol:AlephNFT',
+      address: WorldChampionNFT.address,
+      contract: 'contracts/useCases/WorldChampionNFT.sol:WorldChampionNFT',
       constructorArguments: [deployer],
     })
   } catch (error) {
     console.error('Verifier verification failed:', error)
   }
+  try {
+    await run('verify:verify', {
+      address: MatchTicket.address,
+      contract: 'contracts/useCases/MatchTicket.sol:MatchTicket',
+      constructorArguments: [deployer],
+    })
+  } catch (error) {
+    console.error('Verifier verification failed:', error)
+  }
+
   try {
     await run('verify:verify', {
       address: giftCardsContract.address,
       contract: 'contracts/useCases/GiftCards.sol:GiftCards',
-      constructorArguments: [verifier.address, hasher.address, 20, MORFI.address],
+      constructorArguments: [verifier.address, hasher.address, 20, BCN.address],
     })
   } catch (error) {
     console.error('Verifier verification failed:', error)
   }
   try {
     await run('verify:verify', {
-      address: AlephNFTAirdropperContract.address,
-      contract: 'contracts/useCases/AlephNFTAirdropper.sol:AlephNFTAirdropper',
-      constructorArguments: [verifier.address, hasher.address, 20, AlephNFT.address],
+      address: WorldChampionNFTAirdropperContract.address,
+      contract: 'contracts/useCases/WorldChampionNFTAirdropper.sol:WorldChampionNFTAirdropper',
+      constructorArguments: [verifier.address, hasher.address, 20, WorldChampionNFT.address],
     })
   } catch (error) {
     console.error('Verifier verification failed:', error)
   }
+  try {
+    await run('verify:verify', {
+      address: MatchTicketAirdropper.address,
+      contract: 'contracts/useCases/MatchTicketAirdropper.sol:MatchTicketAirdropper',
+      constructorArguments: [verifier.address, hasher.address, 20, MatchTicket.address],
+    })
+  } catch (error) {
+    console.error('Verifier verification failed:', error)
+  }
+
   try {
     await run('verify:verify', {
       address: testValidatorModule.address,
@@ -249,6 +292,16 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   } catch (error) {
     console.error('Verifier verification failed:', error)
   }
+
+  try {
+    await run('verify:verify', {
+      address: kintoCountryValidatorModule.address,
+      contract: 'contracts/modules/KintoCountryValidatorModule.sol:KintoCountryValidatorModule',
+    })
+  } catch (error) {
+    console.error('Verifier verification failed:', error)
+  }
+
   try {
     await run('verify:verify', {
       address: privadoIdValidatorModule.address,

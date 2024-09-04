@@ -1,0 +1,133 @@
+{
+  "address": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "KYCViewerAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "country",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "arg",
+          "type": "bytes"
+        }
+      ],
+      "name": "validate",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x315ee74bb61657d0af387ea69662e6ace67fd402b23bea45ac980b0c7d5eec82",
+  "receipt": {
+    "to": null,
+    "from": "0xEB71ed911e4dFc35Da80103a72fE983C8c709F33",
+    "contractAddress": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
+    "transactionIndex": 0,
+    "gasUsed": "261287",
+    "logsBloom": "0x00000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000020000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000040800000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x614981c33378477f0daa9cfa266adad0ccb4ecc28d628ee36d4c8bc9f9241a16",
+    "transactionHash": "0x315ee74bb61657d0af387ea69662e6ace67fd402b23bea45ac980b0c7d5eec82",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 17276914,
+        "transactionHash": "0x315ee74bb61657d0af387ea69662e6ace67fd402b23bea45ac980b0c7d5eec82",
+        "address": "0x0000000000000000000000000000000000007005",
+        "topics": [
+          "0x33c981baba081f8fd2c52ac6ad1ea95b6814b4376640f55689051f6584729688",
+          "0x000000000000000000000000eb71ed911e4dfc35da80103a72fe983c8c709f33"
+        ],
+        "data": "0x0000000000000000000000008b392601107f3bf772c1b536cfd5748f6a036a08",
+        "logIndex": 0,
+        "blockHash": "0x614981c33378477f0daa9cfa266adad0ccb4ecc28d628ee36d4c8bc9f9241a16"
+      }
+    ],
+    "blockNumber": 17276914,
+    "cumulativeGasUsed": "261287",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "fd4b1c0aaa0cc5e6cb4f2058fac9f5bf",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"KYCViewerAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"country\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"arg\",\"type\":\"bytes\"}],\"name\":\"validate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/modules/KintoCountryValidatorModule.sol\":\"KintoCountryValidatorModule\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/modules/IValidationModule.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\ninterface IValidationModule {\\n  function validate(bytes calldata arg) external returns (bool);\\n}\",\"keccak256\":\"0xbce3d3ab208ca1c7fd5e6500f0836c0b99c6dd4b172ebb27bab1a41d2322f94f\",\"license\":\"MIT\"},\"contracts/modules/KintoCountryValidatorModule.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\nimport \\\"../modules/IValidationModule.sol\\\";\\n\\n\\n/// @title CountryCodes Library\\n/// @notice A library that provides a list of valid ISO 3166-1 numeric country codes\\n/// @dev This library contains a single function that returns an array of valid country codes\\nlibrary CountryCodes {\\n    /// @notice Returns an array of valid ISO 3166-1 numeric country codes\\n    /// @return An array of uint16 representing valid country codes\\n    function getValidCountryCodes() internal pure returns (uint16[] memory) {\\n        uint16[] memory codes = new uint16[](249);\\n        codes[0] = 4; // Afghanistan\\n        codes[2] = 10; // Antarctica\\n        codes[1] = 8; // Albania\\n        codes[3] = 12; // Algeria\\n        codes[4] = 16; // American Samoa\\n        codes[5] = 20; // Andorra\\n        codes[6] = 24; // Angola\\n        codes[7] = 28; // Antigua and Barbuda\\n        codes[8] = 31; // Azerbaijan\\n        codes[9] = 32; // Argentina\\n        codes[10] = 36; // Australia\\n        codes[11] = 40; // Austria\\n        codes[12] = 44; // Bahamas\\n        codes[13] = 48; // Bahrain\\n        codes[14] = 50; // Bangladesh\\n        codes[15] = 51; // Armenia\\n        codes[16] = 52; // Barbados\\n        codes[17] = 56; // Belgium\\n        codes[18] = 60; // Bermuda\\n        codes[19] = 64; // Bhutan\\n        codes[20] = 68; // Bolivia\\n        codes[21] = 70; // Bosnia and Herzegovina\\n        codes[22] = 72; // Botswana\\n        codes[23] = 74; // Bouvet Island\\n        codes[24] = 76; // Brazil\\n        codes[25] = 84; // Belize\\n        codes[26] = 86; // British Indian Ocean Territory\\n        codes[27] = 90; // Solomon Islands\\n        codes[28] = 92; // Virgin Islands (British)\\n        codes[29] = 96; // Brunei Darussalam\\n        codes[30] = 100; // Bulgaria\\n        codes[31] = 104; // Myanmar\\n        codes[32] = 108; // Burundi\\n        codes[33] = 112; // Belarus\\n        codes[34] = 116; // Cambodia\\n        codes[35] = 120; // Cameroon\\n        codes[36] = 124; // Canada\\n        codes[37] = 132; // Cape Verde\\n        codes[38] = 136; // Cayman Islands\\n        codes[39] = 140; // Central African Republic\\n        codes[40] = 144; // Sri Lanka\\n        codes[41] = 148; // Chad\\n        codes[42] = 152; // Chile\\n        codes[43] = 156; // China\\n        codes[44] = 158; // Taiwan, Province of China\\n        codes[45] = 162; // Christmas Island\\n        codes[46] = 166; // Cocos (Keeling) Islands\\n        codes[47] = 170; // Colombia\\n        codes[48] = 174; // Comoros\\n        codes[49] = 175; // Mayotte\\n        codes[50] = 178; // Congo\\n        codes[51] = 180; // Congo, the Democratic Republic of the\\n        codes[52] = 184; // Cook Islands\\n        codes[53] = 188; // Costa Rica\\n        codes[54] = 191; // Croatia\\n        codes[55] = 192; // Cuba\\n        codes[56] = 196; // Cyprus\\n        codes[57] = 203; // Czech Republic\\n        codes[58] = 204; // Benin\\n        codes[59] = 208; // Denmark\\n        codes[60] = 212; // Dominica\\n        codes[61] = 214; // Dominican Republic\\n        codes[62] = 218; // Ecuador\\n        codes[63] = 222; // El Salvador\\n        codes[64] = 226; // Equatorial Guinea\\n        codes[65] = 231; // Ethiopia\\n        codes[66] = 232; // Eritrea\\n        codes[67] = 233; // Estonia\\n        codes[68] = 234; // Faroe Islands\\n        codes[69] = 238; // Falkland Islands (Malvinas)\\n        codes[70] = 239; // South Georgia and the South Sandwich Islands\\n        codes[71] = 242; // Fiji\\n        codes[72] = 246; // Finland\\n        codes[73] = 248; // \\u00c5land Islands\\n        codes[74] = 250; // France\\n        codes[75] = 254; // French Guiana\\n        codes[76] = 258; // French Polynesia\\n        codes[77] = 260; // French Southern Territories\\n        codes[78] = 262; // Djibouti\\n        codes[79] = 266; // Gabon\\n        codes[80] = 268; // Georgia\\n        codes[81] = 270; // Gambia\\n        codes[82] = 275; // Palestine, State of\\n        codes[83] = 276; // Germany\\n        codes[84] = 288; // Ghana\\n        codes[85] = 292; // Gibraltar\\n        codes[86] = 296; // Kiribati\\n        codes[87] = 300; // Greece\\n        codes[88] = 304; // Greenland\\n        codes[89] = 308; // Grenada\\n        codes[90] = 312; // Guadeloupe\\n        codes[91] = 316; // Guam\\n        codes[92] = 320; // Guatemala\\n        codes[93] = 324; // Guinea\\n        codes[94] = 328; // Guyana\\n        codes[95] = 332; // Haiti\\n        codes[96] = 334; // Heard Island and McDonald Islands\\n        codes[97] = 336; // Holy See (Vatican City State)\\n        codes[98] = 340; // Honduras\\n        codes[99] = 344; // Hong Kong\\n        codes[100] = 348; // Hungary\\n        codes[101] = 352; // Iceland\\n        codes[102] = 356; // India\\n        codes[103] = 360; // Indonesia\\n        codes[104] = 364; // Iran, Islamic Republic of\\n        codes[105] = 368; // Iraq\\n        codes[106] = 372; // Ireland\\n        codes[107] = 376; // Israel\\n        codes[108] = 380; // Italy\\n        codes[109] = 384; // C\\u00f4te d'Ivoire\\n        codes[110] = 388; // Jamaica\\n        codes[111] = 392; // Japan\\n        codes[112] = 398; // Kazakhstan\\n        codes[113] = 400; // Jordan\\n        codes[114] = 404; // Kenya\\n        codes[115] = 408; // Korea, Democratic People's Republic of\\n        codes[116] = 410; // Korea, Republic of\\n        codes[117] = 414; // Kuwait\\n        codes[118] = 417; // Kyrgyzstan\\n        codes[119] = 418; // Lao People's Democratic Republic\\n        codes[120] = 422; // Lebanon\\n        codes[121] = 426; // Lesotho\\n        codes[122] = 428; // Latvia\\n        codes[123] = 430; // Liberia\\n        codes[124] = 434; // Libya\\n        codes[125] = 438; // Liechtenstein\\n        codes[126] = 440; // Lithuania\\n        codes[127] = 442; // Luxembourg\\n        codes[128] = 446; // Macao\\n        codes[129] = 450; // Madagascar\\n        codes[130] = 454; // Malawi\\n        codes[131] = 458; // Malaysia\\n        codes[132] = 462; // Maldives\\n        codes[133] = 466; // Mali\\n        codes[134] = 470; // Malta\\n        codes[135] = 474; // Martinique\\n        codes[136] = 478; // Mauritania\\n        codes[137] = 480; // Mauritius\\n        codes[138] = 484; // Mexico\\n        codes[139] = 492; // Monaco\\n        codes[140] = 496; // Mongolia\\n        codes[141] = 498; // Moldova, Republic of\\n        codes[142] = 499; // Montenegro\\n        codes[143] = 500; // Montserrat\\n        codes[144] = 504; // Morocco\\n        codes[145] = 508; // Mozambique\\n        codes[146] = 512; // Oman\\n        codes[147] = 516; // Namibia\\n        codes[148] = 520; // Nauru\\n        codes[149] = 524; // Nepal\\n        codes[150] = 528; // Netherlands\\n        codes[151] = 531; // Cura\\u00e7ao\\n        codes[152] = 533; // Aruba\\n        codes[153] = 534; // Sint Maarten (Dutch part)\\n        codes[154] = 535; // Bonaire, Sint Eustatius and Saba\\n        codes[155] = 540; // New Caledonia\\n        codes[156] = 548; // Vanuatu\\n        codes[157] = 554; // New Zealand\\n        codes[158] = 558; // Nicaragua\\n        codes[159] = 562; // Niger\\n        codes[160] = 566; // Nigeria\\n        codes[161] = 570; // Niue\\n        codes[162] = 574; // Norfolk Island\\n        codes[163] = 578; // Norway\\n        codes[164] = 580; // Northern Mariana Islands\\n        codes[165] = 581; // United States Minor Outlying Islands\\n        codes[166] = 583; // Micronesia, Federated States of\\n        codes[167] = 584; // Marshall Islands\\n        codes[168] = 585; // Palau\\n        codes[169] = 586; // Pakistan\\n        codes[170] = 591; // Panama\\n        codes[171] = 598; // Papua New Guinea\\n        codes[172] = 600; // Paraguay\\n        codes[173] = 604; // Peru\\n        codes[174] = 608; // Philippines\\n        codes[175] = 612; // Pitcairn\\n        codes[176] = 616; // Poland\\n        codes[177] = 620; // Portugal\\n        codes[178] = 624; // Guinea-Bissau\\n        codes[179] = 626; // Timor-Leste\\n        codes[180] = 630; // Puerto Rico\\n        codes[181] = 634; // Qatar\\n        codes[182] = 638; // R\\u00e9union\\n        codes[183] = 642; // Romania\\n        codes[184] = 643; // Russian Federation\\n        codes[185] = 646; // Rwanda\\n        codes[186] = 652; // Saint Barth\\u00e9lemy\\n        codes[187] = 654; // Saint Helena, Ascension and Tristan da Cunha\\n        codes[188] = 659; // Saint Kitts and Nevis\\n        codes[189] = 660; // Anguilla\\n        codes[190] = 662; // Saint Lucia\\n        codes[191] = 663; // Saint Martin (French part)\\n        codes[192] = 666; // Saint Pierre and Miquelon\\n        codes[193] = 670; // Saint Vincent and the Grenadines\\n        codes[194] = 674; // San Marino\\n        codes[195] = 678; // Sao Tome and Principe\\n        codes[196] = 682; // Saudi Arabia\\n        codes[197] = 686; // Senegal\\n        codes[198] = 688; // Serbia\\n        codes[199] = 690; // Seychelles\\n        codes[200] = 694; // Sierra Leone\\n        codes[201] = 702; // Singapore\\n        codes[202] = 703; // Slovakia\\n        codes[203] = 704; // Viet Nam\\n        codes[204] = 705; // Slovenia\\n        codes[205] = 706; // Somalia\\n        codes[206] = 710; // South Africa\\n        codes[207] = 716; // Zimbabwe\\n        codes[208] = 724; // Spain\\n        codes[209] = 728; // South Sudan\\n        codes[210] = 729; // Sudan\\n        codes[211] = 732; // Western Sahara\\n        codes[212] = 740; // Suriname\\n        codes[213] = 744; // Svalbard and Jan Mayen\\n        codes[214] = 748; // Eswatini\\n        codes[215] = 752; // Sweden\\n        codes[216] = 756; // Switzerland\\n        codes[217] = 760; // Syrian Arab Republic\\n        codes[218] = 762; // Tajikistan\\n        codes[219] = 764; // Thailand\\n        codes[220] = 768; // Togo\\n        codes[221] = 772; // Tokelau\\n        codes[222] = 776; // Tonga\\n        codes[223] = 780; // Trinidad and Tobago\\n        codes[224] = 784; // United Arab Emirates\\n        codes[225] = 788; // Tunisia\\n        codes[226] = 792; // Turkey\\n        codes[227] = 795; // Turkmenistan\\n        codes[228] = 796; // Turks and Caicos Islands\\n        codes[229] = 798; // Tuvalu\\n        codes[230] = 800; // Uganda\\n        codes[231] = 804; // Ukraine\\n        codes[232] = 807; // North Macedonia\\n        codes[233] = 818; // Egypt\\n        codes[234] = 826; // United Kingdom\\n        codes[235] = 831; // Guernsey\\n        codes[236] = 832; // Jersey\\n        codes[237] = 833; // Isle of Man\\n        codes[238] = 834; // Tanzania, United Republic of\\n        codes[239] = 840; // United States\\n        codes[240] = 850; // Virgin Islands (U.S.)\\n        codes[241] = 854; // Burkina Faso\\n        codes[242] = 858; // Uruguay\\n        codes[243] = 860; // Uzbekistan\\n        codes[244] = 862; // Venezuela, Bolivarian Republic of\\n        codes[245] = 876; // Wallis and Futuna\\n        codes[246] = 882; // Samoa\\n        codes[247] = 887; // Yemen\\n        codes[248] = 894; // Zambia\\n        return codes;\\n    }\\n}\\n\\ninterface KYCViewer {\\n  struct UserInfo {\\n        /// @notice The ETH balance of the user's EOA (Externally Owned Account)\\n        uint256 ownerBalance;\\n        /// @notice The ETH balance of the user's Kinto wallet\\n        uint256 walletBalance;\\n        /// @notice The policy governing the wallet's signers (e.g., number of required signatures)\\n        uint256 walletPolicy;\\n        /// @notice Array of addresses that own the wallet\\n        address[] walletOwners;\\n        /// @notice Amount of ETH claimed from the faucet\\n        bool claimedFaucet;\\n        /// @notice Indicates whether the user has a Kinto ID NFT\\n        bool hasNFT;\\n        /// @notice Total Engen Credits earned by the user\\n        uint256 engenCreditsEarned;\\n        /// @notice Amount of Engen Credits claimed by the user\\n        uint256 engenCreditsClaimed;\\n        /// @notice Indicates whether the user has completed KYC\\n        bool isKYC;\\n        /// @notice Timestamp of when the wallet entered recovery mode (0 if not in recovery)\\n        uint256 recoveryTs;\\n        /// @notice The insurance policy of the wallet (details depend on implementation)\\n        uint256 insurancePolicy;\\n        /// @notice Indicates whether the wallet has a valid insurance policy\\n        bool hasValidInsurance;\\n        /// @notice Timestamp of when the insurance policy was last updated\\n        uint256 insuranceTimestamp;\\n        /// @notice Address of the EOA that deployed the wallet (if applicable)\\n        address deployer;\\n    }\\n\\n\\n  function isKYC(address _address) external view returns (bool);\\n\\nfunction isSanctionsSafe(address _account) external view returns (bool);\\n\\nfunction isSanctionsSafeIn(address _account, uint16 _countryId) external view returns (bool);\\n\\nfunction isCompany(address _account) external view returns (bool);\\n\\nfunction isIndividual(address _account) external view returns (bool);\\n\\nfunction hasTrait(address _account, uint16 _traitId) external view returns (bool);\\n\\nfunction getCountry(address account) external view returns (uint16);\\n\\nfunction getUserInfo(address _account, address payable _wallet) external view returns (UserInfo memory info);\\n\\nfunction getBalances(address[] memory tokens, address target) external view returns (uint256[] memory balances);\\n}\\n\\n// This validator checks for Argentinean users\\ncontract KintoCountryValidatorModule is IValidationModule {\\n\\n  address public KYCViewerAddress;\\n  uint16 public country;\\n\\n  constructor() {\\n    KYCViewerAddress = 0x33F28C3a636B38683a38987100723f2e2d3d038e; // Kinto Staging Address @todo: move to deploy script\\n\\n    country = 32; // Argentina\\n  }\\n\\n  function validate(bytes calldata arg) external override returns (bool) {\\n\\n    require( KYCViewer(KYCViewerAddress).getCountry(msg.sender) == country, \\\"User is not from Argentina\\\");\\n    \\n    return true;\\n  }\\n}\",\"keccak256\":\"0x8aba8a8aab49feac3106a02d46a0c37a828d94499bfebdabdfe420bfa23706d0\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060008054742033f28c3a636b38683a38987100723f2e2d3d038e6001600160b01b0319909116179055610269806100496000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806362c2e53f14610046578063c16e50ef14610076578063d8b0b49914610099575b600080fd5b600054610059906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b610089610084366004610196565b6100c1565b604051901515815260200161006d565b6000546100ae90600160a01b900461ffff1681565b60405161ffff909116815260200161006d565b6000805460405163d821f92d60e01b8152336004820152600160a01b820461ffff16916001600160a01b03169063d821f92d90602401602060405180830381865afa158015610114573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101389190610208565b61ffff161461018d5760405162461bcd60e51b815260206004820152601a60248201527f55736572206973206e6f742066726f6d20417267656e74696e61000000000000604482015260640160405180910390fd5b50600192915050565b600080602083850312156101a957600080fd5b823567ffffffffffffffff808211156101c157600080fd5b818501915085601f8301126101d557600080fd5b8135818111156101e457600080fd5b8660208285010111156101f657600080fd5b60209290920196919550909350505050565b60006020828403121561021a57600080fd5b815161ffff8116811461022c57600080fd5b939250505056fea2646970667358221220a38b6b1e8a9b91892d3143a89da268c99be72e7ee9d8941e3fc09d9ffb27b2ec64736f6c63430008140033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c806362c2e53f14610046578063c16e50ef14610076578063d8b0b49914610099575b600080fd5b600054610059906001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b610089610084366004610196565b6100c1565b604051901515815260200161006d565b6000546100ae90600160a01b900461ffff1681565b60405161ffff909116815260200161006d565b6000805460405163d821f92d60e01b8152336004820152600160a01b820461ffff16916001600160a01b03169063d821f92d90602401602060405180830381865afa158015610114573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101389190610208565b61ffff161461018d5760405162461bcd60e51b815260206004820152601a60248201527f55736572206973206e6f742066726f6d20417267656e74696e61000000000000604482015260640160405180910390fd5b50600192915050565b600080602083850312156101a957600080fd5b823567ffffffffffffffff808211156101c157600080fd5b818501915085601f8301126101d557600080fd5b8135818111156101e457600080fd5b8660208285010111156101f657600080fd5b60209290920196919550909350505050565b60006020828403121561021a57600080fd5b815161ffff8116811461022c57600080fd5b939250505056fea2646970667358221220a38b6b1e8a9b91892d3143a89da268c99be72e7ee9d8941e3fc09d9ffb27b2ec64736f6c63430008140033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 5305,
+        "contract": "contracts/modules/KintoCountryValidatorModule.sol:KintoCountryValidatorModule",
+        "label": "KYCViewerAddress",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 5307,
+        "contract": "contracts/modules/KintoCountryValidatorModule.sol:KintoCountryValidatorModule",
+        "label": "country",
+        "offset": 20,
+        "slot": "0",
+        "type": "t_uint16"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_uint16": {
+        "encoding": "inplace",
+        "label": "uint16",
+        "numberOfBytes": "2"
+      }
+    }
+  }
+}

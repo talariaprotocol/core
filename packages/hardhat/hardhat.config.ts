@@ -28,7 +28,7 @@ const deployerPrivateKey =
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || 'DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW'
 const blockscoutApiKey = process.env.BLOCKSCOUT_API_KEY || '' // Use a Blockscout API key if required
 const polygonApiKey = '3WV3Z8PP7HFSW2E6Z65GR9845PJMW2ET6Z'
-const arbitrumApiKey = "1W124WYR21JHW7CWPD5ZDGAKCSP3AIVC7I";
+const arbitrumApiKey = '1W124WYR21JHW7CWPD5ZDGAKCSP3AIVC7I'
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -123,9 +123,22 @@ const config: HardhatUserConfig = {
       url: `https://polygonzkevm-testnet.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
+    morphHolesky: {
+      url: 'https://rpc-quicknode-holesky.morphl2.io',
+      accounts: [deployerPrivateKey],
+    },
+    chilizSpicy: {
+      url: 'https://chiliz-spicy.publicnode.com',
+      accounts: [deployerPrivateKey],
+    },
     gnosis: {
       url: 'https://rpc.gnosischain.com',
       accounts: [deployerPrivateKey],
+    },
+    kinto: {
+      url: 'https://kinto-mainnet.calderachain.xyz/http',
+      accounts: [deployerPrivateKey],
+      gas: 10000000,
     },
     chiado: {
       url: 'https://rpc.chiadochain.net',
@@ -170,10 +183,13 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       polygonAmoy: polygonApiKey,
-      "optimism-sepolia": etherscanApiKey,
+      'optimism-sepolia': etherscanApiKey,
       zkSyncSepolia: etherscanApiKey,
       avalancheFuji: etherscanApiKey,
       arbitrumSepolia: arbitrumApiKey,
+      morphHolesky: 'anything',
+      chilizSpicy: etherscanApiKey,
+      kinto: etherscanApiKey,
       default: `${etherscanApiKey}`,
     },
     customChains: [
@@ -216,7 +232,32 @@ const config: HardhatUserConfig = {
           apiURL: 'https://arb-sepolia.blockscout.com/api',
           browserURL: 'https://arb-sepolia.blockscout.com/',
         },
-      }
+      },
+      {
+        network: 'morphHolesky',
+        chainId: 2810,
+        urls: {
+          apiURL: 'https://explorer-api-holesky.morphl2.io/api',
+          browserURL: 'https://explorer-holesky.morphl2.io',
+        },
+      },
+      {
+        network: 'kinto',
+        chainId: 7887,
+        urls: {
+          apiURL:
+            'https://api.routescan.io/v2/network/mainnet/evm/7887/etherscan/api',
+          browserURL: 'https://kintoscan.io',
+        },
+      },
+      {
+        network: 'chilizSpicy',
+        chainId: 88882,
+        urls: {
+          apiURL: 'https://api.routescan.io/v2/network/testnet/evm/88882/etherscan/api',
+          browserURL: 'https://testnet.chiliscan.com',
+        },
+      },
     ],
   },
   sourcify: {

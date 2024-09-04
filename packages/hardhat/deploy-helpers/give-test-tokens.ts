@@ -1,7 +1,7 @@
 import { join } from 'path'
 
 import { NFTStorage } from 'nft.storage'
-import { AlephNFT, AlephNFT__factory, MORFI, MORFI__factory } from '../typechain-types'
+import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory } from '../typechain-types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
@@ -39,28 +39,31 @@ async function uploadAndMint() {
   console.log('Uploading metadata and minting NFTs...')
 
   // Send some tokens to initial owners
-  const MORFIContract = (await hre.ethers.getContractFactory('MORFI')) as MORFI__factory
-  const MORFI = MORFIContract.attach(addresses[network.name].MORFI) as MORFI
+  const BCNContract = (await hre.ethers.getContractFactory('BCN')) as BCN__factory
+  const BCN = BCNContract.attach(addresses[network.name].BCN) as BCN
 
   console.log('Transferring tokens to initial owners...')
-  await MORFI.transfer(leboAddress, hre.ethers.parseEther('100'))
-  await MORFI.transfer(fainsteinAddress, hre.ethers.parseEther('100'))
-  await MORFI.transfer(martinAddress, hre.ethers.parseEther('100'))
+  await BCN.transfer(leboAddress, hre.ethers.parseEther('100'))
+  await BCN.transfer(fainsteinAddress, hre.ethers.parseEther('100'))
+  await BCN.transfer(martinAddress, hre.ethers.parseEther('100'))
   console.log('Tokens transferred!')
 
-
   // Mint some NFTs
-  const AlephNFTContract = (await hre.ethers.getContractFactory('AlephNFT')) as AlephNFT__factory
-  const alephNFT = AlephNFTContract.attach(addresses[network.name].AlephNFT) as AlephNFT
+  const WorldChampionNFTContract = (await hre.ethers.getContractFactory(
+    'WorldChampionNFT',
+  )) as WorldChampionNFT__factory
+  const worldChampionNFT = WorldChampionNFTContract.attach(
+    addresses[network.name].WorldChampionNFT,
+  ) as WorldChampionNFT
 
   console.log('Minting NFTs...')
-  const folder = "https://ipfs.io/ipfs/QmUAZMAgL24jDKMh3ocfQ7cxaZevWknmNxRrdaPaiULijM"
-  await alephNFT.safeMint(leboAddress, 10, folder + "/0.json")
-  await alephNFT.safeMint(fainsteinAddress, 11, folder + "/1.json")
-  await alephNFT.safeMint(martinAddress, 12, folder + "/2.json")
-  await alephNFT.safeMint(leboAddress, 13, folder + "/3.json")
-  await alephNFT.safeMint(fainsteinAddress, 14, folder + "/4.json")
-  await alephNFT.safeMint(martinAddress, 15, folder + "/5.json")
+  const folder = 'https://ipfs.io/ipfs/Qmacc3iJq3uarS9bp8uDz36gHthp9VW833FaYApST9erMn'
+  await worldChampionNFT.safeMint(leboAddress, 10, folder + '/0.json')
+  await worldChampionNFT.safeMint(fainsteinAddress, 11, folder + '/1.json')
+  await worldChampionNFT.safeMint(martinAddress, 12, folder + '/2.json')
+  await worldChampionNFT.safeMint(leboAddress, 13, folder + '/3.json')
+  await worldChampionNFT.safeMint(fainsteinAddress, 14, folder + '/4.json')
+  await worldChampionNFT.safeMint(martinAddress, 15, folder + '/5.json')
 
   console.log('NFTs minted!')
 }

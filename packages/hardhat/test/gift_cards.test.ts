@@ -19,8 +19,8 @@ import {
   Verifier__factory,
   TestValidatorModule,
   TestValidatorModule__factory,
-  MORFI__factory,
-  MORFI,
+  BCN__factory,
+  BCN,
 } from '../typechain-types'
 
 const fs = require('fs')
@@ -36,7 +36,7 @@ describe('GiftCards', function () {
   let Hasher: Hasher__factory, hasher: Hasher
   let GiftCards: GiftCards__factory, giftCards: GiftCards
   let TestValidatorModule: TestValidatorModule__factory, testValidatorModule: TestValidatorModule
-  let Morfi: MORFI__factory, morfi: MORFI
+  let Morfi: BCN__factory, bcn: BCN
   let owner: any, addr1: any, addr2: any
 
   let tree: any
@@ -60,18 +60,18 @@ describe('GiftCards', function () {
     Hasher = await ethers.getContractFactory('Hasher')
     hasher = await Hasher.deploy()
 
-    Morfi = (await ethers.getContractFactory('MORFI')) as MORFI__factory
-    morfi = (await Morfi.deploy(owner)) as MORFI
+    Morfi = (await ethers.getContractFactory('BCN')) as BCN__factory
+    bcn = (await Morfi.deploy(owner)) as BCN
 
     // Send some tokens to the owner
-    await morfi.mint(await owner.getAddress(), 1000)
+    await bcn.mint(await owner.getAddress(), 1000)
 
     GiftCards = await ethers.getContractFactory('GiftCards')
     giftCards = await GiftCards.deploy(
       await verifier.getAddress(), // verifier
       await hasher.getAddress(), // hasher
       levels, // merkle tree height
-      await morfi.getAddress(), // assuming a dummy token for simplicity
+      await bcn.getAddress(), // assuming a dummy token for simplicity
     )
 
     TestValidatorModule = await ethers.getContractFactory('TestValidatorModule')
@@ -85,25 +85,25 @@ describe('GiftCards', function () {
     tree.insert(transfer.commitment)
     let recipient = getRandomRecipient()
 
-    const initialBalance = await morfi.balanceOf(await owner.getAddress())
+    const initialBalance = await bcn.balanceOf(await owner.getAddress())
 
     console.log('approving')
-    // Approve morfi to spend on behalf of the owner
-    await morfi.connect(owner).approve(await giftCards.getAddress(), 1000)
+    // Approve bcn to spend on behalf of the owner
+    await bcn.connect(owner).approve(await giftCards.getAddress(), 1000)
 
-    console.log('approval', await morfi.allowance(await owner.getAddress(), await giftCards.getAddress()))
+    console.log('approval', await bcn.allowance(await owner.getAddress(), await giftCards.getAddress()))
     console.log('owner', await owner.getAddress())
     console.log('giftCards', await giftCards.getAddress())
 
-    console.log('gifts balance', await morfi.balanceOf(await giftCards.getAddress()))
-    console.log('owner balance', await morfi.balanceOf(await owner.getAddress()))
+    console.log('gifts balance', await bcn.balanceOf(await giftCards.getAddress()))
+    console.log('owner balance', await bcn.balanceOf(await owner.getAddress()))
     // Create gift card with test validator module
     await expect(
       giftCards.connect(owner).createGiftCard(transfer.commitment, [], 100, 'Gift Card Metadata'),
     ).to.emit(giftCards, 'NewCode')
 
-    console.log('gifts balance', await morfi.balanceOf(await giftCards.getAddress()))
-    console.log('owner balance', await morfi.balanceOf(await owner.getAddress()))
+    console.log('gifts balance', await bcn.balanceOf(await giftCards.getAddress()))
+    console.log('owner balance', await bcn.balanceOf(await owner.getAddress()))
 
     // Create parameters for the consumption
     const { pathElements, pathIndices } = tree.path(Number(await giftCards.nextIndex()) - 1)

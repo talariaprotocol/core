@@ -19,12 +19,12 @@ import {
   Verifier__factory,
   TestValidatorModule,
   TestValidatorModule__factory,
-  MORFI__factory,
-  MORFI,
-  AlephNFT__factory,
-  AlephNFT,
-  AlephNFTAirdropper__factory,
-  AlephNFTAirdropper,
+  BCN__factory,
+  BCN,
+  WorldChampionNFT__factory,
+  WorldChampionNFT,
+  WorldChampionNFTAirdropper__factory,
+  WorldChampionNFTAirdropper,
 } from '../typechain-types'
 
 const fs = require('fs')
@@ -38,9 +38,10 @@ const MerkleTree = require('fixed-merkle-tree')
 describe('Airdropper', function () {
   let Verifier: Verifier__factory, verifier: Verifier
   let Hasher: Hasher__factory, hasher: Hasher
-  let AlephAirdropper: AlephNFTAirdropper__factory, alephAirdropper: AlephNFTAirdropper
+  let WorldChampionAirdropper: WorldChampionNFTAirdropper__factory,
+    worldChampionAirdropper: WorldChampionNFTAirdropper
   let TestValidatorModule: TestValidatorModule__factory, testValidatorModule: TestValidatorModule
-  let AlephNFT: AlephNFT__factory, alephNFT: AlephNFT
+  let WorldChampionNFT: WorldChampionNFT__factory, worldChampionNFT: WorldChampionNFT
   let owner: any, addr1: any, addr2: any
 
   let tree: any
@@ -64,18 +65,18 @@ describe('Airdropper', function () {
     Hasher = await ethers.getContractFactory('Hasher')
     hasher = await Hasher.deploy()
 
-    AlephNFT = (await ethers.getContractFactory('AlephNFT')) as AlephNFT__factory
-    alephNFT = (await AlephNFT.deploy(owner)) as AlephNFT
+    WorldChampionNFT = (await ethers.getContractFactory('WorldChampionNFT')) as WorldChampionNFT__factory
+    worldChampionNFT = (await WorldChampionNFT.deploy(owner)) as WorldChampionNFT
 
     // Send some tokens to the owner
-    await alephNFT.safeMint(await owner.getAddress(), 1, '')
+    await worldChampionNFT.safeMint(await owner.getAddress(), 1, '')
 
-    AlephAirdropper = await ethers.getContractFactory('AlephNFTAirdropper')
-    alephAirdropper = await AlephAirdropper.deploy(
+    WorldChampionAirdropper = await ethers.getContractFactory('WorldChampionNFTAirdropper')
+    worldChampionAirdropper = await WorldChampionAirdropper.deploy(
       await verifier.getAddress(), // verifier
       await hasher.getAddress(), // hasher
       levels, // merkle tree height
-      await alephNFT.getAddress(), // assuming a dummy token for simplicity
+      await worldChampionNFT.getAddress(), // assuming a dummy token for simplicity
     )
 
     TestValidatorModule = await ethers.getContractFactory('TestValidatorModule')
@@ -89,29 +90,28 @@ describe('Airdropper', function () {
     tree.insert(transfer.commitment)
     let recipient = getRandomRecipient()
 
-    const initialBalance = await alephNFT.balanceOf(await owner.getAddress())
+    const initialBalance = await worldChampionNFT.balanceOf(await owner.getAddress())
 
     console.log('approving')
-    // Approve alephNFT to spend on behalf of the owner
-    await alephNFT.connect(owner).approve(await alephAirdropper.getAddress(), 1)
+    // Approve worldChampionNFT to spend on behalf of the owner
+    await worldChampionNFT.connect(owner).approve(await worldChampionAirdropper.getAddress(), 1)
 
-    console.log('approval', await alephNFT.getApproved(1))
+    console.log('approval', await worldChampionNFT.getApproved(1))
     console.log('owner', await owner.getAddress())
-    console.log('alephAirdropper', await alephAirdropper.getAddress())
+    console.log('worldChampionAirdropper', await worldChampionAirdropper.getAddress())
 
-    console.log('gifts balance', await alephNFT.balanceOf(await alephAirdropper.getAddress()))
-    console.log('owner balance', await alephNFT.balanceOf(await owner.getAddress()))
+    console.log('gifts balance', await worldChampionNFT.balanceOf(await worldChampionAirdropper.getAddress()))
+    console.log('owner balance', await worldChampionNFT.balanceOf(await owner.getAddress()))
     // Create gift card with test validator module
-    await expect(alephAirdropper.connect(owner).createAlephNFTAirdrop(transfer.commitment, [], 1, 1)).to.emit(
-      alephAirdropper,
-      'NewCode',
-    )
+    await expect(
+      worldChampionAirdropper.connect(owner).createWorldChampionNFTAirdrop(transfer.commitment, [], 1, 1),
+    ).to.emit(worldChampionAirdropper, 'NewCode')
 
-    console.log('gifts balance', await alephNFT.balanceOf(await alephAirdropper.getAddress()))
-    console.log('owner balance', await alephNFT.balanceOf(await owner.getAddress()))
+    console.log('gifts balance', await worldChampionNFT.balanceOf(await worldChampionAirdropper.getAddress()))
+    console.log('owner balance', await worldChampionNFT.balanceOf(await owner.getAddress()))
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(Number(await alephAirdropper.nextIndex()) - 1)
+    const { pathElements, pathIndices } = tree.path(Number(await worldChampionAirdropper.nextIndex()) - 1)
     const input = stringifyBigInts({
       // public
       root: tree.root(),
@@ -136,7 +136,7 @@ describe('Airdropper', function () {
 
     // Execute the test function!
     await expect(
-      alephAirdropper.consumeAlephNFTAirdrop(
+      worldChampionAirdropper.consumeWorldChampionNFTAirdrop(
         transfer.commitment,
         proof,
         root,
@@ -144,6 +144,6 @@ describe('Airdropper', function () {
         await owner.getAddress(),
         ['0x'],
       ),
-    ).to.emit(alephAirdropper, 'Success')
+    ).to.emit(worldChampionAirdropper, 'Success')
   })
 })

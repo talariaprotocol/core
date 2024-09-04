@@ -4,11 +4,11 @@ pragma solidity ^0.8.20;
 import "../ERC721Transfer.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
+contract WorldChampionNFTAirdropper is ERC721Transfer, IERC721Receiver {
 
-// Map for consumed AlephNFTs per campaign
+// Map for consumed WorldChampionNFTs per campaign
   mapping(bytes32 => uint256) public consumed;
-// Map for limit amount of AlephNFTs per campaign
+// Map for limit amount of WorldChampionNFTs per campaign
   mapping(bytes32 => uint256) public limits;
 
   event Success(bool success);
@@ -31,7 +31,7 @@ contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
     return this.onERC721Received.selector;
   }
 
-  function createAlephNFTAirdrop(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) public payable  {
+  function createWorldChampionNFTAirdrop(bytes32 _commitment, address[] calldata _validationModules, uint256 _id, uint256 limit) public payable  {
     limits[_commitment] = limit;
     
     createTransfer(
@@ -41,7 +41,7 @@ contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
     );
   }
 
-  function consumeAlephNFTAirdrop(
+  function consumeWorldChampionNFTAirdrop(
     bytes32 _commitment,
     bytes calldata _proof,
     bytes32 _root,
@@ -49,7 +49,7 @@ contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
     address payable _to,
     bytes[] calldata _validationsArgs
   ) public  {
-    require(consumed[_commitment] < limits[_commitment], "AlephNFTAirdropper: Limit reached");
+    require(consumed[_commitment] < limits[_commitment], "WorldChampionNFTAirdropper: Limit reached");
 
     consumed[_commitment] += 1;
     consumeTransfer(
@@ -65,17 +65,17 @@ contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
 
   }
 
-  function bulkCreateAlephNFTAirdrop(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _ids, uint256[] calldata _limits) external payable  {
+  function bulkCreateWorldChampionNFTAirdrop(bytes32[] calldata _commitments, address[][] calldata _validationModules, uint256[] calldata _ids, uint256[] calldata _limits) external payable  {
     require(_commitments.length == _ids.length, "commitments and ids length mismatch");
     require(_commitments.length == _limits.length, "commitments and limits length mismatch");
     require(_commitments.length == _validationModules.length, "commitments and validationModules length mismatch");
 
     for (uint256 i = 0; i < _commitments.length; i++) {
-      createAlephNFTAirdrop(_commitments[i], _validationModules[i], _ids[i], _limits[i]);
+      createWorldChampionNFTAirdrop(_commitments[i], _validationModules[i], _ids[i], _limits[i]);
     }
   }
 
-  function bulkConsumeAlephNFTAirdrop(
+  function bulkConsumeWorldChampionNFTAirdrop(
     bytes32[] calldata _commitments,
     bytes[] calldata _proofs,
     bytes32[] calldata _roots,
@@ -90,7 +90,7 @@ contract AlephNFTAirdropper is ERC721Transfer, IERC721Receiver {
     require(_commitments.length == _validationsArgs.length, "commitments and validationsArgs length mismatch");
 
     for (uint256 i = 0; i < _commitments.length; i++) {
-      consumeAlephNFTAirdrop(_commitments[i], _proofs[i], _roots[i], _nullifierHashes[i], _tos[i], _validationsArgs);
+      consumeWorldChampionNFTAirdrop(_commitments[i], _proofs[i], _roots[i], _nullifierHashes[i], _tos[i], _validationsArgs);
     }
   }
 }

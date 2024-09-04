@@ -7,9 +7,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract AlephNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
+contract WorldChampionNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     constructor(address initialOwner)
-        ERC721("Aleph", "APH")
+        ERC721("WorldChampion", "WDC")
         Ownable(initialOwner)
     {}
 
