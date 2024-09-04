@@ -102,5 +102,22 @@
     "WorldcoinValidatorModule": "0x887d110a0822C5c5C2CAc774C6eCB3d63916a335",
     "KintoCountryValidatorModule": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
     "PrivadoIDValidatorModule": "0x7b023da407047bac6d82A84EEa7e5c90e3D59A44"
+  },
+  "kinto": {
+    "Verifier": "0x8adbd2f6bc6519D86F7C259edC7A30804cbc4Ae9",
+    "Hasher": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "EarlyAccessCodes": "0xB808ffe40A4Add6DF866a22ace5AfCD1a782EcC0",
+    "EarlyAccessCodesTestContract": "0xF65c25F287f87B2B1Ca3286121eee1959215d7F6",
+    "NumberContract": "0x7126d1631d090D0612Cf37cF75B4D36bF2673014",
+    "GiftCards": "0x331b814A1aDd167927c29D9af93670687fF8145A",
+    "BCN": "0xC0d1855b8D61604F83b87C63a3E94B6511ce37F6",
+    "WorldChampionNFT": "0x22257FF37950917C17024d46f3f90DD5448E872D",
+    "MatchTicket": "0x3fc401018e989B7586C68755c2f6Af4330eed6C0",
+    "WorldChampionNFTAirdropper": "0x7CDd81CF9d4bE5F0cfF96BC5dD73bbfe8667A449",
+    "MatchTicketAirdropper": "0xdd6F34ca1870929324001ce99eb7d057585cA52f",
+    "TestValidatorModule": "0xc9420473439B3BAC4c740822409d6dFaCdE5cA2B",
+    "WorldcoinValidatorModule": "0x887d110a0822C5c5C2CAc774C6eCB3d63916a335",
+    "KintoCountryValidatorModule": "0x8b392601107F3bf772C1B536CFd5748F6a036a08",
+    "PrivadoIDValidatorModule": "0x7b023da407047bac6d82A84EEa7e5c90e3D59A44"
   }
 }
