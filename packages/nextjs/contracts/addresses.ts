@@ -40,10 +40,8 @@ export const GiftCardAddress: Record<number, Address> = {
 
 export const MorfiAddress: Record<number, Address> = {
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.MORFI as Address,
-  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.MORFI as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.MORFI as Address,
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.MORFI as Address,
-  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.MORFI as Address,
 };
 
 export const GiftcardTokenAddress: Record<number, Address> = {
@@ -55,12 +53,10 @@ export const WorldcoinValidatorModuleAddress: Record<number, Address> = {
 };
 
 export const AirNftContractAddress: Record<number, Address> = {
-  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AlephNFT as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.AlephNFT as Address,
 };
 
 export const AirNftDropperContractAddress: Record<number, Address> = {
-  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AlephNFTAirdropper as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.AlephNFTAirdropper as Address,
 };
 

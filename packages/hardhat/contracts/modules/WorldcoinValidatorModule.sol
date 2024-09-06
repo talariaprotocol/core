@@ -40,9 +40,9 @@ contract WorldcoinValidatorModule is IValidationModule {
   string _appId;
   string _action;
 
-  constructor() {
-    worldcoinVerifier = 0x11cA3127182f7583EfC416a8771BD4d11Fae4334; // Sepolia Tesnet Address @todo: move to deploy script
-  
+  constructor(address _verifier) {
+    worldcoinVerifier = _verifier;
+    
     _appId = "app_staging_671675a8edd5130f3a7b0d2f9bc7b11c";
     _action = "commit2";
   }

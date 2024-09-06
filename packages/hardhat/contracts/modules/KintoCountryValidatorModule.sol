@@ -323,8 +323,8 @@ contract KintoCountryValidatorModule is IValidationModule {
   address public KYCViewerAddress;
   uint16 public country;
 
-  constructor() {
-    KYCViewerAddress = 0x33F28C3a636B38683a38987100723f2e2d3d038e; // Kinto Staging Address @todo: move to deploy script
+  constructor(address _KYCViewerAddress) {
+    KYCViewerAddress = _KYCViewerAddress; 
 
     country = 32; // Argentina
   }

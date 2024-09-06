@@ -22,7 +22,7 @@ if (process.env.DEPLOY_TARGET === 'zksync') {
 // You can get your own at https://dashboard.alchemyapi.io
 const providerApiKey = process.env.ALCHEMY_API_KEY || 'oKxs-03sij-U_N0iOlrSsZFr29-IqbuF'
 // If not set, it uses the hardhat account 0 private key.
-const deployerPrivateKey =
+export const deployerPrivateKey =
   process.env.DEPLOYER_PRIVATE_KEY ?? '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || 'DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW'
@@ -84,6 +84,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     arbitrumSepolia: {
+      chainId: 421614,
       url: `https://arb-sepolia.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
@@ -92,6 +93,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     optimismSepolia: {
+      chainId: 11155420,
       url: `https://opt-sepolia.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
@@ -100,6 +102,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     avalancheFuji: {
+      chainId: 43113,
       url: 'https://api.avax-test.network/ext/bc/C/rpc',
       accounts: [deployerPrivateKey],
     },
@@ -112,6 +115,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     polygonAmoy: {
+      chainId: 80002,
       url: `https://polygon-amoy.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],
     },
@@ -124,10 +128,12 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     morphHolesky: {
+      chainId: 2810,
       url: 'https://rpc-quicknode-holesky.morphl2.io',
       accounts: [deployerPrivateKey],
     },
     chilizSpicy: {
+      chainId: 88882,
       url: 'https://chiliz-spicy.publicnode.com',
       accounts: [deployerPrivateKey],
     },
@@ -136,6 +142,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     kinto: {
+      chainId: 7887,
       url: 'https://kinto-mainnet.calderachain.xyz/http',
       accounts: [deployerPrivateKey],
       gas: 10000000,
@@ -149,6 +156,7 @@ const config: HardhatUserConfig = {
       accounts: [deployerPrivateKey],
     },
     baseSepolia: {
+      chainId: 84532,
       url: 'https://sepolia.base.org',
       accounts: [deployerPrivateKey],
     },
@@ -245,8 +253,7 @@ const config: HardhatUserConfig = {
         network: 'kinto',
         chainId: 7887,
         urls: {
-          apiURL:
-            'https://api.routescan.io/v2/network/mainnet/evm/7887/etherscan/api',
+          apiURL: 'https://api.routescan.io/v2/network/mainnet/evm/7887/etherscan/api',
           browserURL: 'https://kintoscan.io',
         },
       },
@@ -268,6 +275,9 @@ const config: HardhatUserConfig = {
     etherscan: {
       apiKey: `${etherscanApiKey}`,
     },
+  },
+  gasReporter: {
+    enabled: false,
   },
 }
 

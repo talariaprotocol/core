@@ -128,6 +128,18 @@ describe('GiftCards', function () {
 
     const root = zeroPadValue(toBeHex(input.root), 32)
     const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32)
+    
+    // Check Proof
+    expect(
+      await verifier.verifyProof(proof, [
+        BigInt(root),
+        BigInt(nullifierHash),
+        BigInt(await owner.getAddress()),
+        0,
+        0,
+        0,
+      ]),
+    ).to.be.true
 
     // Execute the test function!
     await expect(

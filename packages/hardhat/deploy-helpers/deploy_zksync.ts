@@ -45,18 +45,6 @@ const deployAndVerify = async function (hre: HardhatRuntimeEnvironment) {
     console.log(`${name} deployed at ${await contract.getAddress()}`)
     addresses[hre.network.name][name] = await contract.getAddress()
 
-    // console.log(`Verifying ${name}...`)
-    // try {
-    //   await hre.run('verify:verify', {
-    //     address: await contract.getAddress(),
-    //     contract: `contracts/${name}.sol:${name}`,
-    //     constructorArguments: args,
-    //   })
-    //   console.log(`${name} verified successfully!`)
-    // } catch (error) {
-    //   console.error(`Verification of ${name} failed:`, error)
-    // }
-
     return contract
   }
 

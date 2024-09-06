@@ -65,15 +65,15 @@ contract CommitProtocol is MerkleTreeWithHistory, ReentrancyGuard {
   */
   function consumeCode(
     bytes32 _commitment,
-    bytes calldata _proof,
+    bytes memory _proof,
     bytes32 _root,
     bytes32 _nullifierHash,
     address payable _recipient,
-    bytes[] calldata _validationsArgs
+    bytes[] memory _validationsArgs
   ) public virtual payable nonReentrant {
     require(!nullifierHashes[_nullifierHash], "The note has been already spent");
     require(isKnownRoot(_root), "Cannot find your merkle root"); // Make sure to use a recent one
-    
+        
     require(
       verifier.verifyProof(
         _proof,

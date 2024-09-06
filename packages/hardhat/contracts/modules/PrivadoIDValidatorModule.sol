@@ -54,8 +54,8 @@ contract PrivadoIDValidatorModule is IValidationModule {
   address public PrivadoIDValidator;
   ICircuitValidator.CircuitQuery public query;
 
-  constructor(ICircuitValidator.CircuitQuery memory _query) {
-    PrivadoIDValidator = 0x8c99F13dc5083b1E4c16f269735EaD4cFbc4970d; // Amoy Tesnet Address validator @todo: move to deploy script
+  constructor(ICircuitValidator.CircuitQuery memory _query, address _validator) {
+    PrivadoIDValidator = _validator;
     
     query = _query;
   }

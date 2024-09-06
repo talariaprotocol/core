@@ -22,6 +22,7 @@
     "give:tokens:morphHolesky": "hardhat run --network morphHolesky deploy-helpers/give-test-tokens.ts",
     "give:tokens:kinto": "hardhat run --network kinto deploy-helpers/give-test-tokens.ts",
     "give:tokens:chiliz": "hardhat run --network chilizSpicy deploy-helpers/give-test-tokens.ts",
+    "set:lz:peers": "hardhat run deploy-helpers/connect-layer-zero-peers.ts",
     "fork": "MAINNET_FORKING_ENABLED=true hardhat node --network hardhat --no-deploy",
     "generate": "hardhat run scripts/generateAccount.ts",
     "flatten": "hardhat flatten",
@@ -73,7 +74,15 @@
     "zksync-web3": "^0.17.1"
   },
   "dependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.41",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.40",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.40",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.41",
+    "@layerzerolabs/oapp-evm": "^0.0.4",
+    "@layerzerolabs/oft-evm": "^0.0.11",
+    "@layerzerolabs/test-devtools-evm-hardhat": "^0.2.7",
     "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@typechain/ethers-v6": "^0.5.1",
     "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc",
     "crypto": "^1.0.1",
@@ -83,6 +92,7 @@
     "nft.storage": "^7.2.0",
     "qrcode": "^1.5.1",
     "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
+    "solidity-bytes-utils": "^0.8.2",
     "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
   }
 }
