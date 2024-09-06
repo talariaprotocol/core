@@ -1,6 +1,7 @@
 import DeployedAddresses from "../contracts-data/deployments/addresses.json";
 import { Address } from "viem";
 
+export const ChillizChainId = 88882;
 export const OptimismSepoliaChainId = 11155420;
 export const zkSyncTestNetCode = 300;
 export const polygonTestnet = 80001;
@@ -34,6 +35,7 @@ export const GiftCardAddress: Record<number, Address> = {
   [polygonTestnet]: DeployedAddresses.polygonAmoy.GiftCards as Address,
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.GiftCards as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.GiftCards as Address,
+  [ChillizChainId]: DeployedAddresses.chilizSpicy.GiftCards as Address,
 };
 
 export const MorfiAddress: Record<number, Address> = {
@@ -42,6 +44,10 @@ export const MorfiAddress: Record<number, Address> = {
   [polygonTestnet]: DeployedAddresses.polygonAmoy.MORFI as Address,
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.MORFI as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.MORFI as Address,
+};
+
+export const GiftcardTokenAddress: Record<number, Address> = {
+  [ChillizChainId]: DeployedAddresses.chilizSpicy.BCN as Address,
 };
 
 export const WorldcoinValidatorModuleAddress: Record<number, Address> = {

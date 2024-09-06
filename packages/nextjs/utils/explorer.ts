@@ -1,6 +1,7 @@
 import {
   ArbitrumSepoliaChainId,
   AvalancheFujiChainId,
+  ChillizChainId,
   KintoChainId,
   OptimismSepoliaChainId,
   polygonTestnet,
@@ -14,4 +15,5 @@ export const TransactionExplorerBaseUrl: Record<number, string> = {
   [AvalancheFujiChainId]: "https://testnet.snowtrace.io/tx/",
   [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/tx/",
   [KintoChainId]: "https://kintoscan.io/tx/",
+  [ChillizChainId]: "https://testnet.chiliscan.com/tx/",
 };

@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { AwardIcon, GiftIcon } from "lucide-react";
 import { FileKey2Icon } from "lucide-react";
 import { NextPage } from "next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
+import ChilizLogo from "~~/public/logos/chiliz-logo.png";
 
 const Home: NextPage = () => {
   return (
@@ -38,11 +40,13 @@ const Home: NextPage = () => {
           <Link href="/giftcard">
             <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1" className="h-full">
               <CardHeader className="pb-4 flex flex-col gap-2">
-                <CardTitle className="text-2xl">Giftcard</CardTitle>
-                <GiftIcon className="w-32 h-32" />
+                <CardTitle className="text-2xl">BCN Giftcard</CardTitle>
+                <Image className="w-16 self-center" src={ChilizLogo} alt="chiliz-logo" />
               </CardHeader>
               <CardContent>
-                <div className="text-xs text-muted-foreground">Transfer value with just a code</div>
+                <div className="text-xs text-muted-foreground">
+                  Send tokens to your club members, without knowing their address!
+                </div>
               </CardContent>
             </Card>
           </Link>

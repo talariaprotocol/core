@@ -23,8 +23,8 @@ const PageHomeNavigation = ({
     <div className="flex min-h-full flex-col items-center justify-center">
       <div className="container justify-center flex items-center gap-32 flex-col lg:flex-row">
         <div className="space-y-4">
-          <div className="flex gap-1 items-center">
-            <Image src={logoSrc} alt="home-navigation-logo" className="w-24 h-24" />
+          <div className="flex gap-2 items-center">
+            <Image src={logoSrc} alt="home-navigation-logo" className="w-8" />
             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{title}</h1>
           </div>
           <p className="text-muted-foreground">{subTitle}</p>

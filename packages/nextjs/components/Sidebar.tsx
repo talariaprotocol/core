@@ -26,6 +26,7 @@ import { WagmiProvider, useAccount } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
+import ChilizLogo from "~~/public/logos/chiliz-logo.png";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -91,9 +92,23 @@ const CustomSidebar = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
+              href="/chiliz"
+              className={`${
+                pathname.includes("/chiliz") ? "bg-accent" : ""
+              }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <Image className="w-4" src={ChilizLogo} alt="chiliz-logo" />
+              <span className="sr-only">Chiliz</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Chiliz</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
               href="/kinto"
               className={`${
-                pathname === "/kinto" ? "bg-accent" : ""
+                pathname.includes("/kinto") ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
               <Image className="h-7 w-7" src={KintoLogo} alt="kinto-logo" />
