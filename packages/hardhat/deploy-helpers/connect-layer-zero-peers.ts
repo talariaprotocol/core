@@ -1,9 +1,16 @@
 import { join } from 'path'
 import { ethers } from 'hardhat'
-import { AddressFreeBridge, AddressFreeBridge__factory } from '../typechain-types'
+import { AddressFreeBridge, AddressFreeBridge__factory, ILayerZeroEndpointV2 } from '../typechain-types'
 import { HardhatRuntimeEnvironment, HttpNetworkConfig } from 'hardhat/types'
-import { JsonRpcProvider } from 'ethers'
+import { ContractFactory, JsonRpcProvider } from 'ethers'
 import { deployerPrivateKey } from '../hardhat.config'
+import {
+  EIDsPerNetwork,
+  LayerZeroEndpointPerNetwork,
+  LayerZeroReceiveLibraryPerNetwork,
+  LayerZeroSendLibraryPerNetwork,
+  LayerZeroSupportedChainsType,
+} from '../constants/layerzero.constants'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
 require('dotenv').config({ path: join(__dirname, '../../.env') })
@@ -17,7 +24,9 @@ async function setPeers() {
   const { ethers, network } = hre
 
   // Find all chains with AddressFreeBridge
-  const chains = Object.keys(addresses).filter((chain) => addresses[chain].AddressFreeBridge)
+  const chains = Object.keys(addresses).filter(
+    (chain) => addresses[chain].AddressFreeBridge,
+  ) as LayerZeroSupportedChainsType[]
 
   // Iterate over each chain
   for (const chain of chains) {
@@ -43,6 +52,19 @@ async function setPeers() {
 
     const BridgeFactory = await ethers.getContractFactory('AddressFreeBridge', wallet)
     const bridge = BridgeFactory.attach(bridgeAddress).connect(wallet) as AddressFreeBridge
+
+    const EndpointV2Address = LayerZeroEndpointPerNetwork[chain]
+
+    const sendLibrary = LayerZeroSendLibraryPerNetwork[chain]
+    if (!sendLibrary) {
+      console.log(`No send library found for ${chain}, skipping...`)
+      continue
+    }
+    const receiveLibrary = LayerZeroReceiveLibraryPerNetwork[chain]
+    if (!receiveLibrary) {
+      console.log(`No receive library found for ${chain}, skipping...`)
+      continue
+    }
 
     // Iterate over other chains and set peers
     for (const peerChain of chains) {
@@ -72,7 +94,58 @@ async function setPeers() {
       // Print the scanner link for the transaction
       const scannerUrl = getScannerUrl(network.name, tx.hash)
       console.log(`Transaction confirmed: ${scannerUrl}`)
+
+      // Define function signatures for setSendLibrary and setReceiveLibrary
+      const setSendLibrarySignature =
+        'function setSendLibrary(address sender, uint32 dstEid, address library)'
+      const setReceiveLibrarySignature =
+        'function setReceiveLibrary(address receiver, uint32 srcEid, address library, uint256 nonce)'
+
+      // Create an Interface for encoding the function calls
+      const iface = new ethers.Interface([setSendLibrarySignature, setReceiveLibrarySignature])
+
+      const peerEid = EIDsPerNetwork[peerChain]
+
+      // Set message libraries
+      console.log(`Setting libraries for ${chain} -> ${peerChain}...`)
+
+      // Encode the data for setSendLibrary
+      console.log('Send Library Params : ', await bridge.getAddress(), peerEid, sendLibrary)
+      const setSendLibraryData = iface.encodeFunctionData('setSendLibrary', [
+        await bridge.getAddress(),
+        peerEid,
+        sendLibrary,
+      ])
+
+      // Send the transaction for setSendLibrary
+      const sendLibTx = await wallet.sendTransaction({
+        to: EndpointV2Address,
+        data: setSendLibraryData,
+        gasLimit: 500000, // Adjust if needed
+      })
+      await sendLibTx.wait()
+      console.log(`Set send library for ${chain} -> ${peerChain}, Tx: ${sendLibTx.hash}`)
+
+      // Encode the data for setReceiveLibrary
+      console.log('Receive Library Params : ', await bridge.getAddress(), peerEid, receiveLibrary)
+      const setReceiveLibraryData = iface.encodeFunctionData('setReceiveLibrary', [
+        await bridge.getAddress(),
+        peerEid,
+        receiveLibrary,
+        0,
+      ])
+
+      // Send the transaction for setReceiveLibrary
+      const receiveLibTx = await wallet.sendTransaction({
+        to: EndpointV2Address,
+        data: setReceiveLibraryData,
+        gasLimit: 500000, // Adjust if needed
+      })
+      await receiveLibTx.wait()
+      console.log(`Set receive library for ${chain} -> ${peerChain}, Tx: ${receiveLibTx.hash}`)
     }
+
+    // Set Message Libraries
   }
 }
 
