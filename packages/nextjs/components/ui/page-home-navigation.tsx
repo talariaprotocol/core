@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactElement } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import TornadoAscii from "../assets/TornadoLogo";
@@ -12,11 +12,13 @@ const PageHomeNavigation = ({
   title,
   logoSrc,
   subTitle,
+  warningMessage,
 }: {
   application: string;
   title: string;
   logoSrc: StaticImageData;
   subTitle: string;
+  warningMessage?: ReactElement;
 }) => {
   const [code, setCode] = React.useState("");
   return (
@@ -28,6 +30,14 @@ const PageHomeNavigation = ({
             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{title}</h1>
           </div>
           <p className="text-muted-foreground">{subTitle}</p>
+          {warningMessage && (
+            <p
+              className="bg-yellow-200 
+            text-yellow-800 border border-yellow-400 rounded-md p-2"
+            >
+              {warningMessage}
+            </p>
+          )}
           <div className="flex flex-col gap-2 sm:flex-row">
             <Link
               href={`/${application}/owner`}

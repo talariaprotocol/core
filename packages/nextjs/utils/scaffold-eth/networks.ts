@@ -132,6 +132,6 @@ export function getBlockExplorerAddressLink(network: chains.Chain, address: Addr
 export function getTargetNetworks(): ChainWithAttributes[] {
   return scaffoldConfig.targetNetworks.map(targetNetwork => ({
     ...targetNetwork,
-    ...NETWORKS_EXTRA_DATA[targetNetwork.id],
+    ...NETWORKS_EXTRA_DATA[targetNetwork?.id],
   }));
 }

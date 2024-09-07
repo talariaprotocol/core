@@ -26,6 +26,7 @@ import { WagmiProvider, useAccount } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
+import MorphLogo from "~~/public/logos/morph-logo.png";
 import ChilizLogo from "~~/public/logos/chiliz-logo.png";
 import CHZTokenLogo from "~~/public/logos/chz-token.png";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
@@ -56,11 +57,11 @@ const CustomSidebar = () => {
                 pathname === "/early-access" ? "bg-accent" : ""
               }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
             >
-              <FileKey2Icon className="h-7 w-7" />
-              <span className="sr-only">Early access</span>
+              <Image className="w-4" src={MorphLogo} alt="morph-logo" />
+              <span className="sr-only">MorphL2</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Early access</TooltipContent>
+          <TooltipContent side="right">MorphL2</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
