@@ -99,7 +99,7 @@
     "ts-node": "^10.9.1",
     "use-debounce": "^8.0.4",
     "usehooks-ts": "^2.13.0",
-    "viem": "2.13.6",
+    "viem": "2.21.2",
     "wagmi": "2.9.8",
     "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d",
     "zod": "^3.23.8",

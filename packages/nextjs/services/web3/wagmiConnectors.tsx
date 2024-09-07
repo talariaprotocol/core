@@ -5,6 +5,7 @@ import {
   metaMaskWallet,
   rainbowWallet,
   safeWallet,
+  bitgetWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { rainbowkitBurnerWallet } from "burner-connector";
@@ -19,6 +20,7 @@ const wallets = [
   ledgerWallet,
   //coinbaseWallet,
   rainbowWallet,
+  bitgetWallet,
   safeWallet,
   ...(!targetNetworks.some(network => network.id !== (chains.hardhat as chains.Chain).id) || !onlyLocalBurnerWallet
     ? [rainbowkitBurnerWallet]

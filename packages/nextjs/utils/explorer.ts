@@ -6,6 +6,7 @@ import {
   OptimismSepoliaChainId,
   polygonTestnet,
   zkSyncTestNetCode,
+    MorphHoleskyChainId
 } from "~~/contracts/addresses";
 
 export const TransactionExplorerBaseUrl: Record<number, string> = {
@@ -16,4 +17,5 @@ export const TransactionExplorerBaseUrl: Record<number, string> = {
   [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/tx/",
   [KintoChainId]: "https://kintoscan.io/tx/",
   [ChillizChainId]: "https://testnet.chiliscan.com/tx/",
+  [MorphHoleskyChainId]: "\thttps://explorer-holesky.morphl2.io/tx/"
 };

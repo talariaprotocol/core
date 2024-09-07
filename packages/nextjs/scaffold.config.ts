@@ -21,6 +21,7 @@ const scaffoldConfig = {
     chains.avalancheFuji,
     chains.arbitrumSepolia,
     chains.spicy,
+    chains.morphHolesky,
   ],
 
   // The interval at which your front-end polls the RPC servers for new data

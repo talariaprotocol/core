@@ -3,7 +3,6 @@ import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithPro
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
-import MiniKitProvider from "~~/worldcoin/MinikitProvider";
 
 export const metadata = getMetadata({
   title: "Commit Protocol",
@@ -13,11 +12,11 @@ export const metadata = getMetadata({
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
-      <body>
-        <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
-      </body>
+        <body>
+          <ThemeProvider enableSystem>
+            <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          </ThemeProvider>
+        </body>
     </html>
   );
 };

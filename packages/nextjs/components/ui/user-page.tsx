@@ -204,7 +204,14 @@ const UserPage = ({
         account: account.address,
         abi: extendedContract?.abi || contractAbi,
         functionName: contractRestrictedFunction,
-        args: [processedCode.commitment, proof, root, nullifierHash, ...(sendRecipient ? [account.address] : []), []],
+        args: [
+          processedCode.commitment,
+          proof,
+          root,
+          nullifierHash,
+          ...(sendRecipient ? [account.address] : []),
+          ['0x'],
+        ],
       });
 
       setTransactionSteps(prev => ({

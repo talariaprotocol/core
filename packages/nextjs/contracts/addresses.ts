@@ -8,6 +8,7 @@ export const polygonTestnet = 80001;
 export const AvalancheFujiChainId = 43113;
 export const ArbitrumSepoliaChainId = 421614;
 export const KintoChainId = 7887;
+export const MorphHoleskyChainId = 2810;
 
 export const NumberContractAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.NumberContract as Address,
@@ -19,6 +20,7 @@ export const EarlyAccessCodeAddress: Record<number, Address> = {
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodes as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodes as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodes as Address,
+  [MorphHoleskyChainId]: DeployedAddresses.morphHolesky.EarlyAccessCodes as Address,
   [KintoChainId]: DeployedAddresses.kinto.EarlyAccessCodes as Address,
 };
 
@@ -28,6 +30,7 @@ export const EarlyAccesCodeTestAddress: Record<number, Address> = {
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodesTestContract as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodesTestContract as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodesTestContract as Address,
+  [MorphHoleskyChainId]: DeployedAddresses.morphHolesky.EarlyAccessCodesTestContract as Address,
   [KintoChainId]: DeployedAddresses.kinto.EarlyAccessCodesTestContract as Address,
 };
 
@@ -38,6 +41,7 @@ export const GiftCardAddress: Record<number, Address> = {
   [AvalancheFujiChainId]: DeployedAddresses.avalancheFuji.GiftCards as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.GiftCards as Address,
   [ChillizChainId]: DeployedAddresses.chilizSpicy.GiftCards as Address,
+  [MorphHoleskyChainId]: DeployedAddresses.morphHolesky.GiftCards as Address,
 };
 
 export const MorfiAddress: Record<number, Address> = {
@@ -48,10 +52,13 @@ export const MorfiAddress: Record<number, Address> = {
 
 export const GiftcardTokenAddress: Record<number, Address> = {
   [ChillizChainId]: DeployedAddresses.chilizSpicy.BCN as Address,
+  [MorphHoleskyChainId]: DeployedAddresses.morphHolesky.BCN as Address,
 };
 
 export const WorldcoinValidatorModuleAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.WorldcoinValidatorModule as Address,
+  [polygonTestnet]: DeployedAddresses.polygonAmoy.WorldcoinValidatorModule as Address,
+
 };
 
 export const AirNftContractAddress: Record<number, Address> = {

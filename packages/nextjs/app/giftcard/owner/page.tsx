@@ -134,7 +134,7 @@ const GiftCardOwnerPage = () => {
       account: account.address,
       abi: GiftCardAbi.abi,
       functionName: "createGiftCard",
-      args: [commitment, [], parseUnits(amount, 18), "dummy_metadata"],
+      args: [commitment, ["0xc9420473439B3BAC4c740822409d6dFaCdE5cA2B"], parseUnits(amount, 18), "dummy_metadata"],
     });
   };
 

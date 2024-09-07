@@ -10,12 +10,12 @@ import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import ShareCode from "~~/components/ui/share-code";
 import { useToast } from "~~/components/ui/use-toast";
+import { BASE_URL } from "~~/constants";
 import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { EarlyAccessCodeAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
-import { BASE_URL } from "~~/constants";
 
 enum TxStatusEnum {
   NOT_STARTED = "NOT_STARTED",
@@ -66,7 +66,7 @@ const EarlyAccessOwnerPage = () => {
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
 
   const chainId = account.chainId || OptimismSepoliaChainId;
-
+  console.log("CHAIN ID", chainId);
   const createEarlyAccessCode = async (commitment: string) => {
     return await writeContractAsync({
       address: EarlyAccessCodeAddress[chainId],
