@@ -27,6 +27,7 @@ import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
 import ChilizLogo from "~~/public/logos/chiliz-logo.png";
+import CHZTokenLogo from "~~/public/logos/chz-token.png";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -102,6 +103,20 @@ const CustomSidebar = () => {
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Chiliz</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href="/chiliz-ticket"
+              className={`${
+                pathname.includes("/chiliz-ticket") ? "bg-accent" : ""
+              }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <Image className="w-4" src={CHZTokenLogo} alt="chiliz-logo" />
+              <span className="sr-only">Chiliz Ticket</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Chiliz Ticket</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>

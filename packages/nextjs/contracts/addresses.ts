@@ -67,3 +67,11 @@ export const WorldChampionNFTContractAddress: Record<number, Address> = {
 export const WorldChampionNFTAirdropperAddress: Record<number, Address> = {
   [KintoChainId]: DeployedAddresses.kinto.WorldChampionNFTAirdropper as Address,
 };
+
+export const MatchTicketERC1155Address: Record<number, Address> = {
+  [ChillizChainId]: DeployedAddresses.chilizSpicy.MatchTicket as Address,
+};
+
+export const MatchTicketAirdropperAddress: Record<number, Address> = {
+  [ChillizChainId]: DeployedAddresses.chilizSpicy.MatchTicketAirdropper as Address,
+};
