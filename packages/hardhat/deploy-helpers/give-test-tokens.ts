@@ -33,8 +33,14 @@ async function uploadAndMint() {
   const { ethers, network } = hre
 
   const leboAddress = '0xdFD699a3224899b601925A4ce7D34c6F51b337EC'
-  const fainsteinAddress = '0x9d901B7394Cb5902ff4c4770E8D1148Bf3D025ee'
-  const martinAddress = '0xEB71ed911e4dFc35Da80103a72fE983C8c709F33'
+  const fainsteinAddress =
+    network.name == 'kinto'
+      ? '0x7D5000079419D3811033dd57C76a0E77924AB9A8'
+      : '0x9d901B7394Cb5902ff4c4770E8D1148Bf3D025ee'
+  const martinAddress =
+    network.name == 'kinto'
+      ? '0x66C8F1182B6cd92dbA95Fa7D18A303e2fef8686f'
+      : '0xEB71ed911e4dFc35Da80103a72fE983C8c709F33'
 
   console.log('Uploading metadata and minting NFTs...')
 
