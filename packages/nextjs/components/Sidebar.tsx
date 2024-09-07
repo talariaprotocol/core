@@ -13,6 +13,7 @@ import {
   AwardIcon,
   FileKey2Icon,
   GiftIcon,
+  HelpCircle,
   ScanBarcodeIcon,
   Settings,
   ShoppingCart,
@@ -26,10 +27,10 @@ import { WagmiProvider, useAccount } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
-import MorphLogo from "~~/public/logos/morph-logo.png";
 import ChilizLogo from "~~/public/logos/chiliz-logo.png";
 import CHZTokenLogo from "~~/public/logos/chz-token.png";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
+import MorphLogo from "~~/public/logos/morph-logo.png";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import Iden3AuthComponent from "~~/utils/privadoId/iden3component";
@@ -41,7 +42,7 @@ const CustomSidebar = () => {
 
   return (
     <>
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 h-full">
         <Link
           href="/"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
@@ -133,6 +134,29 @@ const CustomSidebar = () => {
           </TooltipTrigger>
           <TooltipContent side="right">Kinto</TooltipContent>
         </Tooltip>
+
+        {/* Bottom, Help */}
+        <div
+          className="
+          flex flex-col items-center gap-4
+          absolute bottom-2 w-full p-2
+          
+        "
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href="https://docs.google.com/presentation/d/12PwnsFwsrl054mIC5i5yWiceh10vNPuxJU4zGZ7LStU/pub?start=false&loop=false&delayms=3000"
+                target="_blank"
+              >
+                <HelpCircle></HelpCircle>
+                {/* <Image className="h-7 w-7" src={HelpCircle} alt="kinto-logo" /> */}
+                <span className="sr-only">About & Help</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">About & Help</TooltipContent>
+          </Tooltip>
+        </div>
       </nav>
     </>
   );
