@@ -81,15 +81,19 @@ async function setPeers() {
       const peerEid = EIDsPerNetwork[peerChain]
 
       // Set peer on the current chain
-      const tx = await bridge.setPeer(peerEid, ethers.zeroPadValue(peerBridgeAddress, 32))
-      console.log(`Set peer for ${chain} -> ${peerChain}, Tx: ${tx.hash}`)
+      try {
+        const tx = await bridge.setPeer(peerEid, ethers.zeroPadValue(peerBridgeAddress, 32))
+        await tx.wait()
+        console.log(`Set peer for ${chain} -> ${peerChain}, Tx: ${tx.hash}`)
+
+        // Print the scanner link for the transaction
+        const scannerUrl = getScannerUrl(chain, tx.hash)
+        console.log(`Transaction confirmed: ${scannerUrl}`)
+      } catch (error) {
+        console.error('Error setting peer: ', error)
+      }
 
       // Wait for the transaction to be confirmed
-      await tx.wait()
-
-      // Print the scanner link for the transaction
-      const scannerUrl = getScannerUrl(network.name, tx.hash)
-      console.log(`Transaction confirmed: ${scannerUrl}`)
 
       // Define function signatures for setSendLibrary and setReceiveLibrary
       const setSendLibrarySignature =
@@ -100,47 +104,55 @@ async function setPeers() {
       // Create an Interface for encoding the function calls
       const iface = new ethers.Interface([setSendLibrarySignature, setReceiveLibrarySignature])
 
-
       // Set message libraries
       console.log(`Setting libraries for ${chain} -> ${peerChain}...`)
 
       // Encode the data for setSendLibrary
-      console.log('Send Library Params : ', await bridge.getAddress(), peerEid, sendLibrary)
-      const setSendLibraryData = iface.encodeFunctionData('setSendLibrary', [
-        await bridge.getAddress(),
-        peerEid,
-        sendLibrary,
-      ])
+      try {
+          console.log('Send Library Params : ', await bridge.getAddress(), peerEid, sendLibrary)
+          const setSendLibraryData = iface.encodeFunctionData('setSendLibrary', [
+            await bridge.getAddress(),
+            peerEid,
+            sendLibrary,
+          ])
+    
+          // Send the transaction for setSendLibrary
+          const sendLibTx = await wallet.sendTransaction({
+            to: EndpointV2Address,
+            data: setSendLibraryData,
+            gasLimit: 500000, // Adjust if needed
+          })
+          await sendLibTx.wait()
+          console.log(`Set send library for ${chain} -> ${peerChain}, Tx: ${sendLibTx.hash}`)
 
-      // Send the transaction for setSendLibrary
-      const sendLibTx = await wallet.sendTransaction({
-        to: EndpointV2Address,
-        data: setSendLibraryData,
-        gasLimit: 500000, // Adjust if needed
-      })
-      await sendLibTx.wait()
-      console.log(`Set send library for ${chain} -> ${peerChain}, Tx: ${sendLibTx.hash}`)
+      } catch (error) {
+        console.error('Error setting libraries: ', error)
+      }
 
-      // Encode the data for setReceiveLibrary
-      console.log('Receive Library Params : ', await bridge.getAddress(), peerEid, receiveLibrary)
-      const setReceiveLibraryData = iface.encodeFunctionData('setReceiveLibrary', [
-        await bridge.getAddress(),
-        peerEid,
-        receiveLibrary,
-        0,
-      ])
+      // Receive
+      try {
+        // Encode the data for setReceiveLibrary
+        console.log('Receive Library Params : ', await bridge.getAddress(), peerEid, receiveLibrary)
+        const setReceiveLibraryData = iface.encodeFunctionData('setReceiveLibrary', [
+          await bridge.getAddress(),
+          peerEid,
+          receiveLibrary,
+          0,
+        ])
 
-      // Send the transaction for setReceiveLibrary
-      const receiveLibTx = await wallet.sendTransaction({
-        to: EndpointV2Address,
-        data: setReceiveLibraryData,
-        gasLimit: 500000, // Adjust if needed
-      })
-      await receiveLibTx.wait()
-      console.log(`Set receive library for ${chain} -> ${peerChain}, Tx: ${receiveLibTx.hash}`)
+        // Send the transaction for setReceiveLibrary
+        const receiveLibTx = await wallet.sendTransaction({
+          to: EndpointV2Address,
+          data: setReceiveLibraryData,
+          gasLimit: 500000, // Adjust if needed
+        })
+        await receiveLibTx.wait()
+        console.log(`Set receive library for ${chain} -> ${peerChain}, Tx: ${receiveLibTx.hash}`)
+
+      } catch (error) {
+        console.error('Error setting libraries: ', error)
+      }
     }
-
-    // Set Message Libraries
   }
 }
 
