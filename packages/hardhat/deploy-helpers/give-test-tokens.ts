@@ -1,7 +1,7 @@
 import { join } from 'path'
 
 import { NFTStorage } from 'nft.storage'
-import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory } from '../typechain-types'
+import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory, MatchTicket__factory, MatchTicket } from '../typechain-types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
@@ -30,7 +30,7 @@ const metadata: any[] = require('./metadata.json')
 // Read metadata array from metadata.json and upload each one and mint NFT
 async function uploadAndMint() {
   const hre = require('hardhat') as HardhatRuntimeEnvironment
-  const { ethers, network } = hre
+  const { ethers, network, deployer } = hre
 
   const leboAddress = '0xdFD699a3224899b601925A4ce7D34c6F51b337EC'
   const fainsteinAddress =
@@ -43,6 +43,19 @@ async function uploadAndMint() {
       : '0xEB71ed911e4dFc35Da80103a72fE983C8c709F33'
 
   console.log('Uploading metadata and minting NFTs...')
+
+  // Send Match Tickets
+  const MatchTicketContract = (await hre.ethers.getContractFactory('MatchTicket')) as MatchTicket__factory
+  const MatchTicket = MatchTicketContract.attach(addresses[network.name].MatchTicket) as MatchTicket
+
+  console.log('Sending Match Tickets...')
+  await MatchTicket.mint(leboAddress, 1, 10, '0x');
+  await MatchTicket.mint(fainsteinAddress, 2, 10, '0x');
+  await MatchTicket.mint(martinAddress, 3, 10, '0x');
+  await MatchTicket.mint(leboAddress, 4, 10, '0x');
+  await MatchTicket.mint(fainsteinAddress, 5, 10, '0x');
+  await MatchTicket.mint(martinAddress, 6, 10, '0x');
+  console.log('Match Tickets sent!')
 
   // Send some tokens to initial owners
   const BCNContract = (await hre.ethers.getContractFactory('BCN')) as BCN__factory
