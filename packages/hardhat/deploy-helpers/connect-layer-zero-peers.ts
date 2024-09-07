@@ -78,14 +78,10 @@ async function setPeers() {
       }
 
       // Get the peer chain's chain ID from Hardhat config
-      const peerChainId = hre.config.networks[peerChain]?.chainId
-      if (!peerChainId) {
-        console.log(`No chain ID found for ${peerChain}, skipping...`)
-        continue
-      }
+      const peerEid = EIDsPerNetwork[peerChain]
 
       // Set peer on the current chain
-      const tx = await bridge.setPeer(peerChainId, ethers.zeroPadValue(peerBridgeAddress, 32))
+      const tx = await bridge.setPeer(peerEid, ethers.zeroPadValue(peerBridgeAddress, 32))
       console.log(`Set peer for ${chain} -> ${peerChain}, Tx: ${tx.hash}`)
 
       // Wait for the transaction to be confirmed
@@ -104,7 +100,6 @@ async function setPeers() {
       // Create an Interface for encoding the function calls
       const iface = new ethers.Interface([setSendLibrarySignature, setReceiveLibrarySignature])
 
-      const peerEid = EIDsPerNetwork[peerChain]
 
       // Set message libraries
       console.log(`Setting libraries for ${chain} -> ${peerChain}...`)
