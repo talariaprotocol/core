@@ -46,6 +46,7 @@ import {
 } from "~~/components/ui/dropdown-menu";
 import { Input } from "~~/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "~~/components/ui/sheet";
+import { CUSTOM_WALLET_PAGES } from "~~/constants";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { Role, getRoleCredentialProofRequest } from "~~/utils/privadoId/identities";
 
@@ -107,10 +108,6 @@ export const Header = () => {
   // Get current page
   const pathname = usePathname();
 
-  const [investorQR, setInvestorQR] = useState<string | null>(null);
-  const [founderQR, setFounderQR] = useState<string | null>(null);
-  const [employeeQR, setEmployeeQR] = useState<string | null>(null);
-
   const { address } = useAccount();
   useEffect(() => {
     if (!address) return;
@@ -170,13 +167,13 @@ export const Header = () => {
     };
   }, [polling]);
 
+  const usesCustomConnectButton = CUSTOM_WALLET_PAGES.some(page => pathname.includes(page));
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       {/* <Breadcrumb></Breadcrumb> */}
       <div className="w-full flex items-center justify-end">
-        <div className="relative ml-auto flex-1 md:grow-0">
-          <ConnectButton></ConnectButton>
-        </div>
+        <div className="relative ml-auto flex-1 md:grow-0">{!usesCustomConnectButton && <ConnectButton />}</div>
       </div>
     </header>
   );

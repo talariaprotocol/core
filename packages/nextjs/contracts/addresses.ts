@@ -19,6 +19,7 @@ export const EarlyAccessCodeAddress: Record<number, Address> = {
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodes as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodes as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodes as Address,
+  [KintoChainId]: DeployedAddresses.kinto.EarlyAccessCodes as Address,
 };
 
 export const EarlyAccesCodeTestAddress: Record<number, Address> = {
@@ -27,6 +28,7 @@ export const EarlyAccesCodeTestAddress: Record<number, Address> = {
   [zkSyncTestNetCode]: DeployedAddresses.zkSyncSepolia.EarlyAccessCodesTestContract as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.EarlyAccessCodesTestContract as Address,
   [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.EarlyAccessCodesTestContract as Address,
+  [KintoChainId]: DeployedAddresses.kinto.EarlyAccessCodesTestContract as Address,
 };
 
 export const GiftCardAddress: Record<number, Address> = {
@@ -75,3 +77,4 @@ export const MatchTicketERC1155Address: Record<number, Address> = {
 export const MatchTicketAirdropperAddress: Record<number, Address> = {
   [ChillizChainId]: DeployedAddresses.chilizSpicy.MatchTicketAirdropper as Address,
 };
+export const KintoCountryValidatorModuleAddress = DeployedAddresses.kinto.KintoCountryValidatorModule as Address;

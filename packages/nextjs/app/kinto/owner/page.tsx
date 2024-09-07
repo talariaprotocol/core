@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { KintoAccountInfo, createKintoSDK } from "kinto-web-sdk";
 import { AwardIcon, CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon } from "lucide-react";
-import { erc721Abi } from "viem";
+import { Abi, decodeErrorResult, encodeFunctionData, erc721Abi, serializeTransaction } from "viem";
 import { Address, Hash } from "viem";
-import { useWaitForTransactionReceipt } from "wagmi";
+import { useDisconnect, useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
@@ -14,9 +15,16 @@ import { Input } from "~~/components/ui/input";
 import ShareCode from "~~/components/ui/share-code";
 import { useToast } from "~~/components/ui/use-toast";
 import { BASE_URL } from "~~/constants";
+import EarlyAccessCodes from "~~/contracts-data/deployments/kinto/EarlyAccessCodes.json";
 import WorldChampionNFTAirdropper from "~~/contracts-data/deployments/kinto/WorldChampionNFTAirdropper.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
-import { WorldChampionNFTAirdropperAddress, WorldChampionNFTContractAddress } from "~~/contracts/addresses";
+import {
+  EarlyAccessCodeAddress,
+  KintoChainId,
+  KintoCountryValidatorModuleAddress,
+  WorldChampionNFTAirdropperAddress,
+  WorldChampionNFTContractAddress,
+} from "~~/contracts/addresses";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
@@ -67,33 +75,74 @@ const TX_STEPS: Record<TxStepsEnum, TxStep> = {
   },
 };
 
-const KintoNFTOwnerPage = () => {
-  const {
-    data: approvalHash,
-    isPending: isPendingApproval,
-    writeContractAsync: writeApprovalAsync,
-  } = useWriteContract();
-  const {
-    data: createNFTAirdropHash,
-    isPending: isPendingCreateNFTAirdrop,
-    error: createNFTAirdropError,
-    writeContractAsync: writeCreateNFTAirdropAsync,
-  } = useWriteContract();
+const chainId = KintoChainId;
 
-  const account = useAccount();
+const KintoNFTOwnerPage = () => {
+  const { disconnect } = useDisconnect();
+
+  React.useEffect(() => {
+    disconnect();
+  }, []);
+
+  const [kintoAccount, setKintoAccount] = React.useState<KintoAccountInfo>();
+  const kintoSDK = createKintoSDK(WorldChampionNFTAirdropperAddress[chainId]);
+  const nftAirdropperAddress = WorldChampionNFTAirdropperAddress[chainId];
+  const nftAddress = WorldChampionNFTContractAddress[chainId];
+
+  const onConnect = async () => {
+    const account = await kintoSDK.connect();
+
+    if (!account || !account.exists) {
+      await kintoSDK.createNewWallet();
+      return;
+    }
+
+    setKintoAccount(account);
+  };
+
+  const onApprove = async () => {
+    try {
+      const approvalResult = await kintoSDK.sendTransaction([
+        {
+          data: encodeFunctionData({
+            abi: erc721Abi,
+            functionName: "approve",
+            args: [WorldChampionNFTAirdropperAddress[chainId], BigInt(idNFT)],
+          }),
+          to: WorldChampionNFTContractAddress[chainId],
+          value: 0n,
+        },
+      ]);
+
+      console.log("approvalResult", approvalResult);
+    } catch (e) {
+      console.error("Failed to approve", e);
+    }
+  };
+
+  const onCreate = async (commitment: string) => {
+    try {
+      await kintoSDK.sendTransaction([
+        {
+          data: encodeFunctionData({
+            abi: WorldChampionNFTAirdropper.abi,
+            functionName: "createWorldChampionNFTAirdrop",
+            args: [commitment, [KintoCountryValidatorModuleAddress], BigInt(idNFT), BigInt(1000)],
+          }),
+          to: WorldChampionNFTAirdropperAddress[chainId],
+          value: 0n,
+        },
+      ]);
+    } catch (e) {
+      console.error("Error sending create transaction", e);
+    }
+  };
+
   const { toast } = useToast();
   const [idNFT, setIdNFT] = useState("");
   const [compressObject, setCompressObject] = useState("");
-  const { isLoading: isLoadingApproval, isSuccess: isSuccessApproval } = useWaitForTransactionReceipt({
-    hash: approvalHash,
-  });
-  const { isLoading: isLoadingCreate, isSuccess: isSuccessCreate } = useWaitForTransactionReceipt({
-    hash: createNFTAirdropHash,
-  });
 
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
-
-  const chainId = account.chainId || OptimismSepoliaChainId;
 
   const handleApprove = async () => {
     try {
@@ -105,19 +154,18 @@ const KintoNFTOwnerPage = () => {
           status: TxStatusEnum.PENDING,
         },
       }));
-      const result = await writeApprovalAsync({
-        address: WorldChampionNFTContractAddress[chainId] as Address,
-        abi: erc721Abi,
-        functionName: "approve",
-        args: [WorldChampionNFTAirdropperAddress[chainId], BigInt(idNFT)],
-      });
+
+      // Send approval
+      await onApprove();
 
       setTransactionSteps(prev => ({
         ...prev,
         [TxStepsEnum.APPROVE]: {
           ...prev[TxStepsEnum.APPROVE],
-          message: "Approval submitted! Waiting for receipt...",
-          txHash: result,
+          // message: "Approval submitted! Waiting for receipt...",
+          message: "Approval submitted!",
+
+          // txHash: result,
         },
       }));
     } catch (error) {
@@ -126,16 +174,6 @@ const KintoNFTOwnerPage = () => {
         description: "Error submitting approval",
       });
     }
-  };
-
-  const createNFTAirdropCode = async (commitment: string) => {
-    return await writeCreateNFTAirdropAsync({
-      address: WorldChampionNFTAirdropperAddress[chainId],
-      account: account.address,
-      abi: WorldChampionNFTAirdropper.abi,
-      functionName: "createWorldChampionNFTAirdrop",
-      args: [commitment, [], BigInt(idNFT), BigInt(1000)],
-    });
   };
 
   const onSubmit = async () => {
@@ -190,14 +228,15 @@ const KintoNFTOwnerPage = () => {
         },
       }));
 
-      const result = await createNFTAirdropCode(commitment);
+      // Approve and Create NFT Airdrop
+      await onCreate(commitment);
 
       setTransactionSteps(prev => ({
         ...prev,
         [TxStepsEnum.CREATE]: {
           ...prev[TxStepsEnum.CREATE],
           message: "Commitment submited! Waiting for receipt...",
-          txHash: result,
+          // txHash: result,
         },
       }));
     } catch (e) {
@@ -205,37 +244,34 @@ const KintoNFTOwnerPage = () => {
       toast({
         description: "Error submitting NFT Airdrop creation",
       });
-    } finally {
-      console.log("isPendingCreateNFTAirdrop", isPendingCreateNFTAirdrop);
-      console.log("createNFTAirdropError", createNFTAirdropError);
     }
   };
 
-  React.useEffect(() => {
-    if (isSuccessApproval && transactionSteps[TxStepsEnum.APPROVE].status !== TxStatusEnum.DONE) {
-      setTransactionSteps(prev => ({
-        ...prev,
-        [TxStepsEnum.APPROVE]: {
-          ...prev[TxStepsEnum.APPROVE],
-          message: "Approval transaction confirmed",
-          status: TxStatusEnum.DONE,
-        },
-      }));
-    }
-  }, [isSuccessApproval]);
+  // React.useEffect(() => {
+  //   if (isSuccessApproval && transactionSteps[TxStepsEnum.APPROVE].status !== TxStatusEnum.DONE) {
+  //     setTransactionSteps(prev => ({
+  //       ...prev,
+  //       [TxStepsEnum.APPROVE]: {
+  //         ...prev[TxStepsEnum.APPROVE],
+  //         message: "Approval transaction confirmed",
+  //         status: TxStatusEnum.DONE,
+  //       },
+  //     }));
+  //   }
+  // }, [isSuccessApproval]);
 
-  React.useEffect(() => {
-    if (isSuccessCreate && transactionSteps[TxStepsEnum.CREATE].status !== TxStatusEnum.DONE) {
-      setTransactionSteps(prev => ({
-        ...prev,
-        [TxStepsEnum.CREATE]: {
-          ...prev[TxStepsEnum.CREATE],
-          message: "NFT Airdrop creation confirmed",
-          status: TxStatusEnum.DONE,
-        },
-      }));
-    }
-  }, [isSuccessCreate]);
+  // React.useEffect(() => {
+  //   if (isSuccessCreate && transactionSteps[TxStepsEnum.CREATE].status !== TxStatusEnum.DONE) {
+  //     setTransactionSteps(prev => ({
+  //       ...prev,
+  //       [TxStepsEnum.CREATE]: {
+  //         ...prev[TxStepsEnum.CREATE],
+  //         message: "NFT Airdrop creation confirmed",
+  //         status: TxStatusEnum.DONE,
+  //       },
+  //     }));
+  //   }
+  // }, [isSuccessCreate]);
 
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
@@ -254,28 +290,35 @@ const KintoNFTOwnerPage = () => {
           type="number"
           value={idNFT}
           onChange={e => setIdNFT(e.target.value)}
-          disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+          // disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+          disabled={!kintoAccount}
           className="border p-2 rounded"
           placeholder="NFT ID"
         />
-        {!account.isConnected ? (
-          <Button disabled>Connect Wallet</Button>
+        {!kintoAccount ? (
+          <Button onClick={onConnect}>Connect Kinto Wallet</Button>
         ) : transactionSteps[TxStepsEnum.APPROVE].status === TxStatusEnum.NOT_STARTED ? (
-          <Button onClick={handleApprove} disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}>
+          <Button
+            onClick={handleApprove}
+            // disabled={isPendingApproval || isLoadingApproval || isSuccessApproval}
+          >
             Approve
           </Button>
         ) : (
-          <Button onClick={onSubmit} disabled={isPendingCreateNFTAirdrop || isLoadingCreate || isSuccessCreate}>
+          <Button
+            onClick={onSubmit}
+            // disabled={isPendingCreateNFTAirdrop || isLoadingCreate || isSuccessCreate}
+          >
             Create NFT Airdrop
           </Button>
         )}
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-lg font-bold">Transaction status</p>
-        {TransactionStepsOrder.map((status, index) => {
+        {TransactionStepsOrder.map(status => {
           const step = transactionSteps[status];
           return (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" key={step.id}>
               <div className="bg-muted rounded-md flex items-center justify-center aspect-square w-10">
                 {statusIconMap[step.status]}
               </div>
@@ -294,8 +337,9 @@ const KintoNFTOwnerPage = () => {
             </div>
           );
         })}
-        {compressObject && isSuccessCreate && (
-          <ShareCode code={compressObject} url={`${BASE_URL}/airdrop-nft/user/${compressObject}`} />
+        {compressObject && (
+          // isSuccessCreate &&
+          <ShareCode code={compressObject} url={`${BASE_URL}/kinto/user/${compressObject}`} />
         )}
       </div>
     </div>

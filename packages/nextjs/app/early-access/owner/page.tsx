@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { MiniKit } from "@worldcoin/minikit-js";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon, FileKey2Icon, TimerIcon } from "lucide-react";
 import { Hash } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
@@ -65,10 +64,6 @@ const EarlyAccessOwnerPage = () => {
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash: hash });
 
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
-
-  React.useEffect(() => {
-    console.log("MINIKIT Is installed:", MiniKit.isInstalled());
-  }, []);
 
   const chainId = account.chainId || OptimismSepoliaChainId;
 
