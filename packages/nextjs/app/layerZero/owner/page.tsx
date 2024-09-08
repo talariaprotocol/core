@@ -273,8 +273,8 @@ const GiftCardOwnerLayerZeroPage = () => {
                           <Link
                               className="cursor-pointer text-xs font-light text-blue-500"
                               target="_blank"
-                              href={`https://testnet.layerzeroscan.com/tx/${step.txHash}`}
-                          >
+                              href={`${explorerUrl}${step.txHash}`}
+                              >
                             See transaction in Explorer
                           </Link>
                       )}
