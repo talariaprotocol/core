@@ -2,29 +2,24 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import AddressFreeBridgeAbi from "../../contracts-data/deployments/optimismSepolia/AddressFreeBridge.json";
 import { Input } from "./input";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClipboardPasteIcon, ClockIcon, LockOpenIcon } from "lucide-react";
-import { Abi, Address, Client, Hash } from "viem";
-import {
-  useAccount,
-  useClient,
-  usePublicClient,
-  useReadContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
+import { Abi, Address, Hash } from "viem";
+import { useAccount, useClient, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
+import { layerZeroUniqueIds } from "~~/contracts/crossChainEids";
 import { decodeDecryptAndDecompress } from "~~/helper";
 import ContractService from "~~/services/contractService";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 const snarkjs = require("snarkjs");
 const path = require("path");
-const crypto = require("crypto");
 const MerkleTree = require("fixed-merkle-tree");
 const websnarkUtils = require("websnark/src/utils");
 const buildGroth16 = require("websnark/src/groth16");
@@ -62,7 +57,6 @@ interface UserPageProps {
   contractAbi: Abi | readonly unknown[];
   contractAddressMap: Record<number, Address>;
   extendedContract?: {
-    // Used when a contract extends from our validator, like testFunction contract
     map: Record<number, Address>;
     abi: Abi | readonly unknown[];
   };
@@ -75,7 +69,7 @@ interface UserPageProps {
   sendRecipient?: boolean;
 }
 
-const UserPage = ({
+const UserPageCrossChain = ({
   userCode = "",
   contractAbi,
   contractAddressMap,
@@ -109,7 +103,8 @@ const UserPage = ({
   const { toast } = useToast();
   const chainId = account.chainId || OptimismSepoliaChainId;
   const client = useClient();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: processedCode?.sourceChainId });
+  const consumerChainClient = usePublicClient({ chainId: chainId });
 
   useEffect(() => {
     const getProvingKey = async () => {
@@ -128,6 +123,16 @@ const UserPage = ({
     console.log("decodedparams", decodedparams);
   }, [inputCode]);
 
+  useEffect(() => {
+    const getProvingKey = async () => {
+      const provingKeyPath = path.resolve(__dirname, "./withdraw_proving_key.bin");
+      const provingKey = await fetch(provingKeyPath);
+      const provingKeyParsed = await provingKey.arrayBuffer();
+      setProvingKey(Buffer.from(provingKeyParsed));
+    };
+    void getProvingKey();
+  }, []);
+
   const submitTx = async () => {
     if (!account.address || !client || !publicClient) {
       return;
@@ -144,11 +149,17 @@ const UserPage = ({
 
       // Reconstruct tree:
       const contractService = new ContractService();
+      console.log("public client", publicClient);
+      console.log("sourceChainId", processedCode.sourceChainId);
+      console.log("Address of contract service", contractAddressMap[processedCode.sourceChainId]);
+      console.log("contractAbi", contractAbi);
+
       const commitments = await contractService.getPastCommitments({
         client: publicClient,
         abi: contractAbi,
-        contractAddress: contractAddressMap[chainId],
+        contractAddress: contractAddressMap[processedCode.sourceChainId],
       });
+      console.log("commitments", commitments);
       const tree = new MerkleTree(levels, commitments);
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);
@@ -199,10 +210,49 @@ const UserPage = ({
         },
       }));
 
+      console.log("generating the options for quote");
+      const options = Options.newOptions().addExecutorLzReceiveOption(10000000, 1224986360266160).toHex().toString();
+      const returnOptions = Options.newOptions().addExecutorLzReceiveOption(10000000, 0).toHex().toString();
+
+      console.log("response option", returnOptions, options);
+
+      console.log("Params for read qoute", {
+        addressSmartContract: (extendedContract?.map || contractAddressMap)[chainId],
+        commitment: processedCode.commitment,
+        proof,
+        root,
+        nullifierHash,
+        ownerAddress: processedCode.ownerAddress,
+        sourceChainId: processedCode.sourceChainId,
+        options,
+        returnOptions,
+      });
+
+      const quoteData = (await consumerChainClient?.readContract({
+        address: (extendedContract?.map || contractAddressMap)[chainId],
+        abi: contractAbi,
+        functionName: "quote",
+        args: [
+          processedCode.commitment,
+          proof,
+          root,
+          nullifierHash,
+          processedCode.ownerAddress,
+          ["0x"],
+          layerZeroUniqueIds[processedCode.sourceChainId],
+          options,
+          returnOptions,
+        ],
+      })) as {
+        nativeFee: string;
+      };
+
+      console.log("quote response", quoteData);
+
       const result = await writeContractAsync({
         address: (extendedContract?.map || contractAddressMap)[chainId],
         account: account.address,
-        abi: extendedContract?.abi || contractAbi,
+        abi: AddressFreeBridgeAbi.abi,
         functionName: contractRestrictedFunction,
         args: [
           processedCode.commitment,
@@ -210,10 +260,14 @@ const UserPage = ({
           root,
           nullifierHash,
           ...(sendRecipient ? [account.address] : []),
-          ['0x'],
+          [],
+          layerZeroUniqueIds[processedCode.sourceChainId],
+          options,
+          returnOptions,
         ],
+        value: BigInt(Math.floor(Number(quoteData?.nativeFee) * 1.05)),
       });
-
+      console.log("result of transaction", result);
       setTransactionSteps(prev => ({
         ...prev,
         [TxStepsEnum.SUBMIT]: {
@@ -246,8 +300,6 @@ const UserPage = ({
       });
     }
   }, [isSuccess]);
-
-  const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
   return (
     <div className="flex flex-col gap-10 self-center">
@@ -295,7 +347,7 @@ const UserPage = ({
                   <Link
                     className="cursor-pointer text-xs font-light text-blue-500"
                     target="_blank"
-                    href={`${explorerUrl}${step.txHash}`}
+                    href={`https://testnet.layerzeroscan.com/tx/${step.txHash}`}
                   >
                     See transaction in Explorer
                   </Link>
@@ -309,4 +361,4 @@ const UserPage = ({
   );
 };
 
-export default UserPage;
+export default UserPageCrossChain;

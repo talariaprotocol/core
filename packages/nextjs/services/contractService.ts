@@ -17,7 +17,7 @@ export default class ContractService {
       fromBlock: 0n,
       toBlock: "latest",
     });
-
+    console.log("Events", events);
     const commitments = events
       .map(evt => {
         if ("args" in evt && "commitment" in evt.args) {

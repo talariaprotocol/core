@@ -7,6 +7,7 @@ import { FileKey2Icon } from "lucide-react";
 import { NextPage } from "next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
 import ChilizLogo from "~~/public/logos/chiliz-logo.png";
+import LayerZeroLogo from "~~/public/logos/layerzero-logo.png";
 
 const Home: NextPage = () => {
   return (
@@ -58,6 +59,17 @@ const Home: NextPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">Get an NFT Airdrop for your early adopters</div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link href="/layerZero">
+            <Card x-chunk="dashboard-05-chunk-1 sm:col-span-1" className="h-full">
+              <CardHeader className="pb-4 flex flex-col gap-2">
+                <CardTitle className="text-2xl">Layer zero</CardTitle>
+                <Image className="w-16 self-center" height="200" width="200" src={LayerZeroLogo} alt="layerzero-logo" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-xs text-muted-foreground">Send an receive giftcards cross chain</div>
               </CardContent>
             </Card>
           </Link>

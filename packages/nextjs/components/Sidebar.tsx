@@ -1,14 +1,7 @@
-import React, { Dispatch, SetStateAction, useMemo } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Header } from "./Header";
-import { useRole } from "./ScaffoldEthAppWithProviders";
-import { ToastProvider } from "./ui/toast";
-import { Toaster } from "./ui/toaster";
-import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   AwardIcon,
   FileKey2Icon,
@@ -18,18 +11,13 @@ import {
   Settings,
   ShoppingCart,
   Tornado,
-  Users2,
-  UsersIcon,
-  WalletIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
-import { WagmiProvider, useAccount } from "wagmi";
-import { BlockieAvatar } from "~~/components/scaffold-eth";
-import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
+
+import { Tooltip, TooltipContent, TooltipTrigger } from "~~/components/ui/tooltip";
 import ChilizLogo from "~~/public/logos/chiliz-logo.png";
 import CHZTokenLogo from "~~/public/logos/chz-token.png";
 import KintoLogo from "~~/public/logos/kinto-logo.png";
+import LayerZeroLogo from "~~/public/logos/layerzero-logo.png";
 import MorphLogo from "~~/public/logos/morph-logo.png";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -133,6 +121,20 @@ const CustomSidebar = () => {
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right">Kinto</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+                href="/layerZero"
+                className={`${
+                    pathname.includes("/layerZero") ? "bg-accent" : ""
+                }  flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8`}
+            >
+              <Image className="h-7 w-7" src={LayerZeroLogo} alt="layerZero-logo" />
+              <span className="sr-only">Layerzero</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">LayerZero</TooltipContent>
         </Tooltip>
 
         {/* Bottom, Help */}

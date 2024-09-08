@@ -77,6 +77,11 @@ export const WorldChampionNFTAirdropperAddress: Record<number, Address> = {
   [KintoChainId]: DeployedAddresses.kinto.WorldChampionNFTAirdropper as Address,
 };
 
+export const layerZeroBridgeAddress: Record<number, Address> = {
+  [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.AddressFreeBridge as Address,
+  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.AddressFreeBridge as Address,
+};
+
 export const MatchTicketERC1155Address: Record<number, Address> = {
   [ChillizChainId]: DeployedAddresses.chilizSpicy.MatchTicket as Address,
 };
