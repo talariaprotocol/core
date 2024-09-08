@@ -16,7 +16,6 @@ import { useToast } from "~~/components/ui/use-toast";
 import { BASE_URL } from "~~/constants";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { GiftcardTokenAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
-import { MorfiAddress } from "~~/contracts/addresses";
 import { GiftCardAddress } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import useTokenBalance from "~~/hooks/useTokenBalance";
@@ -63,7 +62,7 @@ const TX_STEPS: Record<TxStepsEnum, TxStep> = {
   [TxStepsEnum.CREATE]: {
     id: TxStepsEnum.CREATE,
     status: TxStatusEnum.NOT_STARTED,
-    message: "Create Giftcard for your membersf",
+    message: "Create Giftcard for your members",
   },
 };
 

@@ -52,13 +52,13 @@ export const MorfiAddress: Record<number, Address> = {
 
 export const GiftcardTokenAddress: Record<number, Address> = {
   [ChillizChainId]: DeployedAddresses.chilizSpicy.BCN as Address,
+  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.BCN as Address,
   [MorphHoleskyChainId]: DeployedAddresses.morphHolesky.BCN as Address,
 };
 
 export const WorldcoinValidatorModuleAddress: Record<number, Address> = {
   [OptimismSepoliaChainId]: DeployedAddresses.optimismSepolia.WorldcoinValidatorModule as Address,
   [polygonTestnet]: DeployedAddresses.polygonAmoy.WorldcoinValidatorModule as Address,
-
 };
 
 export const AirNftContractAddress: Record<number, Address> = {

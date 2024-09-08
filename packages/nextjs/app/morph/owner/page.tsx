@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, CopyIcon, FileKey2Icon, TimerIcon } from "lucide-react";
-import { Hash } from "viem";
-import { useWaitForTransactionReceipt } from "wagmi";
+import { Hash, encodeFunctionData } from "viem";
+import { usePublicClient, useWaitForTransactionReceipt } from "wagmi";
 import { useAccount } from "wagmi";
 import { useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
@@ -13,7 +13,7 @@ import { useToast } from "~~/components/ui/use-toast";
 import { BASE_URL } from "~~/constants";
 import EarlyAccessCodesContractAbi from "~~/contracts-data/deployments/optimismSepolia/EarlyAccessCodes.json";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
-import { EarlyAccessCodeAddress, OptimismSepoliaChainId } from "~~/contracts/addresses";
+import { EarlyAccessCodeAddress, MorphHoleskyChainId, OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
@@ -66,7 +66,7 @@ const EarlyAccessOwnerPage = () => {
   const [transactionSteps, setTransactionSteps] = useState(TX_STEPS);
 
   const chainId = account.chainId || OptimismSepoliaChainId;
-  console.log("CHAIN ID", chainId);
+
   const createEarlyAccessCode = async (commitment: string) => {
     return await writeContractAsync({
       address: EarlyAccessCodeAddress[chainId],
@@ -200,7 +200,7 @@ const EarlyAccessOwnerPage = () => {
             );
           })}
           {compressObject && isSuccess && (
-            <ShareCode code={compressObject} url={`${BASE_URL}/early-access/user/${compressObject}`} />
+            <ShareCode code={compressObject} url={`${BASE_URL}/morph/user/${compressObject}`} />
           )}
         </div>
       </div>

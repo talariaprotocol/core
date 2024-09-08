@@ -1,8 +1,20 @@
+"use client";
+
 import React from "react";
 import PageHomeNavigation from "../../components/ui/page-home-navigation";
+import { useSwitchChain } from "wagmi";
+import { ChillizChainId } from "~~/contracts/addresses";
 import ChilizLogo from "~~/public/logos/chz-token.png";
 
 const GiftcardHomePage = () => {
+  const { switchChain } = useSwitchChain();
+
+  React.useEffect(() => {
+    switchChain({
+      chainId: ChillizChainId,
+    });
+  }, []);
+
   return (
     <PageHomeNavigation
       application="chiliz-ticket"

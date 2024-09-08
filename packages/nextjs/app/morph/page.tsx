@@ -1,11 +1,22 @@
+"use client";
+
 import React from "react";
 import PageHomeNavigation from "../../components/ui/page-home-navigation";
-import MorphLogo from "~~/public/logos/morph-logo.png";
+import { useSwitchChain } from "wagmi";
+import MorphLogo from "~~/components/assets/Morph.logo-Green.png";
+import { MorphHoleskyChainId } from "~~/contracts/addresses";
 
 const EarlyAccessHomePage = () => {
+  const { switchChain } = useSwitchChain();
+
+  React.useEffect(() => {
+    switchChain({
+      chainId: MorphHoleskyChainId,
+    });
+  }, []);
   return (
     <PageHomeNavigation
-      application="early-access"
+      application="morph"
       warningMessage={
         <p>
           We had transactions pending indeterminately while testing this feature. <br></br>Please follow the discussion
