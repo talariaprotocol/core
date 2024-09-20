@@ -60,7 +60,7 @@ const TX_STEPS: Record<TxStepsEnum, TxStep> = {
   [TxStepsEnum.GENERATE_CODES]: {
     id: TxStepsEnum.GENERATE_CODES,
     status: TxStatusEnum.NOT_STARTED,
-    message: "Generate Tornado Codes",
+    message: "Generate Talaria",
   },
   [TxStepsEnum.CREATE]: {
     id: TxStepsEnum.CREATE,
@@ -144,7 +144,7 @@ const GiftCardOwnerPage = () => {
       ...prev,
       [TxStepsEnum.GENERATE_CODES]: {
         ...prev[TxStepsEnum.GENERATE_CODES],
-        message: "Generating Tornado Codes...",
+        message: "Generating Talaria...",
         status: TxStatusEnum.PENDING,
       },
     }));
@@ -174,7 +174,7 @@ const GiftCardOwnerPage = () => {
       ...prev,
       [TxStepsEnum.GENERATE_CODES]: {
         ...prev[TxStepsEnum.GENERATE_CODES],
-        message: "Tornado Codes generated!",
+        message: "Talaria generated!",
         status: TxStatusEnum.DONE,
       },
     }));

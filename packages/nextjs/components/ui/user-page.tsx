@@ -97,7 +97,7 @@ const UserPage = ({
     [TxStepsEnum.GENERATE_CODES]: {
       id: TxStepsEnum.GENERATE_CODES,
       status: TxStatusEnum.NOT_STARTED,
-      message: "Generate Tornado Codes Proof",
+      message: "Generate Talaria Proof",
     },
     [TxStepsEnum.SUBMIT]: {
       id: TxStepsEnum.SUBMIT,
@@ -137,7 +137,7 @@ const UserPage = ({
         ...prev,
         [TxStepsEnum.GENERATE_CODES]: {
           ...prev[TxStepsEnum.GENERATE_CODES],
-          message: "Generating Tornado Codes Proof...",
+          message: "Generating Talaria Proof...",
           status: TxStatusEnum.PENDING,
         },
       }));
@@ -185,7 +185,7 @@ const UserPage = ({
         ...prev,
         [TxStepsEnum.GENERATE_CODES]: {
           ...prev[TxStepsEnum.GENERATE_CODES],
-          message: "Tornado Codes Proof generated!",
+          message: "Talaria Proof generated!",
           status: TxStatusEnum.DONE,
         },
       }));
@@ -210,7 +210,7 @@ const UserPage = ({
           root,
           nullifierHash,
           ...(sendRecipient ? [account.address] : []),
-          ['0x'],
+          ["0x"],
         ],
       });
 

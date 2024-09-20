@@ -96,7 +96,7 @@ const KintoNFTUserPage = ({ params }: { params: { userCode?: string } }) => {
       //   ...prev,
       //   [TxStepsEnum.GENERATE_CODES]: {
       //     ...prev[TxStepsEnum.GENERATE_CODES],
-      //     message: "Generating Tornado Codes Proof...",
+      //     message: "Generating Talaria Proof...",
       //     status: TxStatusEnum.PENDING,
       //   },
       // }));
@@ -144,7 +144,7 @@ const KintoNFTUserPage = ({ params }: { params: { userCode?: string } }) => {
       //   ...prev,
       //   [TxStepsEnum.GENERATE_CODES]: {
       //     ...prev[TxStepsEnum.GENERATE_CODES],
-      //     message: "Tornado Codes Proof generated!",
+      //     message: "Talaria Proof generated!",
       //     status: TxStatusEnum.DONE,
       //   },
       // }));
@@ -304,7 +304,7 @@ type TxStep = {
 //     [TxStepsEnum.GENERATE_CODES]: {
 //       id: TxStepsEnum.GENERATE_CODES,
 //       status: TxStatusEnum.NOT_STARTED,
-//       message: "Generate Tornado Codes Proof",
+//       message: "Generate Talaria Proof",
 //     },
 //     [TxStepsEnum.SUBMIT]: {
 //       id: TxStepsEnum.SUBMIT,

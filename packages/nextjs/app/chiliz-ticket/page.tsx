@@ -20,7 +20,7 @@ const GiftcardHomePage = () => {
       application="chiliz-ticket"
       title="Welcome to the MatchTicket Platform"
       logoSrc={ChilizLogo}
-      subTitle="Get started by either creating a unique access code for an event or redeeming a code you’ve received. Whether you’re an organizer issuing tickets or a fan looking to secure your spot, we’ve made it simple and secure. TornadoCodes allows to
+      subTitle="Get started by either creating a unique access code for an event or redeeming a code you’ve received. Whether you’re an organizer issuing tickets or a fan looking to secure your spot, we’ve made it simple and secure. Talaria allows to
       distribute tickets to your users simply by sharing a code for future redemption with any wallet they choose, and add validation layers for any use case (KYC, Proof of Humanity, etc.). Easy for transfer and resale.
       The future of ticket distribution is here."
     />

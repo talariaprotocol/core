@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <div className="grid gap-2">
           <div className="flex gap-2 items-center">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight">TornadoCodes</h2>
+              <h2 className="text-3xl font-bold tracking-tight">Talaria</h2>
               <p className="text-muted-foreground">Address-Free Access Protocol</p>
             </div>
             <div className="whitespace-pre font-mono text-center text-[1.5px]">

@@ -1,12 +1,12 @@
-# TornadoCodes
+# Talaria
 
-**TornadoCodes: Secure, Configurable Access-Management Without the Hassle of Wallet Addresses**
+**Talaria: Secure, Configurable Access-Management Without the Hassle of Wallet Addresses**
 
-TornadoCodes offers a secure, address-free access-management solution that leverages commitment-based systems linked to nullifiers. Our platform is designed to address the challenges of using wallet addresses for crypto transactions, providing a flexible and customizable approach to managing access for a wide range of applications, from early access codes to subscription payments.
+Talaria offers a secure, address-free access-management solution that leverages commitment-based systems linked to nullifiers. Our platform is designed to address the challenges of using wallet addresses for crypto transactions, providing a flexible and customizable approach to managing access for a wide range of applications, from early access codes to subscription payments.
 
 ## Overview
 
-TornadoCodes is inspired by privacy-preserving solutions like Tornado Cash but is designed with a distinct focus on flexibility and configurability rather than privacy. By using commitment schemes linked to nullifiers, TornadoCodes enables a variety of secure, permission-based interactions on the blockchain, making it easier for developers to implement access management without the need for wallet addresses.
+Talaria is inspired by privacy-preserving solutions like Tornado Cash but is designed with a distinct focus on flexibility and configurability rather than privacy. By using commitment schemes linked to nullifiers, Talaria enables a variety of secure, permission-based interactions on the blockchain, making it easier for developers to implement access management without the need for wallet addresses.
 
 ## Features
 
@@ -19,7 +19,7 @@ TornadoCodes is inspired by privacy-preserving solutions like Tornado Cash but i
 
 ## Use Cases
 
-TornadoCodes can be applied to a wide range of scenarios, including but not limited to:
+Talaria can be applied to a wide range of scenarios, including but not limited to:
 
 1. **Early Access Codes**: Grant early access to events, products, or services without requiring users to provide wallet addresses.
 2. **Gift Cards**: Issue digital gift cards that can be redeemed without linking to a wallet address.
@@ -34,10 +34,10 @@ TornadoCodes can be applied to a wide range of scenarios, including but not limi
 
 ### Core Components
 
-- **Commitments and Nullifiers**: TornadoCodes relies on a system of commitments linked to nullifiers. When a transaction or action is initiated, a commitment is created. Later, this commitment can be nullified (or spent) by presenting a corresponding nullifier.
+- **Commitments and Nullifiers**: Talaria relies on a system of commitments linked to nullifiers. When a transaction or action is initiated, a commitment is created. Later, this commitment can be nullified (or spent) by presenting a corresponding nullifier.
 - **Pedersen Hashes**: Used for generating cryptographic commitments that are secure and efficient.
 - **Merkle Trees**: Provides a scalable way to manage large sets of commitments, enabling quick verification and validation.
-- **Modular Design**: TornadoCodes is built with modularity in mind, allowing for easy integration of new validation modules and other enhancements.
+- **Modular Design**: Talaria is built with modularity in mind, allowing for easy integration of new validation modules and other enhancements.
 
 ### Example Flow
 
@@ -48,14 +48,14 @@ TornadoCodes can be applied to a wide range of scenarios, including but not limi
 
 ## Installation
 
-To get started with TornadoCodes, clone the repository and install the necessary dependencies:
+To get started with Talaria, clone the repository and install the necessary dependencies:
 
 ```bash
 git clone https://github.com/mgrabina/commit
 cd commit
 yarn install
 ```
-Then, follow instructions in each package.
 
+Then, follow instructions in each package.
 
 Contact x.com/mgrabina, x.com/th0rOdinson, x.com/nicolaslebovits

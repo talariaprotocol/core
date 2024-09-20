@@ -49,7 +49,7 @@ const EarlyAccessHomePage = () => {
       }
       title="MorphL2 Early Access for Protocols"
       logoSrc={MorphLogo}
-      subTitle="Unlock the future with Morph Blockchain! Be the first to generate exclusive early access codes or redeem them to access unique digital experiences. Create your code, share it with others, or claim one to unlock new possibilities on the Morph Blockchain. Thanks to TornadoCodes you don't need your users' addresses beforehand, unlocking a new world of opportunities for user acquisition strategies!"
+      subTitle="Unlock the future with Morph Blockchain! Be the first to generate exclusive early access codes or redeem them to access unique digital experiences. Create your code, share it with others, or claim one to unlock new possibilities on the Morph Blockchain. Thanks to Talaria you don't need your users' addresses beforehand, unlocking a new world of opportunities for user acquisition strategies!"
     />
   );
 };
