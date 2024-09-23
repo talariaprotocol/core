@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "../CommitProtocol.sol";
+import "../Talaria.sol";
 
-contract EarlyAccessCodes is CommitProtocol {
+contract EarlyAccessCodes is Talaria {
 
   constructor(
     IVerifier _verifier,
     IHasher _hasher,
     uint32 _merkleTreeHeight
-  ) CommitProtocol(_verifier, _hasher, _merkleTreeHeight) {}
+  ) Talaria(_verifier, _hasher, _merkleTreeHeight) {}
 
   function createEarlyAccessCode(bytes32 _commitment, address[] calldata _validationModules) public payable {
     super.setCode(_commitment, _validationModules);

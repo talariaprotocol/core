@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./CommitProtocol.sol";
+import "./TalariaProtocol.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract ERC20Transfer is CommitProtocol {
+contract ERC20Transfer is TalariaProtocol {
   IERC20 public token;
 
   mapping(bytes32 => uint256) public TransferValues;
@@ -14,7 +14,7 @@ contract ERC20Transfer is CommitProtocol {
     IHasher _hasher,
     uint32 _merkleTreeHeight,
     IERC20 _token
-  ) CommitProtocol(_verifier, _hasher, _merkleTreeHeight) {
+  ) TalariaProtocol(_verifier, _hasher, _merkleTreeHeight) {
     token = _token;
   }
 
