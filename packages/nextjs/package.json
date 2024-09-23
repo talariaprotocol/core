@@ -6,7 +6,6 @@
     "dev": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next dev --experimental-https",
     "start": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next dev --experimental-https",
     "build": "next build",
-    "install": "yarn install",
     "serve": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next start",
     "lint": "next lint",
     "format": "prettier --write . '!(node_modules|.next|contracts)/**/*'",
