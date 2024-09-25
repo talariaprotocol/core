@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next dev --experimental-https",
-    "start": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next dev --experimental-https",
+    "dev": "next dev",
+    "start": "next dev",
     "build": "next build",
-    "serve": "HTTPS=true SSL_CRT_FILE=dev.kinto.xyz+3.pem SSL_KEY_FILE=dev.kinto.xyz+3-key.pem PORT=3001 HOST=dev.kinto.xyz next start",
+    "serve": "next start",
     "lint": "next lint",
     "format": "prettier --write . '!(node_modules|.next|contracts)/**/*'",
     "check-types": "tsc --noEmit --incremental",
