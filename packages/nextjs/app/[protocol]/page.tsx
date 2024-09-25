@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { AlertTriangle, Download } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, BarChart2, Download } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
@@ -76,12 +77,19 @@ export default function CodeGenerator({ params: { protocol } }: { params: { prot
         </Alert>
 
         {generatedCodes.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Generated Codes:</h3>
-            <Button onClick={downloadCSV} className="w-full">
-              <Download className="mr-2 h-4 w-4" /> Download as CSV
-            </Button>
-          </div>
+          <>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Generated Codes:</h3>
+              <Button onClick={downloadCSV} className="w-full">
+                <Download className="mr-2 h-4 w-4" /> Download as CSV
+              </Button>
+            </div>
+            <Link href={`/${protocol}`} className="block">
+              <Button variant="outline" className="w-full">
+                <BarChart2 className="mr-2 h-4 w-4" /> View Whitelist Insights
+              </Button>
+            </Link>
+          </>
         )}
       </div>
     </div>
