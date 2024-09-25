@@ -30,7 +30,8 @@ abstract contract BetaProtocol is Ownable {
 
   constructor(address _whitelist) Ownable(msg.sender) {
     whitelist = Whitelist(_whitelist);
-    betaAccessEnabled = false; // Start disabled
+    
+    betaAccessEnabled = true; // Start disabled
   }
 
   /*

@@ -4,19 +4,20 @@ pragma solidity ^0.8.20;
 import "../../TalariaProtocol.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Whitelist is Ownable {
-  TalariaProtocol talaria;
+contract Whitelist is Ownable, TalariaProtocol{
 
   mapping(address => bool) public usersWhitelisted;
 
   constructor(
-    address _talaria
+    IVerifier _verifier,
+    IHasher _hasher,
+    uint32 _merkleTreeHeight
+  ) TalariaProtocol(_verifier, _hasher, _merkleTreeHeight
   ) Ownable(msg.sender) {
-    talaria = TalariaProtocol(_talaria);
   }
 
   function createEarlyAccessCode(bytes32 _commitment, address[] calldata _validationModules) public payable {
-    talaria.setCode(_commitment, _validationModules);
+    setCode(_commitment, _validationModules);
   }
 
   function consumeEarlyAccessCode(
@@ -28,7 +29,7 @@ contract Whitelist is Ownable {
     bytes[] calldata _validationsArgs,
     address userToWhitelist
   ) public {
-    talaria.consumeCode(_commitment,_proof, _root, _nullifierHash, _to, _validationsArgs);
+    consumeCode(_commitment,_proof, _root, _nullifierHash, _to, _validationsArgs);
 
     usersWhitelisted[userToWhitelist] = true;
   }

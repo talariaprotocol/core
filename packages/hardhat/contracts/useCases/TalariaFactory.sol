@@ -15,7 +15,7 @@ abstract contract TalariaFactory is Ownable {
         IVerifier _verifier,
         IHasher _hasher,
         uint32 _merkleTreeHeight
-    ) {
+    ) Ownable(msg.sender) {
         defaultVerifier = _verifier;
         defaultHasher = _hasher;
         defaultMerkleTreeHeight = _merkleTreeHeight;
