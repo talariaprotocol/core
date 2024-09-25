@@ -7,11 +7,13 @@ import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
+import { useToast } from "~~/components/ui/use-toast";
 import { uppercaseFirstLetter } from "~~/utils";
 
 export default function CodeGenerator({ params: { protocol } }: { params: { protocol: string } }) {
   const [codeCount, setCodeCount] = useState("");
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const generateCodes = (count: number) => {
     const codes = Array.from({ length: count }, () => Math.random().toString(36).substring(2, 10).toUpperCase());
@@ -25,6 +27,10 @@ export default function CodeGenerator({ params: { protocol } }: { params: { prot
       // TODO: Generate codes in blockchain
       generateCodes(count);
     }
+
+    toast({
+      title: "Talaria Codes generated",
+    });
   };
 
   const downloadCSV = () => {
