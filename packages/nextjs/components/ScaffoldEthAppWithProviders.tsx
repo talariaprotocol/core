@@ -32,11 +32,12 @@ import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~~/components/ui/tooltip";
 // import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
-import Iden3AuthComponent from "~~/utils/privadoId/iden3component";
-import { Role } from "~~/utils/privadoId/identities";
+// import Iden3AuthComponent from "~~/utils/privadoId/iden3component";
+// import { Role } from "~~/utils/privadoId/identities";
 
 export type ContextType = {
-  role: Role | undefined;
+  // role: Role | undefined;
+  role: string | undefined;
 };
 
 export type ContextActionsType = {

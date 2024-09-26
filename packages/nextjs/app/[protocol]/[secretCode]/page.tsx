@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, LockOpenIcon } from "lucide-react";
-import { Abi, Address, Hash } from "viem";
+import { Hash } from "viem";
 import { useAccount, useClient, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";

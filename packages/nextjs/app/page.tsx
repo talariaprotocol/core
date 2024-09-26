@@ -1,54 +1,100 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
-import Link from "next/link";
-import TornadoAscii from "../components/assets/TornadoLogo";
-import { AwardIcon, GiftIcon } from "lucide-react";
-import { FileKey2Icon } from "lucide-react";
-import { NextPage } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
-import { projects } from "~~/constants";
+import { useState } from "react";
+import { Check, Copy } from "lucide-react";
+import { Button } from "~~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
+import { Input } from "~~/components/ui/input";
+import { Label } from "~~/components/ui/label";
+import { toast } from "~~/components/ui/use-toast";
 
-const Home: NextPage = () => {
+const codeSnippet = `pragma tu vieja lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
+
+export default function BlockchainSubmissionForm() {
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(codeSnippet);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (!name || !slug || !image) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields.",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // TODO: Implement blockchain submission
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    toast({
+      title: "Whitelist created",
+      description: "Your whitelist has been created.",
+    });
+
+    setIsSubmitting(false);
+    setName("");
+    setSlug("");
+    setImage(null);
+  };
+
   return (
-    <section className="w-full">
-      <div className="container grid gap-8 px-4 md:px-6 max-w-6xl mx-auto">
-        <div className="grid gap-2">
-          <div className="flex gap-2 items-center">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Talaria</h2>
-              <p className="text-muted-foreground">Address-Free Access Protocol</p>
-            </div>
-            <div className="whitespace-pre font-mono text-center text-[1.5px]">
-              <TornadoAscii />
-            </div>
-          </div>
+    <div className="flex flex-col gap-20 items-center justify-center flex-1">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-6 bg-card rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
+        <div className="space-y-2">
+          <Label htmlFor="image">Logo/Image</Label>
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={e => setImage(e.target.files?.[0] || null)}
+            required
+          />
         </div>
-        <div className="w-full border" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map(project => (
-            <div key={project.id} className="relative group overflow-hidden rounded-lg shadow-lg">
-              <Link href={`/${project.url}`} className="absolute inset-0 z-10">
-                <span className="sr-only">View {project.title}</span>
-              </Link>
-              <Image
-                src={project.imgSrc}
-                alt={project.title}
-                width={300}
-                height={300}
-                className="w-full h-32 object-cover group-hover:opacity-50 transition-opacity"
-                style={{ objectFit: "contain" }}
-              />
-              <div className="p-4 bg-background">
-                <h3 className="text-lg font-semibold">{project.title}</h3>
-                <p className="text-sm text-muted-foreground">{project.description}</p>
-              </div>
-            </div>
-          ))}
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required />
         </div>
-      </div>
-    </section>
+        <div className="space-y-2">
+          <Label htmlFor="slug">Slug</Label>
+          <Input id="slug" type="text" value={slug} onChange={e => setSlug(e.target.value)} required />
+        </div>
+        <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image}>
+          {isSubmitting ? "Submitting..." : "Submit Whitelist"}
+        </Button>
+      </form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Next Steps</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ol className="list-decimal list-inside space-y-2">
+            <li>Copy the code snippet below and implement it in your application:</li>
+            <div className="bg-muted p-4 rounded-md relative overflow-x-auto">
+              <pre className="text-sm pr-10 whitespace-pre-wrap break-all">{codeSnippet}</pre>
+              <Button variant="outline" size="icon" className="absolute top-2 right-2" onClick={copyToClipboard}>
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+            <li>
+              Implement <code>validate_whitelist</code> in your beta contract to check if the user is whitelisted.
+            </li>
+          </ol>
+        </CardContent>
+      </Card>
+    </div>
   );
-};
-
-export default Home;
+}

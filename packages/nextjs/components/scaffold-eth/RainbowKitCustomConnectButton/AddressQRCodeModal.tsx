@@ -1,4 +1,4 @@
-import { QRCodeSVG } from "qrcode.react";
+// import { QRCodeSVG } from "qrcode.react";
 import { Address as AddressType } from "viem";
 import { Address } from "~~/components/scaffold-eth";
 
@@ -21,7 +21,7 @@ export const AddressQRCodeModal = ({ address, modalId }: AddressQRCodeModalProps
             </label>
             <div className="space-y-3 py-6">
               <div className="flex flex-col items-center gap-6">
-                <QRCodeSVG value={address} size={256} />
+                {/* <QRCodeSVG value={address} size={256} /> */}
                 <Address address={address} format="long" disableAddressLink />
               </div>
             </div>

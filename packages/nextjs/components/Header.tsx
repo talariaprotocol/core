@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRole } from "./ScaffoldEthAppWithProviders";
 import { Badge } from "./ui/badge";
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
@@ -24,31 +23,13 @@ import {
   UsersIcon,
   WalletIcon,
 } from "lucide-react";
-import QRCode from "qrcode.react";
 import { useAccount } from "wagmi";
 import { BugAntIcon } from "@heroicons/react/24/outline";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "~~/components/ui/breadcrumb";
 import { Button } from "~~/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~~/components/ui/dropdown-menu";
 import { Input } from "~~/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "~~/components/ui/sheet";
 import { CUSTOM_WALLET_PAGES } from "~~/constants";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { Role, getRoleCredentialProofRequest } from "~~/utils/privadoId/identities";
 
 type HeaderMenuLink = {
   label: string;
@@ -129,43 +110,6 @@ export const Header = () => {
 
   const [polling, setPolling] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const checkRole = async () => {
-    console.log("role", roleContext?.role);
-    fetch("/api/role?address=" + address)
-      .then(res => res.json())
-      .then(data => {
-        console.log("roles from backend: ", data);
-        const dataRoles = data as {
-          data: {
-            role: Role;
-          }[];
-        };
-
-        if (!dataRoles?.data || dataRoles?.data.length === 0) {
-          return;
-        }
-
-        roleContext?.setRole({ ...roleContext, role: dataRoles?.data[0].role });
-        setIsDialogOpen(false); // Close the dialog when role is set
-      })
-      .catch(error => {
-        console.error("Error fetching roles: ", error);
-      });
-  };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (polling) {
-      checkRole(); // Check immediately
-      interval = setInterval(checkRole, 2000); // Check every 5 seconds
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [polling]);
 
   const usesCustomConnectButton = CUSTOM_WALLET_PAGES.some(page => pathname.includes(page));
 
