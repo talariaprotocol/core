@@ -12,7 +12,6 @@ import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
-import ContractService from "~~/services/contractService";
 import { uppercaseFirstLetter } from "~~/utils";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
@@ -111,7 +110,6 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
       }));
 
       // Reconstruct tree:
-      const contractService = new ContractService();
 
       // TODO: Implement Abi and contractAddressMap from Whitelist contract
       const commitments: string[] = [];

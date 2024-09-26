@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { Hash } from "viem";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
+import WhitelistFactoryABI from "~~/contracts-data/deployments/arbitrumSepolia/WhitelistFactory.json";
+import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
+import { contractService } from "~~/services/contractService";
 
 const codeSnippet = `pragma tu vieja lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
@@ -16,6 +21,14 @@ export default function BlockchainSubmissionForm() {
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const hasSavedRef = useRef(false);
+  const publicClient = usePublicClient();
+
+  const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
+
+  const account = useAccount();
+
+  const currentNetwork = account.chainId || polygonTestnet;
 
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(codeSnippet);
@@ -37,11 +50,11 @@ export default function BlockchainSubmissionForm() {
     }
 
     // TODO: Implement blockchain submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    toast({
-      title: "Whitelist created",
-      description: "Your whitelist has been created.",
+    await writeContractAsync({
+      abi: WhitelistFactoryABI.abi,
+      address: WhitelistFactoryAddresses[currentNetwork],
+      functionName: "create",
+      args: [],
     });
 
     setIsSubmitting(false);
@@ -49,6 +62,34 @@ export default function BlockchainSubmissionForm() {
     setSlug("");
     setImage(null);
   };
+
+  React.useEffect(() => {
+    const saveWhitelist = async (hash: Hash) => {
+      if (!publicClient) return;
+      // Get created whitelist address
+      const whitelistAddress = await contractService.getWhitelistAddress({
+        client: publicClient,
+        abi: WhitelistFactoryABI.abi,
+        transactionHash: hash,
+      });
+
+      console.log("whitelistAddress", whitelistAddress);
+
+      // TODO: Submit to DB
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      toast({
+        title: "Whitelist created",
+        description: "Your whitelist has been created.",
+      });
+    };
+
+    if (hash && !hasSavedRef.current && publicClient) {
+      console.log("hash", hash);
+      hasSavedRef.current = true;
+      saveWhitelist(hash);
+    }
+  }, [hash]);
 
   return (
     <div className="flex flex-col gap-20 items-center justify-center flex-1">

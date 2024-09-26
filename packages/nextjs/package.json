@@ -16,8 +16,6 @@
   "dependencies": {
     "@ethersproject/bignumber": "^5.7.0",
     "@heroicons/react": "^2.0.11",
-    "@hookform/resolvers": "^3.9.0",
-    "@iden3/js-iden3-auth": "1.4.0",
     "@layerzerolabs/lz-v2-utilities": "^2.3.40",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",

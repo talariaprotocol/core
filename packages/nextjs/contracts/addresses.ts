@@ -10,6 +10,6 @@ export const ArbitrumSepoliaChainId = 421614;
 export const KintoChainId = 7887;
 export const MorphHoleskyChainId = 2810;
 
-export const WhitelistFactoryAddresse = {
-  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.WhitelistFactory,
+export const WhitelistFactoryAddresses: Record<number, Address> = {
+  [ArbitrumSepoliaChainId]: DeployedAddresses.arbitrumSepolia.WhitelistFactory as Address,
 };
