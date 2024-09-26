@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, LockOpenIcon } from "lucide-react";
-import { Abi, Address, Hash } from "viem";
+import { Hash } from "viem";
 import { useAccount, useClient, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
@@ -12,7 +12,6 @@ import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
-import ContractService from "~~/services/contractService";
 import { uppercaseFirstLetter } from "~~/utils";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
@@ -111,7 +110,6 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
       }));
 
       // Reconstruct tree:
-      const contractService = new ContractService();
 
       // TODO: Implement Abi and contractAddressMap from Whitelist contract
       const commitments: string[] = [];

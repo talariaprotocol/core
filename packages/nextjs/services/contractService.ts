@@ -1,6 +1,6 @@
-import { Abi, Address, Client, PublicClient, getContract, parseUnits } from "viem";
+import { Abi, Address, Client, Hash, PublicClient, decodeEventLog, getContract, parseUnits } from "viem";
 
-export default class ContractService {
+class ContractService {
   async getPastCommitments({
     client,
     abi,
@@ -28,4 +28,32 @@ export default class ContractService {
 
     return commitments;
   }
+
+  async getWhitelistAddress({
+    client,
+    abi,
+    transactionHash,
+  }: {
+    client: PublicClient;
+    abi: Abi | readonly unknown[];
+    transactionHash: Hash;
+  }) {
+    const receipt = await client.getTransactionReceipt({
+      hash: transactionHash,
+    });
+
+    const decodedLogs = receipt.logs.map(log => {
+      const decodedLog = decodeEventLog({
+        abi,
+        eventName: "WhitelistCreated",
+        data: log.data,
+        topics: log.topics,
+      });
+      return decodedLog;
+    });
+    // @ts-ignore
+    return decodedLogs.find(log => log.eventName === "WhitelistCreated")?.args.whitelist as Address;
+  }
 }
+
+export const contractService = new ContractService();
