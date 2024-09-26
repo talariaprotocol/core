@@ -1,7 +1,7 @@
 import RedeemCodeForm from "./redeem-code-form";
 import { Address } from "viem";
 
-export const WHITELIST_MOCK_DATA = {
+const WHITELIST_MOCK_DATA = {
   address: "0x36711b58f3e7a3c5bf23900f5a42d1651258104d" as Address,
 };
 
