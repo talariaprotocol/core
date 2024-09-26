@@ -2,10 +2,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as commitProtocolSol from "./CommitProtocol.sol";
-export * as ethTransferSol from "./ETHTransfer.sol";
+export * as talariaProtocolSol from "./TalariaProtocol.sol";
+export * as examples from "./examples";
 export * as helpers from "./helpers";
+export * as mocks from "./mocks";
 export * as modules from "./modules";
 export * as useCases from "./useCases";
 export { ERC1155Transfer__factory } from "./ERC1155Transfer__factory";
 export { ERC20Transfer__factory } from "./ERC20Transfer__factory";
 export { ERC721Transfer__factory } from "./ERC721Transfer__factory";
+export { ETHTransfer__factory } from "./ETHTransfer__factory";
