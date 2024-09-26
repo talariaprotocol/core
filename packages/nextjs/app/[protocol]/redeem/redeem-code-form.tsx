@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, LockOpenIcon } from "lucide-react";
-import { Hash } from "viem";
+import { Address, Hash } from "viem";
 import { useAccount, useClient, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
 import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
+import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/contracts/useCases/whitelist/Whitelist__factory";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
+import { contractService } from "~~/services/contractService";
 import { uppercaseFirstLetter } from "~~/utils";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
@@ -50,7 +52,16 @@ type TxStep = {
   txHash?: Hash;
 };
 
-const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: string; secretCode: string } }) => {
+const RedeemCodeForm = ({
+  protocol,
+  logo,
+  whitelistAddress,
+}: {
+  protocol: string;
+  logo: string;
+  whitelistAddress: Address;
+}) => {
+  const secretCode = encodeURIComponent(window.location.hash.slice(1));
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
   const account = useAccount();
   const { data: hash, isPending: isPendingSendNumber, error, writeContractAsync } = useWriteContract();
@@ -110,14 +121,11 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
       }));
 
       // Reconstruct tree:
-
-      // TODO: Implement Abi and contractAddressMap from Whitelist contract
-      const commitments: string[] = [];
-      //   const commitments = await contractService.getPastCommitments({
-      //     client: publicClient,
-      //     abi: contractAbi,
-      //     contractAddress: contractAddressMap[chainId],
-      //   });
+      const commitments = await contractService.getPastCommitments({
+        client: publicClient,
+        abi: Whitelist__factory.abi,
+        contractAddress: whitelistAddress,
+      });
       const tree = new MerkleTree(levels, commitments);
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);
@@ -145,9 +153,9 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
 
       const { proof } = websnarkUtils.toSolidityInput(proofData);
       console.log("proof successfull", proof);
-      const root = zeroPadValue(toBeHex(input.root), 32);
+      const root = zeroPadValue(toBeHex(input.root), 32) as Hash;
       console.log("root", root);
-      const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32);
+      const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
       console.log("nullifierHash", nullifierHash);
 
       setTransactionSteps(prev => ({
@@ -169,21 +177,13 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
       }));
 
       // TODO: Implement contract call
-      const result = "0x";
-      //   const result = await writeContractAsync({
-      //     address: (extendedContract?.map || contractAddressMap)[chainId],
-      //     account: account.address,
-      //     abi: extendedContract?.abi || contractAbi,
-      //     functionName: contractRestrictedFunction,
-      //     args: [
-      //       processedCode.commitment,
-      //       proof,
-      //       root,
-      //       nullifierHash,
-      //       ...(sendRecipient ? [account.address] : []),
-      //       ["0x"],
-      //     ],
-      //   });
+      const result = await writeContractAsync({
+        address: whitelistAddress,
+        account: account.address,
+        abi: Whitelist__factory.abi,
+        functionName: "consumeEarlyAccessCode",
+        args: [processedCode.commitment, proof, root, nullifierHash, whitelistAddress, [], account.address],
+      });
 
       setTransactionSteps(prev => ({
         ...prev,
@@ -279,4 +279,4 @@ const UserPage = ({ params: { protocol, secretCode } }: { params: { protocol: st
   );
 };
 
-export default UserPage;
+export default RedeemCodeForm;
