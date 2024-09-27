@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Check, Copy } from "lucide-react";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import Landing from "~~/components/landing";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
 import { Input } from "~~/components/ui/input";
@@ -12,16 +12,18 @@ import { toast } from "~~/components/ui/use-toast";
 import WhitelistFactoryABI from "~~/contracts-data/deployments/arbitrumSepolia/WhitelistFactory.json";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
 import { contractService } from "~~/services/contractService";
+import { databaseService } from "~~/services/databaseService";
 
 const codeSnippet = `pragma tu vieja lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
-export default function BlockchainSubmissionForm() {
+export default function CreateWhitelist() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
   const hasSavedRef = useRef(false);
+  const [productUrl, setProductUrl] = useState("");
   const publicClient = usePublicClient();
 
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
@@ -65,35 +67,44 @@ export default function BlockchainSubmissionForm() {
 
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
-      if (!publicClient) return;
-      // Get created whitelist address
-      const whitelistAddress = await contractService.getWhitelistAddress({
-        client: publicClient,
-        abi: WhitelistFactoryABI.abi,
-        transactionHash: hash,
-      });
+      if (!publicClient || !image) return;
+      try {
+        const whitelistAddress = await contractService.getWhitelistAddress({
+          client: publicClient,
+          abi: WhitelistFactoryABI.abi,
+          transactionHash: hash,
+        });
 
-      console.log("whitelistAddress", whitelistAddress);
+        await databaseService.createWhitelist({
+          address: whitelistAddress,
+          name,
+          slug,
+          image,
+          productUrl,
+        });
 
-      // TODO: Submit to DB
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      toast({
-        title: "Whitelist created",
-        description: "Your whitelist has been created.",
-      });
+        toast({
+          title: "Whitelist created",
+          description: "Your whitelist has been created.",
+        });
+      } catch (error) {
+        console.error("Error saving whitelist", error);
+        toast({
+          title: "Error",
+          description: "There was an error saving your whitelist.",
+        });
+      }
     };
 
     if (hash && !hasSavedRef.current && publicClient) {
-      console.log("hash", hash);
       hasSavedRef.current = true;
       saveWhitelist(hash);
     }
   }, [hash]);
 
   return (
-    <div className="flex flex-col gap-20 items-center justify-center flex-1">
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-6 bg-card rounded-lg shadow-lg">
+    <div className="grid grid-cols-2">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-6 bg-card rounded-lg shadow-lg w-full">
         <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
         <div className="space-y-2">
           <Label htmlFor="image">Logo/Image</Label>
@@ -113,29 +124,21 @@ export default function BlockchainSubmissionForm() {
           <Label htmlFor="slug">Slug</Label>
           <Input id="slug" type="text" value={slug} onChange={e => setSlug(e.target.value)} required />
         </div>
+        <div className="space-y-2">
+          <Label htmlFor="productUrl">Product URL</Label>
+          <Input
+            id="productUrl"
+            type="text"
+            value={productUrl}
+            onChange={e => setProductUrl(e.target.value)}
+            required
+          />
+        </div>
         <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image}>
           {isSubmitting ? "Submitting..." : "Submit Whitelist"}
         </Button>
       </form>
-      <Card>
-        <CardHeader>
-          <CardTitle>Next Steps</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ol className="list-decimal list-inside space-y-2">
-            <li>Copy the code snippet below and implement it in your application:</li>
-            <div className="bg-muted p-4 rounded-md relative overflow-x-auto">
-              <pre className="text-sm pr-10 whitespace-pre-wrap break-all">{codeSnippet}</pre>
-              <Button variant="outline" size="icon" className="absolute top-2 right-2" onClick={copyToClipboard}>
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
-            </div>
-            <li>
-              Implement <code>validate_whitelist</code> in your beta contract to check if the user is whitelisted.
-            </li>
-          </ol>
-        </CardContent>
-      </Card>
+      <Landing />
     </div>
   );
 }
