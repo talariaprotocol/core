@@ -182,7 +182,7 @@ const RedeemCodeForm = ({
         account: account.address,
         abi: Whitelist__factory.abi,
         functionName: "consumeEarlyAccessCode",
-        args: [processedCode.commitment, proof, root, nullifierHash, whitelistAddress, [], account.address],
+        args: [processedCode.commitment, proof, root, nullifierHash, account.address, [], account.address],
       });
 
       setTransactionSteps(prev => ({
@@ -242,7 +242,11 @@ const RedeemCodeForm = ({
             <Input disabled className="overflow-ellipsis pr-12 bg-secondary" id="code-input" value={secretCode} />
           </div>
         </div>
-        <Button onClick={submitTx} disabled={isLoading || isSuccess || !account.isConnected} className="w-full">
+        <Button
+          onClick={submitTx}
+          disabled={isLoading || isSuccess || !account.isConnected || !provingKey}
+          className="w-full"
+        >
           {isPendingSendNumber ? "Pending, please check your wallet..." : "Submit code & Execute transaction"}
         </Button>
 
