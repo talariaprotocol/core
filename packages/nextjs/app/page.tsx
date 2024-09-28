@@ -100,6 +100,7 @@ export default function CreateWhitelist() {
       hasSavedRef.current = true;
       saveWhitelist(hash);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hash]);
 
   return (

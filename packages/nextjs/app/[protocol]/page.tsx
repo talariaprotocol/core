@@ -1,29 +1,17 @@
-"use client";
-
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import ManageWhitelistForm from "./manage-whitelist-form";
-import { AlertTriangle, BarChart2, Download } from "lucide-react";
-import { useWriteContract } from "wagmi";
-import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
-import { Button } from "~~/components/ui/button";
-import { Input } from "~~/components/ui/input";
-import { Label } from "~~/components/ui/label";
-import { useToast } from "~~/components/ui/use-toast";
-import { uppercaseFirstLetter } from "~~/utils";
+import ManageWhitelistForm from "./components/manage-whitelist-form";
 import { Address } from "viem";
 
 const WHITELIST_MOCK_DATA = {
   address: "0x36711b58f3e7a3c5bf23900f5a42d1651258104d" as Address,
 };
 
-
 export default function CodeGenerator({ params: { protocol } }: { params: { protocol: string } }) {
   const logo = "";
-  const owner = "0x123";
+  const owner = "0x7C22B07a9D65228A54390B03Bc109e46D3BB94Ef";
 
   // TODO: query logo from protocol + validate slug
+  // TODO: Also fetch whitelist statistics from thegraph, and revalidate data after new codes are submitted
+
   return (
     <ManageWhitelistForm
       protocol={protocol}

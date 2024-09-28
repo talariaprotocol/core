@@ -17,12 +17,19 @@ import { contractService } from "~~/services/contractService";
 import { uppercaseFirstLetter } from "~~/utils";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const snarkjs = require("snarkjs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require("crypto");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const MerkleTree = require("fixed-merkle-tree");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const websnarkUtils = require("websnark/src/utils");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const buildGroth16 = require("websnark/src/groth16");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const circuit = require("~~/contracts-data/helpers/withdraw.json");
 const levels = 20;
 
@@ -61,7 +68,6 @@ const RedeemCodeForm = ({
   logo: string;
   whitelistAddress: Address;
 }) => {
-  const secretCode = encodeURIComponent(window.location.hash.slice(1));
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
   const account = useAccount();
   const { data: hash, isPending: isPendingSendNumber, error, writeContractAsync } = useWriteContract();
@@ -96,11 +102,12 @@ const RedeemCodeForm = ({
   }, []);
 
   useEffect(() => {
+    const secretCode = encodeURIComponent(window.location.hash.slice(1));
     if (!secretCode) return;
+
     try {
       const decodedparams = decodeDecryptAndDecompress(secretCode) as any;
       setProcessedCode(decodedparams);
-      console.log("decodedparams", decodedparams);
     } catch (e) {
       console.error("Error decoding params", e);
     }
@@ -129,7 +136,6 @@ const RedeemCodeForm = ({
       const tree = new MerkleTree(levels, commitments);
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);
-      console.log("commitmentIndex", commitmentIndex);
       const { pathElements, pathIndices } = tree.path(commitmentIndex);
       const input = stringifyBigInts({
         // public
@@ -146,17 +152,12 @@ const RedeemCodeForm = ({
         pathIndices: pathIndices,
       });
 
-      console.log("proving_key", provingKey);
       const groth16 = await buildGroth16();
       const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, provingKey?.buffer);
-      console.log("proofData", proofData);
 
       const { proof } = websnarkUtils.toSolidityInput(proofData);
-      console.log("proof successfull", proof);
       const root = zeroPadValue(toBeHex(input.root), 32) as Hash;
-      console.log("root", root);
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
-      console.log("nullifierHash", nullifierHash);
 
       setTransactionSteps(prev => ({
         ...prev,
@@ -217,6 +218,7 @@ const RedeemCodeForm = ({
         description: `Congratulations, you are now whitelisted for ${uppercaseFirstLetter(protocol)}!`,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, protocol]);
 
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
@@ -239,7 +241,12 @@ const RedeemCodeForm = ({
             Your proof code:
           </label>
           <div className="relative flex-1">
-            <Input disabled className="overflow-ellipsis pr-12 bg-secondary" id="code-input" value={secretCode} />
+            <Input
+              disabled
+              className="overflow-ellipsis pr-12 bg-secondary"
+              id="code-input"
+              value={processedCode?.commitment}
+            />
           </div>
         </div>
         <Button

@@ -1,6 +1,7 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
+import Footer from "~~/components/footer";
 import { Navigation } from "~~/components/navigation";
 import { Toaster } from "~~/components/ui/toaster";
 import { TooltipProvider } from "~~/components/ui/tooltip";
@@ -19,12 +20,13 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>
             <div className="flex flex-col min-h-screen">
-              <Navigation />
               <TooltipProvider>
-                <main className="container flex-1 flex justify-center items-center bg-muted/40">
+                <Navigation />
+                <main className="flex-1 flex justify-center bg-muted/40 py-6 px-2 md:px-0">
                   {children}
                   <Toaster />
                 </main>
+                <Footer />
               </TooltipProvider>
             </div>
           </ScaffoldEthAppWithProviders>
