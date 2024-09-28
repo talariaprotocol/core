@@ -1,6 +1,6 @@
 import { Abi, Address, Client, Hash, PublicClient, decodeEventLog, getContract, parseUnits } from "viem";
 
-class ContractService {
+export class ContractService {
   async getPastCommitments({
     client,
     abi,
@@ -17,7 +17,7 @@ class ContractService {
       fromBlock: 0n,
       toBlock: "latest",
     });
-    console.log("Events", events);
+
     const commitments = events
       .map(evt => {
         if ("args" in evt && "commitment" in evt.args) {

@@ -7,3 +7,14 @@ export interface CreateWhitelist {
   image: File;
   productUrl: string;
 }
+
+export interface WhitelistedAddresses {
+  address: Address;
+  timestamp: bigint;
+}
+[];
+
+export interface WhitelistStatistics {
+  generated: number;
+  whitelistedAddresses: WhitelistedAddresses[];
+}
