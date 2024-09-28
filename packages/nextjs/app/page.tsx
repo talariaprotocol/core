@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import Link from "next/link";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import Landing from "~~/components/landing";
@@ -65,6 +66,8 @@ export default function CreateWhitelist() {
     setImage(null);
   };
 
+  const [isWhitelistSaved, setIsWhitelistSaved] = useState(false);
+
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
       if (!publicClient || !image) return;
@@ -83,6 +86,7 @@ export default function CreateWhitelist() {
           productUrl,
         });
 
+        setIsWhitelistSaved(true);
         toast({
           title: "Whitelist created",
           description: "Your whitelist has been created.",
@@ -104,8 +108,8 @@ export default function CreateWhitelist() {
   }, [hash]);
 
   return (
-    <div className="grid grid-cols-2">
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto p-6 bg-card rounded-lg shadow-lg w-full">
+    <div className="flex flex-col md:flex-row gap-16">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-lg p-6 bg-card rounded-lg w-full border">
         <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
         <div className="space-y-2">
           <Label htmlFor="image">Logo/Image</Label>
@@ -135,9 +139,16 @@ export default function CreateWhitelist() {
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image}>
-          {isSubmitting ? "Submitting..." : "Submit Whitelist"}
-        </Button>
+        <div className="flex flex-col gap-4">
+          <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image || !account}>
+            {!account ? "Connect Wallet" : isSubmitting ? "Submitting..." : "Submit Whitelist"}
+          </Button>
+          <Link href={`/${slug}`} className={`w-full ${!isWhitelistSaved ? "pointer-events-none" : ""}`}>
+            <Button className="w-full" disabled={!isWhitelistSaved} variant="outline">
+              Start generating codes
+            </Button>
+          </Link>
+        </div>
       </form>
       <Landing />
     </div>
