@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { Upload } from "lucide-react";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import SlugInput from "~~/components/homepage/slug-input";
 import Landing from "~~/components/landing";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
@@ -32,12 +35,6 @@ export default function CreateWhitelist() {
   const account = useAccount();
 
   const currentNetwork = account.chainId || polygonTestnet;
-
-  const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(codeSnippet);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,49 +105,62 @@ export default function CreateWhitelist() {
   }, [hash]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-16">
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-lg p-6 bg-card rounded-lg w-full border">
-        <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
-        <div className="space-y-2">
-          <Label htmlFor="image">Logo/Image</Label>
-          <Input
-            id="image"
-            type="file"
-            accept="image/*"
-            onChange={e => setImage(e.target.files?.[0] || null)}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="slug">Slug</Label>
-          <Input id="slug" type="text" value={slug} onChange={e => setSlug(e.target.value)} required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="productUrl">Product URL</Label>
-          <Input
-            id="productUrl"
-            type="text"
-            value={productUrl}
-            onChange={e => setProductUrl(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image || !account}>
-            {!account ? "Connect Wallet" : isSubmitting ? "Submitting..." : "Submit Whitelist"}
-          </Button>
-          <Link href={`/${slug}`} className={`w-full ${!isWhitelistSaved ? "pointer-events-none" : ""}`}>
-            <Button className="w-full" disabled={!isWhitelistSaved} variant="outline">
-              Start generating codes
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-lg h-min self-center">
+      <div className="p-6 bg-card rounded-lg border md:min-w-96 h-min">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+          <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
+          <div className="space-y-2">
+            <Label htmlFor="name">Company Name</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+              placeholder="Talaria Protocol"
+            />
+          </div>
+          <div className="space-y-2">
+            <SlugInput slug={slug} setSlug={setSlug} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="logo" className="block">
+              Company Logo
+            </Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={e => setImage(e.target.files?.[0] ?? null)}
+              className="w-full"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="productUrl">Product CTA URL (optional)</Label>
+            <Input
+              id="productUrl"
+              type="text"
+              value={productUrl}
+              onChange={e => setProductUrl(e.target.value)}
+              placeholder="your-company.xyz/new-feature"
+            />
+            <p className="text-sm text-muted-foreground">Where to send users after whitelisting</p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image || !account}>
+              {!account ? "Connect Wallet" : isSubmitting ? "Submitting..." : "Submit Whitelist"}
             </Button>
-          </Link>
-        </div>
-      </form>
-      <Landing />
+            <Link href={`/${slug}`} className={`w-full ${!isWhitelistSaved ? "pointer-events-none" : ""}`}>
+              <Button className="w-full" disabled={!isWhitelistSaved} variant="outline">
+                Start generating codes
+              </Button>
+            </Link>
+          </div>
+        </form>
+      </div>
+      <div className="h-full">
+        <Landing showDocs={isWhitelistSaved} />
+      </div>
     </div>
   );
 }

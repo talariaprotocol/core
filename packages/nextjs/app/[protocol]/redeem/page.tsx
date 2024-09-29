@@ -7,10 +7,18 @@ const WHITELIST_MOCK_DATA = {
 
 const RedeemPage = ({ params: { protocol } }: { params: { protocol: string } }) => {
   const logo = "";
+  const protocolCTAUrl = "";
 
   // TODO: query logo from protocol + validate slug
 
-  return <RedeemCodeForm protocol={protocol} logo={logo} whitelistAddress={WHITELIST_MOCK_DATA.address} />;
+  return (
+    <RedeemCodeForm
+      protocol={protocol}
+      logo={logo}
+      whitelistAddress={WHITELIST_MOCK_DATA.address}
+      ctaUrl={protocolCTAUrl}
+    />
+  );
 };
 
 export default RedeemPage;

@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AlertTriangle, Download, Loader2 } from "lucide-react";
+import { AlertTriangle, BarChart2Icon, BarChartIcon, Code, Download, Loader2 } from "lucide-react";
 import { Address, Hash } from "viem";
 import { useAccount, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
+import { ButtonGroup } from "~~/components/button-group";
 import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
@@ -31,7 +32,7 @@ export default function ManageWhitelistForm({
   ownerAddress: Address;
 }) {
   const account = useAccount();
-  const [codeCount, setCodeCount] = useState("");
+  const [codeCount, setCodeCount] = useState("50");
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
@@ -117,7 +118,7 @@ export default function ManageWhitelistForm({
     return ownerAddress.toLowerCase() === account.address?.toLowerCase();
   }, [ownerAddress, account.address]);
 
-  const disabledForm = isPendingWrite || isFetching || !isOwner;
+  const disabledForm = isPendingWrite || isFetching || !isOwner || !account.isConnected;
 
   return (
     <div className="space-y-8">
@@ -128,35 +129,52 @@ export default function ManageWhitelistForm({
         </div>
         <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 flex flex-col gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="lg:col-span-1 flex flex-col gap-4">
           <Card className="w-full flex-1">
             <CardHeader>
-              <CardTitle>Generate Codes</CardTitle>
+              <CardTitle className="flex gap-2 items-center">
+                <Code className="w-5 h-5" />
+                Generate Codes
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <form onSubmit={handleSubmit} className="flex items-end space-x-2">
-                <div className="flex-1">
+              <form onSubmit={handleSubmit} className="flex gap-2">
+                <div className="flex-1 flex flex-col gap-2">
                   <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">
                     Number of Codes
                   </label>
-                  <Input
-                    type="number"
-                    id="amount"
-                    name="amount"
-                    required
-                    min="1"
-                    value={codeCount}
-                    onChange={e => setCodeCount(e.target.value)}
-                    disabled={disabledForm}
-                  />
+                  <div className="grid grid-cols-5 gap-2">
+                    <div className="col-span-3">
+                      <Input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        required
+                        min="1"
+                        value={codeCount}
+                        onChange={e => setCodeCount(e.target.value)}
+                        disabled={disabledForm}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Button type="submit" disabled={disabledForm} className="min-w-20 w-full">
+                        {isPendingWrite || isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate"}
+                      </Button>
+                    </div>
+                    <div className="col-span-3">
+                      <ButtonGroup
+                        options={["25", "50", "100"]}
+                        selected={codeCount}
+                        onChange={newValue => setCodeCount(newValue)}
+                        disabled={disabledForm}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <Button type="submit" disabled={disabledForm} className="min-w-28">
-                  {isPendingWrite || isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate"}
-                </Button>
               </form>
-              {!isOwner && (
-                <Alert variant="warning" className="animate-zoomIn">
+              {!isOwner && !account.isConnecting && !account.isReconnecting && (
+                <Alert variant="warning">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
                     Are you the whitelist owner? Please connect with {trimAddress(ownerAddress)} to manage the
@@ -167,9 +185,12 @@ export default function ManageWhitelistForm({
             </CardContent>
           </Card>
         </div>
-        <Card>
+        <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Code Statistics</CardTitle>
+            <CardTitle className="flex gap-2 items-center">
+              <BarChart2Icon className="h-6 w-6" />
+              Code Statistics
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
