@@ -32,7 +32,7 @@ class TalariaService {
             timestamp: 0n,
           },
       )
-      .filter(evt => evt !== undefined);
+      .filter(evt => evt !== undefined) as WhitelistedAddresses[];
   }
 
   async getStatistics({
