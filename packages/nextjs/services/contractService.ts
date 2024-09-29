@@ -57,15 +57,3 @@ export class ContractService {
 }
 
 export const contractService = new ContractService();
-
-export const checkWhitelistStatus = async (): Promise<boolean> => {
-  try {
-    // This is a placeholder. Replace with actual logic to check whitelist status.
-    // This might involve calling a smart contract function or checking a database entry.
-    const status = await someContractOrDatabaseCall();
-    return status;
-  } catch (error) {
-    console.error("Error checking whitelist status:", error);
-    return false;
-  }
-};
