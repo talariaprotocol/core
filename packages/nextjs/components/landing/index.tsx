@@ -1,46 +1,45 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
+import { Card, CardContent } from "~~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~~/components/ui/tabs";
 
 const Landing = () => {
   const [activeTab, setActiveTab] = useState("about");
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>Protocol Information</CardTitle>
-        <CardDescription>Learn about the protocol and how to implement it</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="about">About the Protocol</TabsTrigger>
-            <TabsTrigger value="docs">Quick Implementation Docs</TabsTrigger>
-          </TabsList>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col gap-4 max-w-lg">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="about">About Talaria</TabsTrigger>
+        <TabsTrigger value="docs">Integration Guide</TabsTrigger>
+      </TabsList>
+      <Card>
+        <CardContent>
           <TabsContent value="about">
             <div className="space-y-4">
               <section>
-                <h3 className="text-lg font-semibold">What is our Protocol?</h3>
+                <h3 className="text-lg font-semibold">What is Talaria?</h3>
                 <p>
-                  Our protocol is a decentralized solution for managing whitelists and access control in blockchain
-                  applications.
+                  Talaria is an advanced access management protocol designed for blockchain applications. It provides a
+                  unique approach to whitelist management and user access control.
                 </p>
               </section>
               <section>
                 <h3 className="text-lg font-semibold">Key Features</h3>
                 <ul className="list-disc list-inside">
-                  <li>Decentralized whitelist management</li>
-                  <li>Flexible access control</li>
                   <li>Easy integration with existing smart contracts</li>
-                  <li>Gas-efficient operations</li>
+                  <li>No need for user wallet addresses in advance</li>
+                  <li>Flexible and secure access control</li>
+                  <li>Customizable for various use cases</li>
                 </ul>
               </section>
               <section>
                 <h3 className="text-lg font-semibold">How it Works</h3>
                 <p>
-                  The protocol uses smart contracts to maintain whitelists and verify access rights. Project owners can
-                  easily manage their whitelists, while users can prove their access without revealing sensitive
-                  information.
+                  Talaria provides a base contract that your protocol can extend. This contract includes built-in
+                  whitelist functionality, allowing you to easily manage access to your protocol's features.
+                </p>
+                <p>
+                  By integrating Talaria, you can focus on your core functionality while leveraging our robust access
+                  control system.
                 </p>
               </section>
             </div>
@@ -48,32 +47,25 @@ const Landing = () => {
           <TabsContent value="docs">
             <div className="space-y-4">
               <section>
-                <h3 className="text-lg font-semibold">Quick Start Guide</h3>
+                <h3 className="text-lg font-semibold">Integration Steps</h3>
                 <ol className="list-decimal list-inside">
-                  <li>
-                    Install the SDK: <code>npm install @protocol/sdk</code>
-                  </li>
-                  <li>
-                    Import the main contract: <code>import {`WhitelistManager`} from '@protocol/sdk';</code>
-                  </li>
-                  <li>Initialize the contract with your project's address</li>
-                  <li>Use the provided methods to manage your whitelist and check access</li>
+                  <li>Import the Talaria BetaProtocol contract</li>
+                  <li>Extend your contract from BetaProtocol</li>
+                  <li>Initialize with a whitelist address from app.talariaprotocol.xyz</li>
+                  <li>Use the onlyWhitelisted modifier for restricted functions</li>
                 </ol>
               </section>
               <section>
-                <h3 className="text-lg font-semibold">Key Functions</h3>
+                <h3 className="text-lg font-semibold">Key Components</h3>
                 <ul className="list-disc list-inside">
                   <li>
-                    <code>addToWhitelist(address)</code>: Add an address to the whitelist
+                    <code>BetaProtocol</code>: Base contract to extend from
                   </li>
                   <li>
-                    <code>removeFromWhitelist(address)</code>: Remove an address from the whitelist
+                    <code>onlyWhitelisted</code>: Modifier for access control
                   </li>
                   <li>
-                    <code>isWhitelisted(address)</code>: Check if an address is whitelisted
-                  </li>
-                  <li>
-                    <code>getWhitelistCount()</code>: Get the total number of whitelisted addresses
+                    <code>_whitelist</code>: Address of your Talaria whitelist instance
                   </li>
                 </ul>
               </section>
@@ -81,17 +73,23 @@ const Landing = () => {
                 <h3 className="text-lg font-semibold">Example Usage</h3>
                 <pre className="bg-gray-100 p-2 rounded">
                   <code>{`
-const whitelistManager = new WhitelistManager(projectAddress);
-await whitelistManager.addToWhitelist(userAddress);
-const isWhitelisted = await whitelistManager.isWhitelisted(userAddress);
+import {BetaProtocol} from "./BetaProtocol.sol";
+
+contract YourProtocol is BetaProtocol {
+  constructor(address _whitelist) BetaProtocol(_whitelist) {}
+
+  function test() public view onlyWhitelisted {
+    // Your logic here
+  }
+}
                   `}</code>
                 </pre>
               </section>
             </div>
           </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Tabs>
   );
 };
 

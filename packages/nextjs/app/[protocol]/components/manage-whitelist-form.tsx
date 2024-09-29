@@ -93,15 +93,15 @@ export default function ManageWhitelistForm({
   };
 
   const downloadCSV = useCallback(() => {
-    const csvContent = "data:text/csv;charset=utf-8," + generatedCodes.join("\n");
-    const encodedUri = encodeURI(csvContent);
+    const generatedUrls = generatedCodes.map(code => `${process.env.NEXT_PUBLIC_APP_URL}/${protocol}/redeem#${code}`);
+    const csvContent = "data:text/csv;charset=utf-8," + generatedUrls.join("\n");
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", csvContent);
     link.setAttribute("download", "talaria_generated_codes.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, [generatedCodes]);
+  }, [generatedCodes, protocol]);
 
   const processedStatistic = useMemo(
     () => ({
