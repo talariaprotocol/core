@@ -55,7 +55,6 @@ export default function CreateWhitelist() {
       functionName: "create",
       args: [],
     });
-
     setIsSubmitting(false);
   };
 
@@ -71,7 +70,7 @@ export default function CreateWhitelist() {
           transactionHash: hash,
         });
         await createWhitelistAction({
-          logo: "pepe.jpg",
+          logo: "/brand/197297796.png",
           protocol_name: name,
           slug: slug,
           wallet: account.address as string,
