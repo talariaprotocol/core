@@ -3,11 +3,11 @@ import {databaseService} from "~~/services/databaseService";
 
 export async function getWhitelistAction(
     {
-        wallet
+        slug
     }: {
-        wallet: string;
+        slug: string;
     }) {
     return await databaseService.getWhitelist({
-        wallet,
+        slug,
     });
 }

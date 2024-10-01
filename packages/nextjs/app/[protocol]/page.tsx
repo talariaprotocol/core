@@ -16,7 +16,7 @@ export default function CodeGenerator({ params: { protocol } }: { params: { prot
   const getWhitelist = async () => {
     try {
       const dbWhitelist = await getWhitelistAction({
-        wallet: account.address as string,
+        slug: protocol,
       });
       setWhitelist(dbWhitelist);
     } catch (error) {

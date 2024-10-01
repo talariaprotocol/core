@@ -47,11 +47,11 @@ class DatabaseService {
             })
             .execute();
     }
-    async getWhitelist({ wallet }: Pick<WhitelistTable, 'wallet'>) {
+    async getWhitelist({ slug }: Pick<WhitelistTable, 'slug'>) {
         // Fetch the whitelist data where the wallet matches the provided value
         const result = await this.db.selectFrom('whitelist')
             .selectAll()
-            .where('wallet', '=', wallet as string)
+            .where('slug', '=', slug as string)
             .execute();
         // Return the result (it will be an array, so handle it accordingly)
         return result;

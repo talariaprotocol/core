@@ -14,7 +14,7 @@ const RedeemPage = ({ params: { protocol } }: { params: { protocol: string } }) 
   const getWhitelist = async () => {
     try {
       const dbWhitelist = await getWhitelistAction({
-        wallet: account.address as string,
+        slug: protocol as string,
       });
       setWhitelist(dbWhitelist);
     } catch (error) {
