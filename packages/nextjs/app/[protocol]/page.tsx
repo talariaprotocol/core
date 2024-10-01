@@ -1,23 +1,46 @@
-import ManageWhitelistForm from "./components/manage-whitelist-form";
-import { Address } from "viem";
+"use client";
 
-const WHITELIST_MOCK_DATA = {
-  address: "0x36711b58f3e7a3c5bf23900f5a42d1651258104d" as Address,
-};
+import {useState, useEffect} from "react";
+import React from "react";
+import {useAccount} from "wagmi";
+import {toast} from "~~/components/ui/use-toast";
+import {getWhitelistAction} from "~~/repository/whitelist/getWhitelist.action";
+import ManageWhitelistForm from "./components/manage-whitelist-form";
 
 export default function CodeGenerator({ params: { protocol } }: { params: { protocol: string } }) {
-  const logo = "";
-  const owner = "0x7C22B07a9D65228A54390B03Bc109e46D3BB94Ef";
+  const account = useAccount();
+  const [whitelist, setWhitelist] = useState([]);
 
   // TODO: query logo from protocol + validate slug
   // TODO: Also fetch whitelist statistics from thegraph, and revalidate data after new codes are submitted
+  const getWhitelist = async () => {
+    try {
+      const dbWhitelist = await getWhitelistAction({
+        wallet: account.address as string,
+      });
+      setWhitelist(dbWhitelist);
+    } catch (error) {
+      console.error("Error getting whitelist", error);
+      toast({
+        title: "Error",
+        description: "There was an error getting your whitelist.",
+      });
+    }
+  };
+
+  // Fetch whitelist data when the component mounts and account address is available
+  useEffect(() => {
+    if (account.address) {
+      getWhitelist();
+    }
+  }, [account.address]); // Trigger only when account address changes
 
   return (
-    <ManageWhitelistForm
-      protocol={protocol}
-      logo={logo}
-      whitelistAddress={WHITELIST_MOCK_DATA.address}
-      ownerAddress={owner}
-    />
+      <ManageWhitelistForm
+          protocol={protocol}
+          logo={whitelist[0]?.logo}
+          whitelistAddress={whitelist[0]?.whitelist_address}
+          ownerAddress={whitelist[0]?.wallet}
+      />
   );
 }

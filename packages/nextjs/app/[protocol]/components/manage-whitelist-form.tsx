@@ -46,7 +46,6 @@ export default function ManageWhitelistForm({
   useEffect(() => {
     const fetchStatistics = async () => {
       if (!publicClient) return;
-
       const fetchedStatistics = await talariaService.getStatistics({
         publicClient,
         whitelistAddress,
@@ -95,9 +94,10 @@ export default function ManageWhitelistForm({
 
   const downloadCSV = useCallback(() => {
     const generatedUrls = generatedCodes.map(code => `${process.env.NEXT_PUBLIC_APP_URL}/${protocol}/redeem#${code}`);
-    const csvContent = "data:text/csv;charset=utf-8," + generatedUrls.join("\n");
+    const csvContent = generatedUrls.join("\n");
+    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
     const link = document.createElement("a");
-    link.setAttribute("href", csvContent);
+    link.setAttribute("href", encodedUri);
     link.setAttribute("download", "talaria_generated_codes.csv");
     document.body.appendChild(link);
     link.click();
@@ -115,7 +115,7 @@ export default function ManageWhitelistForm({
   );
 
   const isOwner = useMemo(() => {
-    return ownerAddress.toLowerCase() === account.address?.toLowerCase();
+    return ownerAddress?.toLowerCase() === account.address?.toLowerCase();
   }, [ownerAddress, account.address]);
 
   const disabledForm = isPendingWrite || isFetching || !isOwner || !account.isConnected;

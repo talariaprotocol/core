@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { Upload } from "lucide-react";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import SlugInput from "~~/components/homepage/slug-input";
@@ -15,10 +13,11 @@ import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
 import WhitelistFactoryABI from "~~/contracts-data/deployments/arbitrumSepolia/WhitelistFactory.json";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
+import {createWhitelistAction} from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
 import { databaseService } from "~~/services/databaseService";
 
-const codeSnippet = `pragma tu vieja lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
+const codeSnippet = `lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
 export default function CreateWhitelist() {
   const [name, setName] = useState("");
@@ -58,31 +57,27 @@ export default function CreateWhitelist() {
     });
 
     setIsSubmitting(false);
-    setName("");
-    setSlug("");
-    setImage(null);
   };
 
   const [isWhitelistSaved, setIsWhitelistSaved] = useState(false);
 
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
-      if (!publicClient || !image) return;
+      if (!publicClient) return;
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
           client: publicClient,
           abi: WhitelistFactoryABI.abi,
           transactionHash: hash,
         });
-
-        await databaseService.createWhitelist({
-          address: whitelistAddress,
-          name,
-          slug,
-          image,
-          productUrl,
+        await createWhitelistAction({
+          logo: "pepe.jpg",
+          protocol_name: name,
+          slug: slug,
+          wallet: account.address as string,
+          whilist_address: whitelistAddress as string,
+          protocolRedirect: productUrl ? productUrl : "",
         });
-
         setIsWhitelistSaved(true);
         toast({
           title: "Whitelist created",

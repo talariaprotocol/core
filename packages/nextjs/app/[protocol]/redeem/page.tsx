@@ -1,22 +1,43 @@
-import RedeemCodeForm from "./redeem-code-form";
-import { Address } from "viem";
+"use client";
 
-const WHITELIST_MOCK_DATA = {
-  address: "0x36711b58f3e7a3c5bf23900f5a42d1651258104d" as Address,
-};
+import {useEffect} from "react";
+import {useState} from "react";
+import {useAccount} from "wagmi";
+import {toast} from "~~/components/ui/use-toast";
+import {getWhitelistAction} from "~~/repository/whitelist/getWhitelist.action";
+import RedeemCodeForm from "./redeem-code-form";
 
 const RedeemPage = ({ params: { protocol } }: { params: { protocol: string } }) => {
-  const logo = "";
-  const protocolCTAUrl = "";
 
-  // TODO: query logo from protocol + validate slug
+  const account = useAccount();
+  const [whitelist, setWhitelist] = useState([]);
+  const getWhitelist = async () => {
+    try {
+      const dbWhitelist = await getWhitelistAction({
+        wallet: account.address as string,
+      });
+      setWhitelist(dbWhitelist);
+    } catch (error) {
+      console.error("Error getting whitelist", error);
+      toast({
+        title: "Error",
+        description: "There was an error getting your whitelist.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (account.address) {
+      getWhitelist();
+    }
+  }, [account.address]);
 
   return (
     <RedeemCodeForm
       protocol={protocol}
-      logo={logo}
-      whitelistAddress={WHITELIST_MOCK_DATA.address}
-      ctaUrl={protocolCTAUrl}
+      logo={whitelist[0]?.logo}
+      whitelistAddress={whitelist[0]?.whitelist_address}
+      ctaUrl={whitelist[0]?.protocolRedirect}
     />
   );
 };
