@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { Upload } from "lucide-react";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import SlugInput from "~~/components/homepage/slug-input";
@@ -14,18 +12,18 @@ import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
+import { createWhitelistAction } from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
 import { databaseService } from "~~/services/databaseService";
 import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
 
-const codeSnippet = `pragma tu vieja lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
+const codeSnippet = `lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
 export default function CreateWhitelist() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [copied, setCopied] = useState(false);
   const hasSavedRef = useRef(false);
   const [productUrl, setProductUrl] = useState("");
   const publicClient = usePublicClient();
@@ -56,33 +54,28 @@ export default function CreateWhitelist() {
       functionName: "create",
       args: [],
     });
-
     setIsSubmitting(false);
-    setName("");
-    setSlug("");
-    setImage(null);
   };
 
   const [isWhitelistSaved, setIsWhitelistSaved] = useState(false);
 
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
-      if (!publicClient || !image) return;
+      if (!publicClient || !account.address) return;
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
           client: publicClient,
           abi: WhitelistFactory__factory.abi,
           transactionHash: hash,
         });
-
-        await databaseService.createWhitelist({
-          address: whitelistAddress,
-          name,
-          slug,
-          image,
-          productUrl,
+        await createWhitelistAction({
+          logo: "/brand/197297796.png",
+          protocol_name: name,
+          slug: slug,
+          wallet: account.address,
+          whitelist_address: whitelistAddress,
+          protocolRedirect: productUrl,
         });
-
         setIsWhitelistSaved(true);
         toast({
           title: "Whitelist created",

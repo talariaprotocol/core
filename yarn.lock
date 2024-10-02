@@ -3920,6 +3920,7 @@ __metadata:
     "@types/snarkjs": ^0
     "@typescript-eslint/eslint-plugin": ^5.39.0
     "@vercel/postgres": ^0.9.0
+    "@vercel/postgres-kysely": ^0.10.0
     abitype: 1.0.2
     autoprefixer: ^10.4.12
     axios: ^1.7.2
@@ -3938,6 +3939,7 @@ __metadata:
     ffjavascript: ^0.3.0
     fixed-merkle-tree: ^0.6.0
     jiti: ^1.21.6
+    kysely: ^0.27.4
     lucide-react: ^0.408.0
     next: ^14.2.5
     next-auth: ^4.24.7
@@ -4963,6 +4965,28 @@ __metadata:
     typescript: 4.9.5
     undici: 5.26.5
   checksum: a8cb14266af1fe98ca29bea7adcb108d1a6ec8d8518e0615a36e28aafd70a92e9a0397b46a8b52d0b5220529ed37c8a093a6b74e28357b4bbbcbb2595c0d3f2d
+  languageName: node
+  linkType: hard
+
+"@vercel/postgres-kysely@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@vercel/postgres-kysely@npm:0.10.0"
+  dependencies:
+    "@vercel/postgres": 0.10.0
+  peerDependencies:
+    kysely: ^0.24.2 || ^0.25.0 || ^0.26.0 || ^0.27.0
+  checksum: a3b3be8e349e638d1a0ffbac08516ea360597b1efb9146f8012197ec606b87bff10ad43d6a947974e2ba6f4b690d75cdbc422344b673d636e9f242e0c3fdbfa4
+  languageName: node
+  linkType: hard
+
+"@vercel/postgres@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@vercel/postgres@npm:0.10.0"
+  dependencies:
+    "@neondatabase/serverless": ^0.9.3
+    bufferutil: ^4.0.8
+    ws: ^8.17.1
+  checksum: 45c29baa73bed4b07a5c06ae283647d43c89d843ebd3cb4864b59ec4217ef5d24832e569cd08d61f8b7875522fc207bb364547ea7e9423dd37521fba24ccec20
   languageName: node
   linkType: hard
 
@@ -13421,6 +13445,13 @@ __metadata:
   version: 6.0.3
   resolution: "kind-of@npm:6.0.3"
   checksum: 3ab01e7b1d440b22fe4c31f23d8d38b4d9b91d9f291df683476576493d5dfd2e03848a8b05813dd0c3f0e835bc63f433007ddeceb71f05cb25c45ae1b19c6d3b
+  languageName: node
+  linkType: hard
+
+"kysely@npm:^0.27.4":
+  version: 0.27.4
+  resolution: "kysely@npm:0.27.4"
+  checksum: 16b7e90eb70edb91d15d5f4816e9e84abf7cbaf7125cb04ce4bddb41f965495ec25796918ef1ab678656b49be328147a1d054ad580a390d0a6dd67c7a5793c8b
   languageName: node
   linkType: hard
 

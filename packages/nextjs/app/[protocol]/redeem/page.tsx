@@ -1,22 +1,18 @@
 import RedeemCodeForm from "./redeem-code-form";
 import { Address } from "viem";
+import { getWhitelistAction } from "~~/repository/whitelist/getWhitelist.action";
 
-const WHITELIST_MOCK_DATA = {
-  address: "0x36711b58f3e7a3c5bf23900f5a42d1651258104d" as Address,
-};
-
-const RedeemPage = ({ params: { protocol } }: { params: { protocol: string } }) => {
-  const logo = "";
-  const protocolCTAUrl = "";
-
-  // TODO: query logo from protocol + validate slug
+const RedeemPage = async ({ params: { protocol } }: { params: { protocol: string } }) => {
+  const whitelist = await getWhitelistAction({
+    slug: protocol as string,
+  });
 
   return (
     <RedeemCodeForm
       protocol={protocol}
-      logo={logo}
-      whitelistAddress={WHITELIST_MOCK_DATA.address}
-      ctaUrl={protocolCTAUrl}
+      // logo={whitelist[0]?.logo}
+      whitelistAddress={whitelist[0]?.whitelist_address as Address}
+      ctaUrl={whitelist[0]?.protocolRedirect}
     />
   );
 };
