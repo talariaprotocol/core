@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { AlertTriangle, BarChart2Icon, BarChartIcon, Code, Download, Loader2 } from "lucide-react";
 import { Address, Hash } from "viem";
-import { useAccount, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useEstimateMaxPriorityFeePerGas, useGasPrice, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
 import { ButtonGroup } from "~~/components/button-group";
 import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
@@ -37,6 +37,8 @@ export default function ManageWhitelistForm({
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
   const publicClient = usePublicClient();
+  const gasPrice = useGasPrice();
+  const maxPriorityFee = useEstimateMaxPriorityFeePerGas()
   const [statistics, setStatistics] = useState<WhitelistStatistics>({
     generated: 0,
     whitelistedAddresses: [],
@@ -80,11 +82,26 @@ export default function ManageWhitelistForm({
       validationModules.push([]);
     }
 
+
+    
+    // const singleGasEstimate = 4220740; // Gas used for one commitment
+    // const numberOfCodes = commitments.length; // Number of commitments you're processing
+    // const gas = BigInt(singleGasEstimate * numberOfCodes * 2); // Add 20% buffer
+
+    // const maxFeePerGas = gasPrice.data;
+    // const maxPriorityFeePerGas = maxPriorityFee.data;
+
+    // console.log("bulkGasEstimate", gas);
+    // console.log("maxFeePerGas", maxFeePerGas);
+    // console.log("maxPriorityFeePerGas", maxPriorityFeePerGas);
+
     await writeContractAsync({
       abi: Whitelist__factory.abi,
       address: whitelistAddress,
       functionName: "bulkCreateEarlyAccessCodes",
       args: [commitments, validationModules],
+      // gas,
+      // gasPrice: maxFeePerGas,
     });
 
     toast({

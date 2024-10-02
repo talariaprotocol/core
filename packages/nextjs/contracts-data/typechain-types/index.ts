@@ -204,8 +204,10 @@ export type { WorldcoinVerifier } from "./contracts/modules/WorldcoinValidatorMo
 export { WorldcoinVerifier__factory } from "./factories/contracts/modules/WorldcoinValidatorModule.sol/WorldcoinVerifier__factory";
 export type { TalariaFactory } from "./contracts/useCases/TalariaFactory";
 export { TalariaFactory__factory } from "./factories/contracts/useCases/TalariaFactory__factory";
-export type { BetaProtocol } from "./contracts/useCases/whitelist/BetaProtocol";
-export { BetaProtocol__factory } from "./factories/contracts/useCases/whitelist/BetaProtocol__factory";
+export type { BetaProtocol } from "./contracts/useCases/whitelist/BetaProtocol.sol/BetaProtocol";
+export { BetaProtocol__factory } from "./factories/contracts/useCases/whitelist/BetaProtocol.sol/BetaProtocol__factory";
+export type { IWhitelist } from "./contracts/useCases/whitelist/BetaProtocol.sol/IWhitelist";
+export { IWhitelist__factory } from "./factories/contracts/useCases/whitelist/BetaProtocol.sol/IWhitelist__factory";
 export type { TestProtocol } from "./contracts/useCases/whitelist/TestProtocol";
 export { TestProtocol__factory } from "./factories/contracts/useCases/whitelist/TestProtocol__factory";
 export type { Whitelist } from "./contracts/useCases/whitelist/Whitelist";

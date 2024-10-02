@@ -42,6 +42,37 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "AddressNotAllowed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [],
+    name: "BetaAccessDisabled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [],
+    name: "BetaAccessEnabled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
         name: "previousOwner",
         type: "address",
       },
@@ -53,6 +84,25 @@ const _abi = [
       },
     ],
     name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "WhitelistCodeUsed",
     type: "event",
   },
   {

@@ -2,6 +2,11 @@
   "arbitrumSepolia": {
     "Verifier": "0xCdbf1055f9d9901ef9988ffb5b9cc93564aC2880",
     "Hasher": "0x537d630b33B2CEE5282231B0A0c5aFB96A63Be19",
-    "WhitelistFactory": "0xe486C2272aaC9e78b064864E4e76D1AEe01744e6"
+    "WhitelistFactory": "0xAedD98d5FE7E1De3871DfBE5f38F9Be1f97B99c0"
+  },
+  "polygonAmoy": {
+    "Verifier": "0xfBCfE32f7448A7bcf319a8De8E3368C4a0Da4032",
+    "Hasher": "0x0aE14e75D815F78EF0d179e93F09329AD6F45D78",
+    "WhitelistFactory": "0x8845314928D52d2cb11BD00Fa1e5F2584a781cf9"
   }
 }

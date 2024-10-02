@@ -6,3 +6,4 @@ typechain-types
 # files
 **/*.json
 tornado/**/*
+contracts/examples/**/*.sol

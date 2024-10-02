@@ -11,11 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card"
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
-import WhitelistFactoryABI from "~~/contracts-data/deployments/arbitrumSepolia/WhitelistFactory.json";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
 import { createWhitelistAction } from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
 import { databaseService } from "~~/services/databaseService";
+import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
 
 const codeSnippet = `lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
@@ -49,7 +49,7 @@ export default function CreateWhitelist() {
 
     // TODO: Implement blockchain submission
     await writeContractAsync({
-      abi: WhitelistFactoryABI.abi,
+      abi: WhitelistFactory__factory.abi,
       address: WhitelistFactoryAddresses[currentNetwork],
       functionName: "create",
       args: [],
@@ -65,7 +65,7 @@ export default function CreateWhitelist() {
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
           client: publicClient,
-          abi: WhitelistFactoryABI.abi,
+          abi: WhitelistFactory__factory.abi,
           transactionHash: hash,
         });
         await createWhitelistAction({

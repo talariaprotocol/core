@@ -8626,7 +8626,7 @@ __metadata:
 "ds-test@github:dapphub/ds-test":
   version: 1.0.0
   resolution: "ds-test@https://github.com/dapphub/ds-test.git#commit=e282159d5170298eb2455a6c05280ab5a73a4ef0"
-  checksum: 8f36e20dde868d062841c790fc43c9dd18b93d6180995f378bedaee1f24444950838843c0f2ffa5ac3b8a21b4c29fd97a60725e29e8ff71c9cf28f837614d96f
+  checksum: 0c40ebd34dcd3ac76528d911636bc60a4b3b1bed89ca71d2a316186f00f8cb3a96b9c0bf7fd71fbb3daf69b3e4c1511cd934b6ec5fc2028efc728f9a67ddd2fb
   languageName: node
   linkType: hard
 

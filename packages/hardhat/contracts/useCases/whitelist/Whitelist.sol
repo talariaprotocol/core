@@ -29,6 +29,8 @@ contract Whitelist is Ownable, TalariaProtocol{
     bytes[] calldata _validationsArgs,
     address userToWhitelist
   ) public {
+    require(!usersWhitelisted[userToWhitelist], "User already whitelisted");
+
     consumeCode(_commitment,_proof, _root, _nullifierHash, _to, _validationsArgs);
 
     usersWhitelisted[userToWhitelist] = true;
@@ -54,15 +56,19 @@ contract Whitelist is Ownable, TalariaProtocol{
     }
   }
 
-  function isWhitelisted(address _user) public view returns (bool) {
+  function isWhitelisted(address _user) external view returns (bool) {
     return usersWhitelisted[_user];
   }
 
   function addUserToWhitelist(address _user) public onlyOwner {
+    require(!usersWhitelisted[_user], "User already whitelisted");
+
     usersWhitelisted[_user] = true;
   }
 
   function removeUserFromWhitelist(address _user) public onlyOwner {
+    require(usersWhitelisted[_user], "User not whitelisted");
+
     usersWhitelisted[_user] = false;
   }
 }
