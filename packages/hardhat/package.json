@@ -51,7 +51,6 @@
     "prettier": "latest",
     "solhint": "^5.0.3",
     "solhint-plugin-prettier": "^0.0.5",
-    "solidity-bytes-utils": "^0.8.2",
     "solidity-coverage": "^0.8.5",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.0",
@@ -60,7 +59,7 @@
     "zksync-web3": "^0.17.1"
   },
   "dependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.41",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.44",
     "@layerzerolabs/lz-evm-oapp-v2": "^2.3.40",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.40",
     "@layerzerolabs/lz-v2-utilities": "^2.3.41",

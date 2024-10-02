@@ -1115,16 +1115,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@layerzerolabs/lz-evm-messagelib-v2@npm:^2.3.41":
-  version: 2.3.42
-  resolution: "@layerzerolabs/lz-evm-messagelib-v2@npm:2.3.42"
+"@layerzerolabs/lz-evm-messagelib-v2@npm:^2.3.44":
+  version: 2.3.44
+  resolution: "@layerzerolabs/lz-evm-messagelib-v2@npm:2.3.44"
   peerDependencies:
     "@arbitrum/nitro-contracts": ^1.1.0
     "@axelar-network/axelar-gmp-sdk-solidity": ^5.6.4
     "@chainlink/contracts-ccip": ^0.7.6
     "@eth-optimism/contracts": ^0.6.0
-    "@layerzerolabs/lz-evm-protocol-v2": ^2.3.42
-    "@layerzerolabs/lz-evm-v1-0.7": ^2.3.42
+    "@layerzerolabs/lz-evm-protocol-v2": ^2.3.44
+    "@layerzerolabs/lz-evm-v1-0.7": ^2.3.44
     "@openzeppelin/contracts": ^4.8.1 || ^5.0.0
     "@openzeppelin/contracts-upgradeable": ^4.8.1 || ^5.0.0
     hardhat-deploy: ^0.12.4
@@ -1132,7 +1132,7 @@ __metadata:
   peerDependenciesMeta:
     "@arbitrum/nitro-contracts":
       optional: true
-  checksum: 1c4691d8bec5e3ef5cb59fb8e7e39c093dac1b4b6ffb3a897d3e523ef75582cca34ab7a67add2750cd076af8011647c15e710a09874a0284a125c7c1a6da2381
+  checksum: 2937f6f83d2fcdc9ab26598e6522ac65d281686ddec080e46d510e2a33b04b9800db34958c1382b55b92f22b143e3ba7a597e3a0d66774056e532bc0fbf71459
   languageName: node
   linkType: hard
 
@@ -3837,7 +3837,7 @@ __metadata:
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/providers": ^5.7.1
-    "@layerzerolabs/lz-evm-messagelib-v2": ^2.3.41
+    "@layerzerolabs/lz-evm-messagelib-v2": ^2.3.44
     "@layerzerolabs/lz-evm-oapp-v2": ^2.3.40
     "@layerzerolabs/lz-evm-protocol-v2": ^2.3.40
     "@layerzerolabs/lz-v2-utilities": ^2.3.41
@@ -3883,7 +3883,6 @@ __metadata:
     snarkjs: "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5"
     solhint: ^5.0.3
     solhint-plugin-prettier: ^0.0.5
-    solidity-bytes-utils: ^0.8.2
     solidity-coverage: ^0.8.5
     ts-node: ^10.9.1
     typechain: ^8.1.0
@@ -8623,13 +8622,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ds-test@github:dapphub/ds-test":
-  version: 1.0.0
-  resolution: "ds-test@https://github.com/dapphub/ds-test.git#commit=e282159d5170298eb2455a6c05280ab5a73a4ef0"
-  checksum: 0c40ebd34dcd3ac76528d911636bc60a4b3b1bed89ca71d2a316186f00f8cb3a96b9c0bf7fd71fbb3daf69b3e4c1511cd934b6ec5fc2028efc728f9a67ddd2fb
-  languageName: node
-  linkType: hard
-
 "duplexify@npm:^4.1.2":
   version: 4.1.3
   resolution: "duplexify@npm:4.1.3"
@@ -10732,13 +10724,6 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 766ae6e220f5fe23676bb4c6a99387cec5b7b62ceb99e10923376e27bfea72f3c3aeec2ba5f45f3f7ba65d6616965aa7c20b15002b6860833bb6e394dea546a8
-  languageName: node
-  linkType: hard
-
-"forge-std@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "forge-std@npm:1.1.2"
-  checksum: d5b36b909269a39dd30b619ac09a78e59b1a65e7887872ef99304298c4ffe2aa16f5dc5238c77e481a5e615582191b446401098a2ed567283d7df87e099a9d3c
   languageName: node
   linkType: hard
 
@@ -18076,16 +18061,6 @@ __metadata:
   bin:
     solhint: solhint.js
   checksum: 30361c0099cded492059719e477cecadcc7390f87a1737904411e8dbf15277344a5892e0762738a025cefd78467455601db1d7d6ffb3d489a6ab6e296c6a7b92
-  languageName: node
-  linkType: hard
-
-"solidity-bytes-utils@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "solidity-bytes-utils@npm:0.8.2"
-  dependencies:
-    ds-test: "github:dapphub/ds-test"
-    forge-std: ^1.1.2
-  checksum: 2be608f1aacfc2ff194d55e0c2b10abab3b88af262811b6c011933c6d049238fbd743c9de79a8e6cb46b1726349f47fe6132e81a9eaca21a588eb213f85a2fb4
   languageName: node
   linkType: hard
 
