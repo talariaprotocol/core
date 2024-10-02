@@ -214,11 +214,20 @@ export interface ETHTransferInterface extends Interface {
 }
 
 export namespace ConsumeCodeEvent {
-  export type InputTuple = [to: AddressLike, nullifierHash: BytesLike];
-  export type OutputTuple = [to: string, nullifierHash: string];
+  export type InputTuple = [
+    to: AddressLike,
+    nullifierHash: BytesLike,
+    timestamp: BigNumberish
+  ];
+  export type OutputTuple = [
+    to: string,
+    nullifierHash: string,
+    timestamp: bigint
+  ];
   export interface OutputObject {
     to: string;
     nullifierHash: string;
+    timestamp: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -514,7 +523,7 @@ export interface ETHTransfer extends BaseContract {
   >;
 
   filters: {
-    "ConsumeCode(address,bytes32)": TypedContractEvent<
+    "ConsumeCode(address,bytes32,uint256)": TypedContractEvent<
       ConsumeCodeEvent.InputTuple,
       ConsumeCodeEvent.OutputTuple,
       ConsumeCodeEvent.OutputObject

@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   BetaProtocol,
   BetaProtocolInterface,
-} from "../../../../contracts/useCases/whitelist/BetaProtocol";
+} from "../../../../../contracts/useCases/whitelist/BetaProtocol.sol/BetaProtocol";
 
 const _abi = [
   {
@@ -169,7 +169,7 @@ const _abi = [
     name: "whitelist",
     outputs: [
       {
-        internalType: "contract Whitelist",
+        internalType: "contract IWhitelist",
         name: "",
         type: "address",
       },

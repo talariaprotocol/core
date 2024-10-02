@@ -434,6 +434,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BetaProtocol__factory>;
     getContractFactory(
+      name: "IWhitelist",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IWhitelist__factory>;
+    getContractFactory(
       name: "TestProtocol",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TestProtocol__factory>;
@@ -972,6 +976,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.BetaProtocol>;
     getContractAt(
+      name: "IWhitelist",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IWhitelist>;
+    getContractAt(
       name: "TestProtocol",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -1408,6 +1417,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.BetaProtocol>;
     deployContract(
+      name: "IWhitelist",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IWhitelist>;
+    deployContract(
       name: "TestProtocol",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TestProtocol>;
@@ -1945,6 +1958,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.BetaProtocol>;
+    deployContract(
+      name: "IWhitelist",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IWhitelist>;
     deployContract(
       name: "TestProtocol",
       args: any[],
