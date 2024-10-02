@@ -2,6 +2,6 @@
   "arbitrumSepolia": {
     "Verifier": "0xCdbf1055f9d9901ef9988ffb5b9cc93564aC2880",
     "Hasher": "0x537d630b33B2CEE5282231B0A0c5aFB96A63Be19",
-    "WhitelistFactory": "0xe486C2272aaC9e78b064864E4e76D1AEe01744e6"
+    "WhitelistFactory": "0xAedD98d5FE7E1De3871DfBE5f38F9Be1f97B99c0"
   }
 }

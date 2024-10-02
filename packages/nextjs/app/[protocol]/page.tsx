@@ -7,7 +7,7 @@ const WHITELIST_MOCK_DATA = {
 
 export default function CodeGenerator({ params: { protocol } }: { params: { protocol: string } }) {
   const logo = "";
-  const owner = "0x7C22B07a9D65228A54390B03Bc109e46D3BB94Ef";
+  const owner = "0xEB71ed911e4dFc35Da80103a72fE983C8c709F33";
 
   // TODO: query logo from protocol + validate slug
   // TODO: Also fetch whitelist statistics from thegraph, and revalidate data after new codes are submitted

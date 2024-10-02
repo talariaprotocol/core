@@ -3883,7 +3883,6 @@ __metadata:
     snarkjs: "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5"
     solhint: ^5.0.3
     solhint-plugin-prettier: ^0.0.5
-    solidity-bytes-utils: ^0.8.2
     solidity-coverage: ^0.8.5
     ts-node: ^10.9.1
     typechain: ^8.1.0
@@ -8599,13 +8598,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ds-test@github:dapphub/ds-test":
-  version: 1.0.0
-  resolution: "ds-test@https://github.com/dapphub/ds-test.git#commit=e282159d5170298eb2455a6c05280ab5a73a4ef0"
-  checksum: 8f36e20dde868d062841c790fc43c9dd18b93d6180995f378bedaee1f24444950838843c0f2ffa5ac3b8a21b4c29fd97a60725e29e8ff71c9cf28f837614d96f
-  languageName: node
-  linkType: hard
-
 "duplexify@npm:^4.1.2":
   version: 4.1.3
   resolution: "duplexify@npm:4.1.3"
@@ -10708,13 +10700,6 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 766ae6e220f5fe23676bb4c6a99387cec5b7b62ceb99e10923376e27bfea72f3c3aeec2ba5f45f3f7ba65d6616965aa7c20b15002b6860833bb6e394dea546a8
-  languageName: node
-  linkType: hard
-
-"forge-std@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "forge-std@npm:1.1.2"
-  checksum: d5b36b909269a39dd30b619ac09a78e59b1a65e7887872ef99304298c4ffe2aa16f5dc5238c77e481a5e615582191b446401098a2ed567283d7df87e099a9d3c
   languageName: node
   linkType: hard
 
@@ -18045,16 +18030,6 @@ __metadata:
   bin:
     solhint: solhint.js
   checksum: 30361c0099cded492059719e477cecadcc7390f87a1737904411e8dbf15277344a5892e0762738a025cefd78467455601db1d7d6ffb3d489a6ab6e296c6a7b92
-  languageName: node
-  linkType: hard
-
-"solidity-bytes-utils@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "solidity-bytes-utils@npm:0.8.2"
-  dependencies:
-    ds-test: "github:dapphub/ds-test"
-    forge-std: ^1.1.2
-  checksum: 2be608f1aacfc2ff194d55e0c2b10abab3b88af262811b6c011933c6d049238fbd743c9de79a8e6cb46b1726349f47fe6132e81a9eaca21a588eb213f85a2fb4
   languageName: node
   linkType: hard
 

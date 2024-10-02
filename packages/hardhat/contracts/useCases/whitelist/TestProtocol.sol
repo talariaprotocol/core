@@ -22,7 +22,7 @@ contract TestProtocol is BetaProtocol {
   * @dev Test function
   * @notice This function is only callable by whitelisted users
   */
-  function test() public view onlyWhitelisted {
+  function test() public onlyWhitelisted {
     console.log("TestProtocol: test() called by whitelisted user");
   }
 }

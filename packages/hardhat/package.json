@@ -77,7 +77,6 @@
     "nft.storage": "^7.2.0",
     "qrcode": "^1.5.1",
     "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
-    "solidity-bytes-utils": "^0.8.2",
     "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
   }
 }

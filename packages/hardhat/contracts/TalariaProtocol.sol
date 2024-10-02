@@ -21,7 +21,7 @@ contract TalariaProtocol is MerkleTreeWithHistory, ReentrancyGuard {
   mapping(bytes32 => address[]) public validationModules;
 
   event NewCode(bytes32 indexed commitment, uint32 leafIndex, uint256 timestamp);
-  event ConsumeCode(address to, bytes32 nullifierHash);
+  event ConsumeCode(address to, bytes32 nullifierHash, uint256 timestamp);
 
   /**
     @dev The constructor
@@ -88,7 +88,7 @@ contract TalariaProtocol is MerkleTreeWithHistory, ReentrancyGuard {
 
     nullifierHashes[_nullifierHash] = true;
 
-    emit ConsumeCode(_recipient, _nullifierHash);
+    emit ConsumeCode(_recipient, _nullifierHash, block.timestamp);
   }
 
   /** @dev whether a note is already spent */
