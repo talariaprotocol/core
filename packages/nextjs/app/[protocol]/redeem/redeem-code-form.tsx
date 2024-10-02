@@ -66,9 +66,9 @@ const RedeemCodeForm = ({
   ctaUrl,
 }: {
   protocol: string;
-  logo: string;
+  logo?: string;
   whitelistAddress: Address;
-  ctaUrl: string;
+  ctaUrl?: string;
 }) => {
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
   const account = useAccount();
@@ -285,9 +285,11 @@ const RedeemCodeForm = ({
         <div className="max-w-md w-full p-6 rounded-lg shadow-lg bg-green-100 text-green-800">
           <h3 className="text-xl font-bold mb-2">🎉 Congratulations!</h3>
           <p>You are now whitelisted for {protocol}. Welcome aboard!</p>
-          <Button>
-            <Link href={ctaUrl}>Go to {protocol}</Link>
-          </Button>
+          {ctaUrl && (
+            <Button className="mt-4">
+              <Link href={ctaUrl}>Go to {protocol}</Link>
+            </Button>
+          )}
         </div>
       )}
     </div>

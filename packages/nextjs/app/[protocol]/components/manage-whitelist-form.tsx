@@ -27,7 +27,7 @@ export default function ManageWhitelistForm({
   ownerAddress,
 }: {
   protocol: string;
-  logo: string;
+  logo?: string;
   whitelistAddress: Address;
   ownerAddress: Address;
 }) {
@@ -46,7 +46,6 @@ export default function ManageWhitelistForm({
   useEffect(() => {
     const fetchStatistics = async () => {
       if (!publicClient) return;
-
       const fetchedStatistics = await talariaService.getStatistics({
         publicClient,
         whitelistAddress,
@@ -95,9 +94,10 @@ export default function ManageWhitelistForm({
 
   const downloadCSV = useCallback(() => {
     const generatedUrls = generatedCodes.map(code => `${process.env.NEXT_PUBLIC_APP_URL}/${protocol}/redeem#${code}`);
-    const csvContent = "data:text/csv;charset=utf-8," + generatedUrls.join("\n");
+    const csvContent = generatedUrls.join("\n");
+    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
     const link = document.createElement("a");
-    link.setAttribute("href", csvContent);
+    link.setAttribute("href", encodedUri);
     link.setAttribute("download", "talaria_generated_codes.csv");
     document.body.appendChild(link);
     link.click();
@@ -115,7 +115,7 @@ export default function ManageWhitelistForm({
   );
 
   const isOwner = useMemo(() => {
-    return ownerAddress.toLowerCase() === account.address?.toLowerCase();
+    return ownerAddress?.toLowerCase() === account.address?.toLowerCase();
   }, [ownerAddress, account.address]);
 
   const disabledForm = isPendingWrite || isFetching || !isOwner || !account.isConnected;
@@ -124,9 +124,11 @@ export default function ManageWhitelistForm({
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Manage Whitelist</h1>
       <div className="flex items-center gap-4">
-        <div className="h-20 w-auto relative">
-          <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
-        </div>
+        {logo && (
+          <div className="h-20 w-auto relative">
+            <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
+          </div>
+        )}
         <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

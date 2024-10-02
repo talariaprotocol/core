@@ -8,6 +8,14 @@ export interface CreateWhitelist {
   productUrl: string;
 }
 
+export interface updateWhitelist {
+  address?: Address;
+  name?: string;
+  slug?: string;
+  image?: File;
+  productUrl?: string;
+}
+
 export interface WhitelistedAddresses {
   address: Address;
   timestamp: bigint;
