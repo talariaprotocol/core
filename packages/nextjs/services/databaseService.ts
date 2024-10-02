@@ -1,5 +1,5 @@
 import { createKysely } from '@vercel/postgres-kysely';
-import { Kysely, Generated, Insertable, sql } from 'kysely';
+import { Kysely, Insertable, sql } from 'kysely';
 import { WhitelistTable } from '~~/repository/whitelist/whitelist.table';
 
 
@@ -33,7 +33,7 @@ class DatabaseService {
             .execute();
     }
 
-    async createWhitelist({logo, protocol_name, slug, wallet, whilist_address, protocolRedirect}: Insertable<WhitelistTable>) {
+    async createWhitelist({logo, protocol_name, slug, wallet, whitelist_address, protocolRedirect}: Insertable<WhitelistTable>) {
         // Insert the whitelist data into the database, omitting id and created_at
         await this.db
             .insertInto('whitelist')
@@ -41,8 +41,8 @@ class DatabaseService {
                 logo: logo,
                 protocol_name: protocol_name,
                 slug: slug,
-                wallet: wallet as string,
-                whitelist_address: whilist_address,
+                wallet: wallet,
+                whitelist_address: whitelist_address,
                 protocolRedirect: protocolRedirect,
             })
             .execute();
@@ -51,7 +51,7 @@ class DatabaseService {
         // Fetch the whitelist data where the wallet matches the provided value
         const result = await this.db.selectFrom('whitelist')
             .selectAll()
-            .where('slug', '=', slug as string)
+            .where('slug', '=', slug)
             .execute();
         // Return the result (it will be an array, so handle it accordingly)
         return result;

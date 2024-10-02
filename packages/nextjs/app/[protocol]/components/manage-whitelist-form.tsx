@@ -27,7 +27,7 @@ export default function ManageWhitelistForm({
   ownerAddress,
 }: {
   protocol: string;
-  logo: string;
+  logo?: string;
   whitelistAddress: Address;
   ownerAddress: Address;
 }) {
@@ -124,9 +124,11 @@ export default function ManageWhitelistForm({
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Manage Whitelist</h1>
       <div className="flex items-center gap-4">
-        <div className="h-20 w-auto relative">
-          <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
-        </div>
+        {logo && (
+          <div className="h-20 w-auto relative">
+            <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
+          </div>
+        )}
         <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
