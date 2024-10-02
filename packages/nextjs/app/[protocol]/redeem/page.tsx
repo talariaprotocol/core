@@ -11,7 +11,7 @@ const RedeemPage = async ({ params: { protocol } }: { params: { protocol: string
     <RedeemCodeForm
       protocol={protocol}
       // logo={whitelist[0]?.logo}
-      whitelistAddress={whitelist[0]?.whilist_address as Address}
+      whitelistAddress={whitelist[0]?.whitelist_address as Address}
       ctaUrl={whitelist[0]?.protocolRedirect}
     />
   );

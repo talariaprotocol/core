@@ -13,7 +13,7 @@ import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
 import WhitelistFactoryABI from "~~/contracts-data/deployments/arbitrumSepolia/WhitelistFactory.json";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
-import {createWhitelistAction} from "~~/repository/whitelist/createWhitelist.action";
+import { createWhitelistAction } from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
 import { databaseService } from "~~/services/databaseService";
 
@@ -24,7 +24,6 @@ export default function CreateWhitelist() {
   const [slug, setSlug] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [copied, setCopied] = useState(false);
   const hasSavedRef = useRef(false);
   const [productUrl, setProductUrl] = useState("");
   const publicClient = usePublicClient();
@@ -62,7 +61,7 @@ export default function CreateWhitelist() {
 
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
-      if (!publicClient) return;
+      if (!publicClient || !account.address) return;
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
           client: publicClient,
@@ -73,9 +72,9 @@ export default function CreateWhitelist() {
           logo: "/brand/197297796.png",
           protocol_name: name,
           slug: slug,
-          wallet: account.address as string,
-          whilist_address: whitelistAddress as string,
-          protocolRedirect: productUrl ? productUrl : "",
+          wallet: account.address,
+          whitelist_address: whitelistAddress,
+          protocolRedirect: productUrl,
         });
         setIsWhitelistSaved(true);
         toast({
