@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
+import { uuidV4 as uuid } from "ethers";
 import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import SlugInput from "~~/components/homepage/slug-input";
@@ -58,7 +59,7 @@ export default function CreateWhitelist() {
           transactionHash: hash,
         });
         await createWhitelistAction({
-          logo: "/brand/197297796.png",
+          logo: undefined, // TODO: Send logo
           protocol_name: name,
           slug: slug,
           wallet: account.address,
