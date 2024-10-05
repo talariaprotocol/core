@@ -4,7 +4,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { AlertTriangle, BarChart2Icon, BarChartIcon, Code, Download, Loader2 } from "lucide-react";
 import { Address, Hash } from "viem";
-import { useAccount, useEstimateMaxPriorityFeePerGas, useGasPrice, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useEstimateMaxPriorityFeePerGas,
+  useGasPrice,
+  usePublicClient,
+  useTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { ButtonGroup } from "~~/components/button-group";
 import { Alert, AlertDescription, AlertTitle } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
@@ -38,7 +45,7 @@ export default function ManageWhitelistForm({
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
   const publicClient = usePublicClient();
   const gasPrice = useGasPrice();
-  const maxPriorityFee = useEstimateMaxPriorityFeePerGas()
+  const maxPriorityFee = useEstimateMaxPriorityFeePerGas();
   const [statistics, setStatistics] = useState<WhitelistStatistics>({
     generated: 0,
     whitelistedAddresses: [],
@@ -82,8 +89,6 @@ export default function ManageWhitelistForm({
       validationModules.push([]);
     }
 
-
-    
     // const singleGasEstimate = 4220740; // Gas used for one commitment
     // const numberOfCodes = commitments.length; // Number of commitments you're processing
     // const gas = BigInt(singleGasEstimate * numberOfCodes * 2); // Add 20% buffer
@@ -110,7 +115,9 @@ export default function ManageWhitelistForm({
   };
 
   const downloadCSV = useCallback(() => {
-    const generatedUrls = generatedCodes.map(code => `${process.env.NEXT_PUBLIC_APP_URL}/${protocol}/redeem#${code}`);
+    const generatedUrls = generatedCodes.map(
+      code => `${process.env.NEXT_PUBLIC_APP_URL}/whitelist/${protocol}/redeem#${code}`,
+    );
     const csvContent = generatedUrls.join("\n");
     const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
     const link = document.createElement("a");

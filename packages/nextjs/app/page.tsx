@@ -7,17 +7,16 @@ import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import SlugInput from "~~/components/homepage/slug-input";
 import Landing from "~~/components/landing";
 import { Button } from "~~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
+import Divider from "~~/components/ui/divider";
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { toast } from "~~/components/ui/use-toast";
+import FastCreation from "~~/components/whitelist/fast-creation";
+import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
 import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
 import { createWhitelistAction } from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
-import { databaseService } from "~~/services/databaseService";
-import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
-
-const codeSnippet = `lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.`;
 
 export default function CreateWhitelist() {
   const [name, setName] = useState("");
@@ -34,20 +33,10 @@ export default function CreateWhitelist() {
 
   const currentNetwork = account.chainId || polygonTestnet;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setIsSubmitting(true);
 
-    if (!name || !slug || !image) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields.",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    // TODO: Implement blockchain submission
     await writeContractAsync({
       abi: WhitelistFactory__factory.abi,
       address: WhitelistFactoryAddresses[currentNetwork],
@@ -98,62 +87,67 @@ export default function CreateWhitelist() {
   }, [hash]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-lg h-min self-center">
-      <div className="p-6 bg-card rounded-lg border md:min-w-96 h-min">
-        <form onSubmit={handleSubmit} className="space-y-4 w-full">
-          <h2 className="text-2xl font-bold text-center mb-6">Create a new whitelist</h2>
-          <div className="space-y-2">
-            <Label htmlFor="name">Company Name</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              required
-              placeholder="Talaria Protocol"
-            />
-          </div>
-          <div className="space-y-2">
-            <SlugInput slug={slug} setSlug={setSlug} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="logo" className="block">
-              Company Logo
-            </Label>
-            <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={e => setImage(e.target.files?.[0] ?? null)}
-              className="w-full"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="productUrl">Product CTA URL (optional)</Label>
-            <Input
-              id="productUrl"
-              type="text"
-              value={productUrl}
-              onChange={e => setProductUrl(e.target.value)}
-              placeholder="your-company.xyz/new-feature"
-            />
-            <p className="text-sm text-muted-foreground">Where to send users after whitelisting</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image || !account}>
-              {!account ? "Connect Wallet" : isSubmitting ? "Submitting..." : "Submit Whitelist"}
-            </Button>
-            <Link href={`/${slug}`} className={`w-full ${!isWhitelistSaved ? "pointer-events-none" : ""}`}>
-              <Button className="w-full" disabled={!isWhitelistSaved} variant="outline">
-                Start generating codes
+    <div className="flex flex-col gap-8 max-w-md">
+      <FastCreation handleCreate={handleSubmit} />
+      <Divider text="Or create manually" />
+      <Card>
+        <CardHeader>
+          <CardTitle>Manual Whitelist Creation</CardTitle>
+          <CardDescription>Input your protocol data for a fully customized whitelist</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4 w-full">
+            <div className="space-y-2">
+              <Label htmlFor="name">Company Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+                placeholder="Talaria Protocol"
+              />
+            </div>
+            <div className="space-y-2">
+              <SlugInput slug={slug} setSlug={setSlug} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="logo" className="block">
+                Company Logo
+              </Label>
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={e => setImage(e.target.files?.[0] ?? null)}
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="productUrl">Product CTA URL (optional)</Label>
+              <Input
+                id="productUrl"
+                type="text"
+                value={productUrl}
+                onChange={e => setProductUrl(e.target.value)}
+                placeholder="your-company.xyz/new-feature"
+              />
+              <p className="text-sm text-muted-foreground">Where to send users after whitelisting</p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <Button type="submit" className="w-full" disabled={isSubmitting || !name || !slug || !image || !account}>
+                {!account ? "Connect Wallet" : isSubmitting ? "Submitting..." : "Submit Whitelist"}
               </Button>
-            </Link>
-          </div>
-        </form>
-      </div>
-      <div className="h-full">
-        <Landing showDocs={isWhitelistSaved} />
-      </div>
+              <Link href={`/${slug}`} className={`w-full ${!isWhitelistSaved ? "pointer-events-none" : ""}`}>
+                <Button className="w-full" disabled={!isWhitelistSaved} variant="outline">
+                  Start generating codes
+                </Button>
+              </Link>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+      <Landing />
     </div>
   );
 }
