@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { AlertTriangle, BarChart2Icon, BarChartIcon, Code, Download, Loader2 } from "lucide-react";
+import { AlertTriangle, BarChart2Icon, Code, Download, Loader2 } from "lucide-react";
 import { Address, Hash } from "viem";
 import {
   useAccount,
@@ -29,11 +29,13 @@ import { trimAddress, uppercaseFirstLetter } from "~~/utils";
 
 export default function ManageWhitelistForm({
   protocol,
+  chainId,
   logo,
   whitelistAddress,
   ownerAddress,
 }: {
-  protocol: string;
+  protocol?: string;
+  chainId: number;
   logo?: string;
   whitelistAddress: Address;
   ownerAddress: Address;
@@ -43,7 +45,9 @@ export default function ManageWhitelistForm({
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({
+    chainId,
+  });
   const gasPrice = useGasPrice();
   const maxPriorityFee = useEstimateMaxPriorityFeePerGas();
   const [statistics, setStatistics] = useState<WhitelistStatistics>({
@@ -116,7 +120,7 @@ export default function ManageWhitelistForm({
 
   const downloadCSV = useCallback(() => {
     const generatedUrls = generatedCodes.map(
-      code => `${process.env.NEXT_PUBLIC_APP_URL}/whitelist/${protocol}/redeem#${code}`,
+      code => `${process.env.NEXT_PUBLIC_APP_URL}/whitelist/${chainId}/${protocol}/redeem#${code}`,
     );
     const csvContent = generatedUrls.join("\n");
     const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
@@ -148,12 +152,12 @@ export default function ManageWhitelistForm({
     <div className="space-y-8">
       <h1 className="text-4xl font-bold">Manage Whitelist</h1>
       <div className="flex items-center gap-4">
-        {logo && (
+        {/* {logo && (
           <div className="h-20 w-auto relative">
             <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
           </div>
-        )}
-        <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3>
+        )} */}
+        {/* <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3> */}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="lg:col-span-1 flex flex-col gap-4">
@@ -204,7 +208,7 @@ export default function ManageWhitelistForm({
                   </div>
                 </div>
               </form>
-              {!isOwner && !account.isConnecting && !account.isReconnecting && (
+              {!isOwner && (
                 <Alert variant="warning">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>

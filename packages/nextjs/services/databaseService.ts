@@ -57,6 +57,16 @@ class DatabaseService {
     // Return the result (it will be an array, so handle it accordingly)
     return result;
   }
+
+  // TODO: Send also chain id when added to whitelsit table
+  async getWhitelistByAddress({ whitelist_address }: Pick<WhitelistTable, "whitelist_address">) {
+    const result = await this.db
+      .selectFrom("whitelist")
+      .selectAll()
+      .where("whitelist_address", "=", whitelist_address)
+      .executeTakeFirst();
+    return result;
+  }
 }
 
 export const databaseService = new DatabaseService();

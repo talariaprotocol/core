@@ -1,5 +1,4 @@
 export * from "./useAnimationConfig";
-export * from "./useBurnerWallet";
 export * from "./useContractLogs";
 export * from "./useFetchBlocks";
 export * from "./useNetworkColor";
