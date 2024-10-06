@@ -17,7 +17,7 @@ export default async function CodeGenerator({ params: { protocol } }: { params: 
       protocol={protocol}
       // logo={whitelist.logo}
       whitelistAddress={whitelist.whitelist_address}
-      ownerAddress={whitelist.wallet}
+      ownerAddress={whitelist.owner}
     />
   );
 }
