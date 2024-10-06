@@ -147,10 +147,6 @@ export default function ManageWhitelistForm({
   }, [ownerAddress, account.address]);
 
   const disabledForm = isPendingWrite || isFetching || !isOwner || !account.isConnected;
-  console.log("disabledForm", disabledForm);
-  console.log("isFetching", isFetching);
-  console.log("isOwner", isOwner, ownerAddress);
-  console.log("accountIsConnected", account.isConnected);
 
   return (
     <div className="space-y-8">
