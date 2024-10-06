@@ -18,10 +18,10 @@ const nextConfig = {
     if (!isServer) {
       config.module.rules.push({
         test: /\.worker\.js$/,
-        use: { 
-          loader: 'worker-loader',
-          options: { inline: true, fallback: false } // Inline the worker into the bundle
-        }
+        use: {
+          loader: "worker-loader",
+          options: { inline: true, fallback: false }, // Inline the worker into the bundle
+        },
       });
     }
 

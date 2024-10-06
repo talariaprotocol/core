@@ -14,6 +14,9 @@ const SlugInput = ({ slug, setSlug }: { slug: string; setSlug: (newValue: string
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSlug = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+
+    if (newSlug === slug) return;
+
     setIsChecking(true);
     setSlug(newSlug);
   };
@@ -60,7 +63,7 @@ const SlugInput = ({ slug, setSlug }: { slug: string; setSlug: (newValue: string
           isChecking && slug ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            isUnique && slug && <CheckIcon color="green" />
+            isUnique && validateSlug(slug) && <CheckIcon color="green" />
           )
         }
       />
