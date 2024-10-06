@@ -6,8 +6,8 @@ export interface WhitelistTable {
     id: Generated<number>;
     logo?: string;
     protocol_name?: string;
-    slug: string;
-    wallet: Address;
+    slug?: string;
+    owner: Address;
     whitelist_address: Address;
     protocolRedirect?: string;
 }

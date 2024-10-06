@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import RedeemCodeForm from "./redeem-code-form";
 import { Address } from "viem";
 import { getWhitelistAction } from "~~/repository/whitelist/getWhitelist.action";
@@ -7,12 +8,16 @@ const RedeemPage = async ({ params: { protocol } }: { params: { protocol: string
     slug: protocol as string,
   });
 
+  if (!whitelist) {
+    notFound();
+  }
+
   return (
     <RedeemCodeForm
       protocol={protocol}
-      // logo={whitelist[0]?.logo}
-      whitelistAddress={whitelist[0]?.whitelist_address as Address}
-      ctaUrl={whitelist[0]?.protocolRedirect}
+      // logo={whitelist.logo}
+      whitelistAddress={whitelist.whitelist_address}
+      ctaUrl={whitelist.protocolRedirect}
     />
   );
 };

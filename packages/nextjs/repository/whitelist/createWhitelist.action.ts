@@ -8,7 +8,7 @@ export async function createWhitelistAction({
   logo,
   protocol_name,
   slug,
-  wallet,
+  owner,
   whitelist_address,
   protocolRedirect,
 }: Insertable<WhitelistTable>) {
@@ -16,7 +16,7 @@ export async function createWhitelistAction({
     logo,
     protocol_name,
     slug,
-    wallet,
+    owner,
     whitelist_address,
     protocolRedirect,
   });
