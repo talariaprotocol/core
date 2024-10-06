@@ -12,7 +12,7 @@ const Navigation = () => {
         <Image src={HorizontalLogo} alt="Talaria" height={25} className="hidden md:block" />
       </Link>
       <ConnectButton
-        showBalance={false}
+        // showBalance={false}
         chainStatus="icon"
         accountStatus={{
           smallScreen: "address",

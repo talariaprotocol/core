@@ -1,19 +1,8 @@
 import { Address } from "viem";
 
-export interface CreateWhitelist {
+export interface MinimalWhitelist {
   address: Address;
-  name: string;
-  slug: string;
-  image: File;
-  productUrl: string;
-}
-
-export interface updateWhitelist {
-  address?: Address;
-  name?: string;
-  slug?: string;
-  image?: File;
-  productUrl?: string;
+  owner: Address;
 }
 
 export interface WhitelistedAddresses {

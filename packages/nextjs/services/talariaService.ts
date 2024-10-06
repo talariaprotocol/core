@@ -1,5 +1,5 @@
 import { ContractService, contractService } from "./contractService";
-import { Address, PublicClient } from "viem";
+import { Address, PublicClient, getContract } from "viem";
 import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/contracts/useCases/whitelist/Whitelist__factory";
 import { WhitelistStatistics, WhitelistedAddresses } from "~~/types/whitelist";
 
@@ -57,6 +57,21 @@ class TalariaService {
       whitelistedAddresses,
       generated: generatedCodes.length,
     };
+  }
+
+  async getWhitelistOwner({ address, client }: { address: Address; client: PublicClient }) {
+    try {
+      const whitelistContractInstance = getContract({
+        abi: Whitelist__factory.abi,
+        address,
+        client,
+      });
+      const owner = await whitelistContractInstance.read.owner();
+
+      return owner;
+    } catch (e) {
+      console.error(`We could not get your whitelist for address ${address} in network ${client.chain?.id}`, e);
+    }
   }
 }
 

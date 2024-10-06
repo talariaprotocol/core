@@ -74,6 +74,8 @@ export default function useCreateWhitelist() {
         variant: "destructive",
       });
       setIsFastCreating(false);
+      setIsCreatingWhitelist(false);
+      setIsWhitelistCreated(false);
     }
   };
 
