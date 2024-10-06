@@ -20,6 +20,7 @@ const ButtonGroup = <T extends string | number>({
           variant={selected === option ? "default" : "outline"}
           disabled={disabled}
           className="flex-1"
+          type="button"
         >
           {option}
         </Button>

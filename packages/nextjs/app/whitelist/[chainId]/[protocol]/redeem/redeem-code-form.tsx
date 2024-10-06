@@ -62,11 +62,13 @@ type TxStep = {
 const RedeemCodeForm = ({
   protocol,
   logo,
+  chainId,
   whitelistAddress,
   ctaUrl,
 }: {
-  protocol: string;
+  protocol?: string;
   logo?: string;
+  chainId: number;
   whitelistAddress: Address;
   ctaUrl?: string;
 }) => {
@@ -88,7 +90,6 @@ const RedeemCodeForm = ({
   });
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
   const { toast } = useToast();
-  const chainId = account.chainId || OptimismSepoliaChainId;
   const publicClient = usePublicClient({
     chainId,
   });
@@ -216,8 +217,8 @@ const RedeemCodeForm = ({
       }));
 
       toast({
-        title: "Transaction executed successfully!",
-        description: `Congratulations, you are now whitelisted for ${uppercaseFirstLetter(protocol)}!`,
+        title: "Congratulations! You are whitelisted!",
+        description: protocol && `You are now whitelisted for ${uppercaseFirstLetter(protocol)}!`,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,13 +230,13 @@ const RedeemCodeForm = ({
     <div className="flex flex-col gap-10 self-center">
       <div className="flex items-center gap-2">
         <LockOpenIcon size="32px" />
-        <h1 className="text-4xl font-bold">{uppercaseFirstLetter(protocol)} Whitelist</h1>
+        <h1 className="text-4xl font-bold">{uppercaseFirstLetter(protocol || "")} Whitelist</h1>
       </div>
       <div className="max-w-md w-full space-y-6 p-6 rounded-lg shadow-lg bg-card">
         <div className="flex flex-col gap-2">
           <h3 className="text-2xl font-bold">Whitelist</h3>
           <p className="text-muted-foreground">
-            Submit your proof code to be whitelisted to access {uppercaseFirstLetter(protocol)}
+            Submit your proof code to be whitelisted {protocol && `in ${uppercaseFirstLetter(protocol)}`}
           </p>
         </div>
         <div className="flex flex-col gap-2">

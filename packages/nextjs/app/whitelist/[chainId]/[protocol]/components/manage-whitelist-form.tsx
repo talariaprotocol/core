@@ -260,6 +260,7 @@ export default function ManageWhitelistForm({
               className="whitespace-nowrap md:ml-auto flex gap-2 items-center"
               size="lg"
               disabled={!isSuccess}
+              type="button"
             >
               <Download className="h-4 w-4" />
               Download codes as CSV
