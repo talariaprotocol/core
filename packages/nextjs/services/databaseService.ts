@@ -24,7 +24,7 @@ class DatabaseService {
       .addColumn("logo", "varchar")
       .addColumn("protocol_name", "varchar")
       .addColumn("slug", "varchar", col => col.unique())
-      .addColumn("wallet", "varchar", col => col.notNull())
+      .addColumn("owner", "varchar", col => col.notNull())
       .addColumn("whitelist_address", "varchar", col => col.notNull())
       .addColumn("protocolRedirect", "varchar")
       .execute();
@@ -34,7 +34,7 @@ class DatabaseService {
     logo,
     protocol_name,
     slug,
-    wallet,
+    owner,
     whitelist_address,
     protocolRedirect,
   }: Insertable<WhitelistTable>) {
@@ -45,7 +45,7 @@ class DatabaseService {
         logo: logo,
         protocol_name: protocol_name,
         slug: slug,
-        wallet: wallet,
+        owner: owner,
         whitelist_address: whitelist_address,
         protocolRedirect: protocolRedirect,
       })
@@ -53,7 +53,7 @@ class DatabaseService {
   }
   async getWhitelist({ slug }: Pick<WhitelistTable, "slug">) {
     // Fetch the whitelist data where the wallet matches the provided value
-    const result = await this.db.selectFrom("whitelist").selectAll().where("slug", "=", slug).execute();
+    const result = await this.db.selectFrom("whitelist").selectAll().where("slug", "=", slug).executeTakeFirst();
     // Return the result (it will be an array, so handle it accordingly)
     return result;
   }

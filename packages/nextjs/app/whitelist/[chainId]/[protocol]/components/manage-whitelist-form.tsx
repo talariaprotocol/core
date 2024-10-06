@@ -184,8 +184,13 @@ export default function ManageWhitelistForm({
                       />
                     </div>
                     <div className="col-span-2">
-                      <Button type="submit" disabled={disabledForm} className="min-w-20 w-full">
-                        {isPendingWrite || isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate"}
+                      <Button
+                        type="submit"
+                        disabled={disabledForm}
+                        isLoading={isPendingWrite || isFetching}
+                        className="min-w-20 w-full"
+                      >
+                        Generate
                       </Button>
                     </div>
                     <div className="col-span-3">

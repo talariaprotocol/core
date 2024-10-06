@@ -12,7 +12,7 @@ const Landing = () => (
         <section>
           <h3 className="text-lg font-semibold">1. Whitelist Manager</h3>
           <p>Create the whitelist security layer</p>
-          <pre className="bg-gray-100 p-2 rounded text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
+          <pre className="bg-gray-100 p-2 rounded text-xs sm:text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
             <code>{`
 interface IWhitelist {
     function usersWhitelisted(address user) external view returns (bool);
@@ -33,7 +33,7 @@ constructor(address _whitelist) {
             Create the modifier to check if the user is whitelisted. You can also add a{" "}
             <code className="text-sm">betaAccessEnabled</code> flag to control access.
           </p>
-          <pre className="bg-gray-100 p-2 rounded text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
+          <pre className="bg-gray-100 p-2 rounded text-xs sm:text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
             <code>{`
 modifier onlyWhitelisted() {
   if (betaAccessEnabled && !whitelist.usersWhitelisted(msg.sender)) {
@@ -46,7 +46,7 @@ modifier onlyWhitelisted() {
         </section>
         <section>
           <h3 className="text-lg font-semibold">Usage Example</h3>
-          <pre className="bg-gray-100 p-2 rounded text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
+          <pre className="bg-gray-100 p-2 rounded text-xs sm:text-sm overflow-x-auto max-w-full whitespace-pre-wrap break-normal">
             <code>{`
 function test() public view onlyWhitelisted {
   // Your logic here

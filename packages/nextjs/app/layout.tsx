@@ -22,7 +22,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
             <div className="flex flex-col min-h-screen">
               <TooltipProvider>
                 <Navigation />
-                <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20">
+                <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20 mt-20">
                   {children}
                   <Toaster />
                 </main>
