@@ -1,5 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
+import GetWhitelistWrapper from "./components/get-whitelist-wrapper";
 import ManageWhitelistForm from "./components/manage-whitelist-form";
 import { Selectable } from "kysely";
 import { isAddress } from "viem";
@@ -24,6 +25,10 @@ export default async function CodeGenerator({
     whitelist = await getWhitelistAction({
       slug: protocol,
     });
+  }
+
+  if (isAddress(protocol) && !whitelist) {
+    return <GetWhitelistWrapper chainId={chainId} whitelistAddress={protocol} />;
   }
 
   if (!whitelist) {

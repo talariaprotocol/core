@@ -34,7 +34,7 @@ export default function ManageWhitelistForm({
   whitelistAddress,
   ownerAddress,
 }: {
-  protocol: string;
+  protocol?: string;
   chainId: number;
   logo?: string;
   whitelistAddress: Address;
@@ -45,7 +45,9 @@ export default function ManageWhitelistForm({
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({
+    chainId,
+  });
   const gasPrice = useGasPrice();
   const maxPriorityFee = useEstimateMaxPriorityFeePerGas();
   const [statistics, setStatistics] = useState<WhitelistStatistics>({
@@ -145,6 +147,10 @@ export default function ManageWhitelistForm({
   }, [ownerAddress, account.address]);
 
   const disabledForm = isPendingWrite || isFetching || !isOwner || !account.isConnected;
+  console.log("disabledForm", disabledForm);
+  console.log("isFetching", isFetching);
+  console.log("isOwner", isOwner, ownerAddress);
+  console.log("accountIsConnected", account.isConnected);
 
   return (
     <div className="space-y-8">
@@ -206,7 +212,7 @@ export default function ManageWhitelistForm({
                   </div>
                 </div>
               </form>
-              {!isOwner && !account.isConnecting && !account.isReconnecting && (
+              {!isOwner && (
                 <Alert variant="warning">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>

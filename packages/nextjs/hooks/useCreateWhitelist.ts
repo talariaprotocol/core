@@ -3,7 +3,7 @@ import { Hash } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { toast } from "~~/components/ui/use-toast";
 import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
-import { WhitelistFactoryAddresses, polygonTestnet } from "~~/contracts/addresses";
+import { WhitelistFactoryAddresses, polygonAmoyTestnet } from "~~/contracts/addresses";
 import { createWhitelistAction } from "~~/repository/whitelist/createWhitelist.action";
 import { contractService } from "~~/services/contractService";
 
@@ -21,11 +21,13 @@ export default function useCreateWhitelist() {
   const [isWhitelistCreated, setIsWhitelistCreated] = useState(false);
   const [createdSlug, setCreatedSlug] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<SubmittedFormData | undefined>();
-
-  const publicClient = usePublicClient();
-  const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
   const account = useAccount();
-  const currentNetwork = account.chainId || polygonTestnet;
+
+  const publicClient = usePublicClient({
+    chainId: account.chainId || polygonAmoyTestnet,
+  });
+  const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
+  const currentNetwork = account.chainId || polygonAmoyTestnet;
 
   const handleFastCreation = () => {
     setIsFastCreating(true);
