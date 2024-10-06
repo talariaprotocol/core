@@ -11,12 +11,13 @@ contract Whitelist is Ownable, TalariaProtocol{
   constructor(
     IVerifier _verifier,
     IHasher _hasher,
-    uint32 _merkleTreeHeight
+    uint32 _merkleTreeHeight,
+    address _owner
   ) TalariaProtocol(_verifier, _hasher, _merkleTreeHeight
-  ) Ownable(msg.sender) {
+  ) Ownable(_owner) {
   }
 
-  function createEarlyAccessCode(bytes32 _commitment, address[] calldata _validationModules) public payable {
+  function createEarlyAccessCode(bytes32 _commitment, address[] calldata _validationModules) public onlyOwner payable {
     setCode(_commitment, _validationModules);
   }
 

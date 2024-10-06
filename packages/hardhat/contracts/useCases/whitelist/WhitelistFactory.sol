@@ -21,7 +21,8 @@ contract WhitelistFactory is TalariaFactory {
         Whitelist w = new Whitelist(
             defaultVerifier,
             defaultHasher,
-            defaultMerkleTreeHeight
+            defaultMerkleTreeHeight,
+            msg.sender
         );
 
         emit WhitelistCreated(address(w));
