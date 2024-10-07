@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, LockOpenIcon } from "lucide-react";
 import { Address, Hash } from "viem";
@@ -226,6 +227,10 @@ const RedeemCodeForm = ({
 
   const explorerUrl = TransactionExplorerBaseUrl[chainId];
 
+  const { isConnected, address } = useAccount();
+  const { openAccountModal } = useAccountModal();
+  const { openConnectModal } = useConnectModal();
+
   return (
     <div className="flex flex-col gap-10 self-center">
       <div className="flex items-center gap-2">
@@ -252,13 +257,33 @@ const RedeemCodeForm = ({
             />
           </div>
         </div>
-        <Button
-          onClick={submitTx}
-          disabled={isLoading || isSuccess || !account.isConnected || !provingKey}
-          className="w-full"
-        >
-          {isPendingSendNumber ? "Pending, please check your wallet..." : "Submit code & Execute transaction"}
-        </Button>
+        {isConnected ? (
+          <>
+            <p
+              className="text-sm text-gray-500 hover:text-blue-500 transition-all cursor-pointer"
+              onClick={openAccountModal}
+            >
+              Using wallet{" "}
+              {address
+                ? address?.substring(0, 4) + "..." + address.substring(address.length - 4, address.length)
+                : "..."}
+            </p>
+            <Button
+              onClick={submitTx}
+              disabled={isLoading || isSuccess || !account.isConnected || !provingKey}
+              className="w-full"
+            >
+              {isPendingSendNumber ? "Pending, please check your wallet..." : "Submit code & Execute transaction"}
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-gray-500">Please connect your wallet to submit the proof code.</p>
+            <Button onClick={openConnectModal} className="w-full">
+              Connect Wallet
+            </Button>
+          </>
+        )}
 
         {TransactionStepsOrder.map(status => {
           const step = transactionSteps[status];
