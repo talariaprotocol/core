@@ -117,7 +117,7 @@ export default function ManageWhitelistForm({
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Consumed Codes</CardTitle>
+          <CardTitle>Whitelisted Addresses</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="max-h-96 overflow-y-auto">
