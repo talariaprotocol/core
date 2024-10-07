@@ -6,6 +6,7 @@ import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
 import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
+import { WalletRequiredButton } from "~~/components/wallet-required-button/WalletRequiredButton";
 import SlugInput from "~~/components/whitelist/slug-input";
 
 interface ManualCreationProps {
@@ -63,14 +64,19 @@ const ManualCreation = ({
             <p className="text-sm text-muted-foreground">Where to send users after whitelisting</p>
           </div>
           <div className="flex flex-col gap-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isCreatingWhitelist || !isConnected || disableForm}
-              isLoading={isCreatingWhitelist}
-            >
-              {!isConnected ? "Connect Wallet" : "Submit Whitelist"}
-            </Button>
+            <WalletRequiredButton
+              showConnectedWalletLabel={true}
+              buttonIfWalletIsConnected={
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isCreatingWhitelist || disableForm}
+                  isLoading={isCreatingWhitelist}
+                >
+                  {!isConnected ? "Connect Wallet" : "Submit Whitelist"}
+                </Button>
+              }
+            ></WalletRequiredButton>
             {isWhitelistCreated && createdSlug && chainId && (
               <AutoRedirect chainId={chainId} createdSlug={createdSlug} />
             )}

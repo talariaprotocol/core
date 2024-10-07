@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useAccount } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
+import { WalletRequiredButton } from "~~/components/wallet-required-button/WalletRequiredButton";
 
 interface FastCreationProps {
   handleFastCreation: () => void;
@@ -25,9 +26,14 @@ const FastCreation = ({
         <CardDescription>Skip manual entry and create your whitelist instantly</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button size="lg" onClick={handleFastCreation} className="w-full" isLoading={isCreatingWhitelist}>
-          Create with One Click <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <WalletRequiredButton
+          showConnectedWalletLabel={false}
+          buttonIfWalletIsConnected={
+            <Button size="lg" onClick={handleFastCreation} className="w-full" isLoading={isCreatingWhitelist}>
+              Create with One Click <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          }
+        ></WalletRequiredButton>
         {isWhitelistCreated && createdSlug && chainId && <AutoRedirect chainId={chainId} createdSlug={createdSlug} />}
       </CardContent>
     </Card>
