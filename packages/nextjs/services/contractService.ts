@@ -1,4 +1,15 @@
-import { Abi, Address, Client, Hash, PublicClient, decodeEventLog, getContract, parseUnits } from "viem";
+import {
+  Abi,
+  Address,
+  Client,
+  Hash,
+  PublicClient,
+  TransactionReceipt,
+  decodeEventLog,
+  getContract,
+  parseUnits,
+} from "viem";
+import { UseWaitForTransactionReceiptParameters, useWaitForTransactionReceipt } from "wagmi";
 
 export class ContractService {
   async getPastCommitments({
@@ -32,17 +43,13 @@ export class ContractService {
   async getWhitelistAddress({
     client,
     abi,
-    transactionHash,
+    txReceipt,
   }: {
     client: PublicClient;
     abi: Abi | readonly unknown[];
-    transactionHash: Hash;
+    txReceipt: TransactionReceipt;
   }) {
-    const receipt = await client.getTransactionReceipt({
-      hash: transactionHash,
-    });
-
-    const decodedLogs = receipt.logs.map(log => {
+    const decodedLogs = txReceipt.logs.map(log => {
       const decodedLog = decodeEventLog({
         abi,
         eventName: "WhitelistCreated",

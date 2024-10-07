@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Hash } from "viem";
-import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import { useAccount, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { toast } from "~~/components/ui/use-toast";
 import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
 import { WhitelistFactoryAddresses, polygonAmoyTestnet } from "~~/contracts/addresses";
@@ -22,12 +22,16 @@ export default function useCreateWhitelist() {
   const [createdSlug, setCreatedSlug] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<SubmittedFormData | undefined>();
   const account = useAccount();
+  const chainId = account.chainId || polygonAmoyTestnet;
 
   const publicClient = usePublicClient({
-    chainId: account.chainId || polygonAmoyTestnet,
+    chainId,
   });
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
-  const currentNetwork = account.chainId || polygonAmoyTestnet;
+  const { isSuccess: txReceiptSuccess, data: txReceipt } = useWaitForTransactionReceipt({
+    hash,
+    chainId,
+  });
 
   const handleFastCreation = () => {
     setIsFastCreating(true);
@@ -65,7 +69,7 @@ export default function useCreateWhitelist() {
     try {
       await writeContractAsync({
         abi: WhitelistFactory__factory.abi,
-        address: WhitelistFactoryAddresses[currentNetwork],
+        address: WhitelistFactoryAddresses[chainId],
         functionName: "create",
         args: [],
       });
@@ -83,12 +87,12 @@ export default function useCreateWhitelist() {
 
   React.useEffect(() => {
     const saveWhitelist = async (hash: Hash) => {
-      if (!publicClient || !account.address) return;
+      if (!publicClient || !account.address || !txReceipt) return;
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
           client: publicClient,
           abi: WhitelistFactory__factory.abi,
-          transactionHash: hash,
+          txReceipt,
         });
         await createWhitelistAction({
           //   logo: formData?.logo, // TODO: Send logo
@@ -113,12 +117,12 @@ export default function useCreateWhitelist() {
       }
     };
 
-    if (hash && !hasSavedRef.current && publicClient) {
+    if (hash && txReceiptSuccess && !hasSavedRef.current && publicClient) {
       hasSavedRef.current = true;
       saveWhitelist(hash);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hash]);
+  }, [txReceiptSuccess]);
 
   return {
     handleFastCreation,
