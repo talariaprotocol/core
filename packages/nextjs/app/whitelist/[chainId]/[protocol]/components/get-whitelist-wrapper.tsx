@@ -47,6 +47,7 @@ const GetWhitelistWrapper = ({ chainId, whitelistAddress }: GetWhitelistWrapperP
   return (
     <ManageWhitelistForm
       chainId={chainId}
+      protocol={whitelistAddress}
       // logo={whitelist.logo}
       whitelistAddress={whitelistAddress}
       ownerAddress={owner}
