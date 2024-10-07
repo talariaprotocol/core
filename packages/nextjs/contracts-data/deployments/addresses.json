@@ -8,5 +8,15 @@
     "Verifier": "0xfBCfE32f7448A7bcf319a8De8E3368C4a0Da4032",
     "Hasher": "0x0aE14e75D815F78EF0d179e93F09329AD6F45D78",
     "WhitelistFactory": "0x636519202E93119e349224FAc1Df31e6EfAae725"
+  },
+  "arbitrum": {
+    "Verifier": "0xB8fFFEAb3D08Ea86E010AbEa164F81e20286F94f",
+    "Hasher": "0x425F0DAC21dbf82F3918A085E425cc573D1acD57",
+    "WhitelistFactory": "0x540F749582CeE504E1fa824d29ed2Fdf227a76c5"
+  },
+  "polygon": {
+    "Verifier": "0xf712f5cc6444a08d75f64212611b1C2A7f99a250",
+    "Hasher": "0x9823777c670Dd2fF8D3304464Bf8FDb92698886F",
+    "WhitelistFactory": "0xB8fFFEAb3D08Ea86E010AbEa164F81e20286F94f"
   }
 }

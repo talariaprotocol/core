@@ -191,10 +191,12 @@ const config: HardhatUserConfig = {
   // configuration for harhdat-verify plugin
   etherscan: {
     apiKey: {
+      polygon: polygonApiKey,
       polygonAmoy: polygonApiKey,
       'optimism-sepolia': etherscanApiKey,
       zkSyncSepolia: etherscanApiKey,
       avalancheFuji: etherscanApiKey,
+      arbitrumOne: arbitrumApiKey,
       arbitrumSepolia: arbitrumApiKey,
       morphHolesky: 'anything',
       chilizSpicy: etherscanApiKey,
