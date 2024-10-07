@@ -2,6 +2,7 @@ import { Button } from "../ui/button";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { uppercaseFirstLetter } from "~~/utils";
+import { walletSubstring } from "~~/utils/misc";
 
 export interface WalletRequiredButtonProps {
   buttonIfWalletIsConnected: React.ReactNode;
@@ -31,7 +32,7 @@ export const WalletRequiredButton: React.FC<WalletRequiredButtonProps> = ({
           onClick={openAccountModal}
         >
           Using{"  "}
-          {address ? address?.substring(0, 4) + "..." + address.substring(address.length - 4, address.length) : "..."}
+          {address ? walletSubstring(address) : "..."}
           {"  "} on {uppercaseFirstLetter(chain?.name ?? "")}
         </label>
       )}

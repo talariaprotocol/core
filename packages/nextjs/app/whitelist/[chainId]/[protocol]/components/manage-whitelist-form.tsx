@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DownloadCodes from "./download-codes";
 import GenerateCodesForm from "./generate-codes-form";
-import { AlertTriangle, BarChart2Icon, Code, Download, Loader2 } from "lucide-react";
+import { AlertTriangle, BarChart2Icon, Code, Copy, Download, Loader2 } from "lucide-react";
 import { Address } from "viem";
 import { useEstimateMaxPriorityFeePerGas, useGasPrice, usePublicClient } from "wagmi";
 import { Alert, AlertDescription } from "~~/components/ui/alert";
@@ -13,6 +13,7 @@ import { Progress } from "~~/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~~/components/ui/table";
 import { talariaService } from "~~/services/talariaService";
 import { WhitelistStatistics } from "~~/types/whitelist";
+import { walletSubstring } from "~~/utils/misc";
 
 export default function ManageWhitelistForm({
   protocol,
@@ -63,7 +64,32 @@ export default function ManageWhitelistForm({
 
   return (
     <div className="space-y-8">
-      <h1 className="text-4xl font-bold">Manage Whitelist</h1>
+      <div className="flex gap-4 items-center">
+        
+      <h1 className="text-4xl font-bold mb-0">Manage Whitelist</h1>
+      <label
+        className=" text-gray-400
+            hover:text-gray-500
+            active:text-gray-800
+            align-bottom
+            cursor-pointer
+            h-full
+            align-bottom
+            transition-colors
+            duration text-md font-light text-gray-400 flex"
+        onClick={() => navigator.clipboard.writeText(whitelistAddress)}
+      >
+        {walletSubstring(whitelistAddress)}
+        <Copy
+          className="
+            h-5
+            w-5
+            ml-2
+           
+          "
+        ></Copy>
+      </label>
+      </div>
       <div className="flex items-center gap-4">
         {/* {logo && (
           <div className="h-20 w-auto relative">
