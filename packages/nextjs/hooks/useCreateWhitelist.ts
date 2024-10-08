@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Hash } from "viem";
+import { Address, Hash, decodeEventLog } from "viem";
 import { useAccount, usePublicClient, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { toast } from "~~/components/ui/use-toast";
 import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
@@ -86,14 +86,15 @@ export default function useCreateWhitelist() {
   };
 
   React.useEffect(() => {
-    const saveWhitelist = async (hash: Hash) => {
+    const saveWhitelist = async () => {
       if (!publicClient || !account.address || !txReceipt) return;
       try {
         const whitelistAddress = await contractService.getWhitelistAddress({
-          client: publicClient,
-          abi: WhitelistFactory__factory.abi,
           txReceipt,
         });
+
+        if (!whitelistAddress) throw new Error("No address was found");
+
         await createWhitelistAction({
           //   logo: formData?.logo, // TODO: Send logo
           protocol_name: formData?.name,
@@ -104,6 +105,7 @@ export default function useCreateWhitelist() {
         });
         setCreatedSlug(formData?.slug || whitelistAddress);
         setIsWhitelistCreated(true);
+        setIsCreatingWhitelist(false);
         toast({
           title: "Whitelist created",
           description: "Your whitelist has been created.",
@@ -119,7 +121,7 @@ export default function useCreateWhitelist() {
 
     if (hash && txReceiptSuccess && !hasSavedRef.current && publicClient) {
       hasSavedRef.current = true;
-      saveWhitelist(hash);
+      saveWhitelist();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txReceiptSuccess]);
