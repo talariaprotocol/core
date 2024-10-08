@@ -30,6 +30,8 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
+  console.log('Deploying contracts on network:', network.name)
+
   // Path to the JSON file
   const addressesFilePath = path.resolve(__dirname, '../deployments/addresses.json')
 
@@ -58,7 +60,7 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     skipIfAlreadyDeployed: false,
   })
 
-  const levels = 20 // Merkle tree height
+  const levels = 10 // Merkle tree height
 
   const whitelistFactory = await deploy('WhitelistFactory', {
     from: deployer,
