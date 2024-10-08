@@ -29,7 +29,13 @@ const FastCreation = ({
         <WalletRequiredButton
           showConnectedWalletLabel={false}
           buttonIfWalletIsConnected={
-            <Button size="lg" onClick={handleFastCreation} className="w-full" isLoading={isCreatingWhitelist}>
+            <Button
+              size="lg"
+              onClick={handleFastCreation}
+              className="w-full"
+              isLoading={isCreatingWhitelist}
+              loadingText="Waiting to confirm transaction"
+            >
               Create with One Click <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           }

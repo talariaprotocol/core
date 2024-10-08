@@ -10,6 +10,7 @@ import {
   parseUnits,
 } from "viem";
 import { UseWaitForTransactionReceiptParameters, useWaitForTransactionReceipt } from "wagmi";
+import { WhitelistFactory__factory } from "~~/contracts-data/typechain-types";
 
 export class ContractService {
   async getPastCommitments({
@@ -40,24 +41,21 @@ export class ContractService {
     return commitments;
   }
 
-  async getWhitelistAddress({
-    client,
-    abi,
-    txReceipt,
-  }: {
-    client: PublicClient;
-    abi: Abi | readonly unknown[];
-    txReceipt: TransactionReceipt;
-  }) {
-    const decodedLogs = txReceipt.logs.map(log => {
-      const decodedLog = decodeEventLog({
-        abi,
-        eventName: "WhitelistCreated",
-        data: log.data,
-        topics: log.topics,
-      });
-      return decodedLog;
-    });
+  async getWhitelistAddress({ txReceipt }: { txReceipt: TransactionReceipt }) {
+    const decodedLogs = txReceipt.logs
+      .map(log => {
+        try {
+          const decodedLog = decodeEventLog({
+            abi: WhitelistFactory__factory.abi,
+            eventName: "WhitelistCreated",
+            data: log.data,
+            topics: log.topics,
+          });
+          return decodedLog;
+        } catch {}
+      })
+      .filter(log => !!log);
+
     // @ts-ignore
     return decodedLogs.find(log => log.eventName === "WhitelistCreated")?.args.whitelist as Address;
   }
