@@ -1,13 +1,13 @@
 {
   "arbitrumSepolia": {
-    "Verifier": "0xCdbf1055f9d9901ef9988ffb5b9cc93564aC2880",
+    "Verifier": "0x1889812B384a273F308de9C2Ccbd75B353905A23",
     "Hasher": "0x537d630b33B2CEE5282231B0A0c5aFB96A63Be19",
-    "WhitelistFactory": "0x01F2953F3Af028476124cA6ffFB5E57f24b24D6E"
+    "WhitelistFactory": "0xA6bBa90D423461029B9c69f40519Dbea7be9d7D3"
   },
   "polygonAmoy": {
-    "Verifier": "0xfBCfE32f7448A7bcf319a8De8E3368C4a0Da4032",
+    "Verifier": "0xe5941240a4fA52aD2402B49Ed0e1b94a35DaaB76",
     "Hasher": "0x0aE14e75D815F78EF0d179e93F09329AD6F45D78",
-    "WhitelistFactory": "0xc46e41422BF8F4c7f5Db4791f6AC5953d42CC89c"
+    "WhitelistFactory": "0x6Cc07bd227C460ed0b4e514533c2a376549F1BfF"
   },
   "arbitrum": {
     "Verifier": "0xB8fFFEAb3D08Ea86E010AbEa164F81e20286F94f",
