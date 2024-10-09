@@ -12,6 +12,7 @@ interface GetWhitelistWrapperProps {
   whitelistAddress: Address;
 }
 
+
 const GetWhitelistWrapper = ({ chainId, whitelistAddress }: GetWhitelistWrapperProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [owner, setOwner] = useState<Address | undefined>();
@@ -23,7 +24,6 @@ const GetWhitelistWrapper = ({ chainId, whitelistAddress }: GetWhitelistWrapperP
   useEffect(() => {
     const fetchWhitelist = async () => {
       if (!publicClient || !!owner) return;
-      console.log("publicClient", publicClient);
       const data = await talariaService.getWhitelistOwner({
         client: publicClient,
         address: whitelistAddress,

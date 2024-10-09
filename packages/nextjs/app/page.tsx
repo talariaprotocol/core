@@ -15,6 +15,7 @@ export default function CreateWhitelist() {
     isWhitelistCreated,
     createdSlug,
     isFastCreating,
+    hash,
   } = useCreateWhitelist();
 
   return (
@@ -25,6 +26,7 @@ export default function CreateWhitelist() {
           createdSlug={createdSlug}
           isWhitelistCreated={isWhitelistCreated}
           isCreatingWhitelist={isCreatingWhitelist}
+          hash={hash}
         />
         <Divider text="Or create manually" />
         <ManualCreation
@@ -33,6 +35,7 @@ export default function CreateWhitelist() {
           isWhitelistCreated={isWhitelistCreated}
           createdSlug={createdSlug}
           disableForm={isFastCreating}
+          hash={hash}
         />
       </div>
       <Landing />

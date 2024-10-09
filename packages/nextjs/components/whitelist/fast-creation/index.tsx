@@ -1,15 +1,19 @@
+import Link from "next/link";
 import AutoRedirect from "../auto-redirect";
 import { ArrowRight } from "lucide-react";
+import { Hash } from "viem";
 import { useAccount } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
 import { WalletRequiredButton } from "~~/components/wallet-required-button/WalletRequiredButton";
+import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 interface FastCreationProps {
   handleFastCreation: () => void;
   isWhitelistCreated: boolean;
   isCreatingWhitelist: boolean;
   createdSlug?: string;
+  hash?: Hash;
 }
 
 const FastCreation = ({
@@ -17,6 +21,7 @@ const FastCreation = ({
   isWhitelistCreated,
   createdSlug,
   isCreatingWhitelist,
+  hash,
 }: FastCreationProps) => {
   const { chainId } = useAccount();
   return (
@@ -40,6 +45,15 @@ const FastCreation = ({
             </Button>
           }
         ></WalletRequiredButton>
+        {hash && chainId && (
+          <Link
+            className="cursor-pointer text-xs font-light text-blue-500"
+            target="_blank"
+            href={`${TransactionExplorerBaseUrl[chainId]}${hash}`}
+          >
+            See transaction in Explorer
+          </Link>
+        )}
         {isWhitelistCreated && createdSlug && chainId && <AutoRedirect chainId={chainId} createdSlug={createdSlug} />}
       </CardContent>
     </Card>

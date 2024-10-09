@@ -9,7 +9,6 @@ export interface WhitelistedAddresses {
   address: Address;
   timestamp: bigint;
 }
-[];
 
 export interface WhitelistStatistics {
   generated: number;
