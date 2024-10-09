@@ -65,7 +65,7 @@
     "usehooks-ts": "^2.13.0",
     "viem": "2.21.2",
     "wagmi": "2.9.8",
-    "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d",
+    "websnark": "git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7",
     "zod": "^3.23.8",
     "zustand": "^4.1.2"
   },

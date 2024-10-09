@@ -3967,7 +3967,7 @@ __metadata:
     vercel: ^32.4.1
     viem: 2.21.2
     wagmi: 2.9.8
-    websnark: "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+    websnark: "git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7"
     zod: ^3.23.8
     zustand: ^4.1.2
   languageName: unknown
@@ -20728,15 +20728,6 @@ __metadata:
   dependencies:
     big-integer: ^1.6.42
   checksum: b0ea188d36cc6451c29b1a11d2474f91c7dbb36f2466fe49c9575b515a125d13ee3d9f74bea82153282368c9f1cad0464a5959a27def8e18645b5861d9111ac2
-  languageName: node
-  linkType: hard
-
-"websnark@git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d":
-  version: 0.0.4
-  resolution: "websnark@https://github.com/tornadocash/websnark.git#commit=4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
-  dependencies:
-    big-integer: ^1.6.42
-  checksum: 32a85a36c0c76a5f1b7ead76cfe7a9e457e2fd0bfb52d06d573d623cb4df0b7fdabe9d9181375bde2d39c066d20b2181ee1b1fae6daf4d6e9ba369400541181f
   languageName: node
   linkType: hard
 

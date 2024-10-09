@@ -17,7 +17,7 @@ import {
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
-import { pedersenHash, stringifyBigInts } from "~~/contracts-data/helpers/helpers";
+import { pedersenHash, stringifyBigInts, toFixedHex } from "~~/contracts-data/helpers/helpers";
 import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/contracts/useCases/whitelist/Whitelist__factory";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
 import { decodeDecryptAndDecompress } from "~~/helper";
@@ -33,7 +33,7 @@ const path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require("crypto");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const MerkleTree = require("fixed-merkle-tree");
+const MerkleTree = require("~~/contracts-data/lib/MerkleTree");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const websnarkUtils = require("websnark/src/utils");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -154,10 +154,15 @@ const RedeemCodeForm = ({
       const tree = new MerkleTree(levels, commitments);
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);
-      const { pathElements, pathIndices } = tree.path(commitmentIndex);
+
+      const path = await tree.path(commitmentIndex)
+      const { root: untransformedRoot, path_elements: pathElements, path_index: pathIndices } = path
+      const root = toFixedHex(untransformedRoot)
+
+      // const { pathElements, pathIndices } = tree.path(commitmentIndex);
       const input = stringifyBigInts({
         // public
-        root: tree.root(),
+        root,
         nullifierHash: pedersenHash(snarkjs.bigInt(processedCode.nullifier).leInt2Buff(31)),
         relayer: ZeroAddress,
         recipient: account.address,
@@ -174,7 +179,7 @@ const RedeemCodeForm = ({
       const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, provingKey?.buffer);
 
       const { proof } = websnarkUtils.toSolidityInput(proofData);
-      const root = zeroPadValue(toBeHex(input.root), 32) as Hash;
+      // const root = zeroPadValue(toBeHex(input.root), 32) as Hash;
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
 
       setTransactionSteps(prev => ({
