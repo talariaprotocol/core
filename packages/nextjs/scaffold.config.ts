@@ -93,3 +93,20 @@ const scaffoldConfig = {
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;
+
+
+
+/**
+ * Gets the chain object for the given chain id.
+ * @param chainId - Chain id of the target EVM chain.
+ * @returns Viem's chain object.
+*/
+export function getChainByChainId(chainId: number) {
+  for (const chain of Object.values(chains)) {
+    if (chain.id === chainId) {
+      return chain;
+    }
+  }
+
+  throw new Error(`Chain with id ${chainId} not found`);
+}

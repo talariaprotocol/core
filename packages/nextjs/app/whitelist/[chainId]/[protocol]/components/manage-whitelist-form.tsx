@@ -3,9 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DownloadCodes from "./download-codes";
 import GenerateCodesForm from "./generate-codes-form";
+import ManualWhitelisting from "./manual-whitelisting";
+import WhitelistedTable from "./whitelisted-table";
 import { AlertTriangle, BarChart2Icon, Code, Copy, Download, Loader2 } from "lucide-react";
 import { Address } from "viem";
 import { useEstimateMaxPriorityFeePerGas, useGasPrice, usePublicClient } from "wagmi";
+import Landing from "~~/components/landing";
 import { Alert, AlertDescription } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
@@ -38,17 +41,17 @@ export default function ManageWhitelistForm({
     whitelistedAddresses: [],
   });
 
+  const fetchStatistics = async () => {
+    if (!publicClient) return;
+    const fetchedStatistics = await talariaService.getStatistics({
+      publicClient,
+      whitelistAddress,
+    });
+
+    setStatistics(fetchedStatistics);
+  };
+
   useEffect(() => {
-    const fetchStatistics = async () => {
-      if (!publicClient) return;
-      const fetchedStatistics = await talariaService.getStatistics({
-        publicClient,
-        whitelistAddress,
-      });
-
-      setStatistics(fetchedStatistics);
-    };
-
     fetchStatistics();
   }, [whitelistAddress, publicClient]);
 
@@ -63,47 +66,32 @@ export default function ManageWhitelistForm({
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex gap-4 items-center">
-        
-      <h1 className="text-4xl font-bold mb-0">Manage Whitelist</h1>
-      <label
-        className=" text-gray-400
-            hover:text-gray-500
-            active:text-gray-800
-            align-bottom
-            cursor-pointer
-            h-full
-            align-bottom
-            transition-colors
-            duration text-md font-light text-gray-400 flex"
-        onClick={() => navigator.clipboard.writeText(whitelistAddress)}
-      >
-        {walletSubstring(whitelistAddress)}
-        <Copy
-          className="
-            h-5
-            w-5
-            ml-2
-           
-          "
-        ></Copy>
-      </label>
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <h1 className="text-4xl font-bold mb-0">Manage Whitelist</h1>
+        <div className="flex gap-2 items-center">
+          <p className="text-sm">{walletSubstring(whitelistAddress)}</p>
+          <Copy
+            onClick={() => navigator.clipboard.writeText(whitelistAddress)}
+            className="h-5 w-5 cursor-pointer"
+          ></Copy>
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-        {/* {logo && (
+      {/* <div className="flex items-center gap-4"> */}
+      {/* {logo && (
           <div className="h-20 w-auto relative">
             <Image src={logo} alt={`${uppercaseFirstLetter(protocol)} Logo`} fill style={{ objectFit: "contain" }} />
           </div>
         )} */}
-        {/* <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3> */}
-      </div>
+      {/* <h3 className="text-2xl font-bold">{uppercaseFirstLetter(protocol)}</h3> */}
+      {/* </div> */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <GenerateCodesForm
           ownerAddress={ownerAddress}
           setGeneratedCodes={setGeneratedCodes}
           whitelistAddress={whitelistAddress}
           setIsGeneratingCodes={setIsGeneratingCodes}
+          refetchStatistics={fetchStatistics}
         />
         <Card className="lg:col-span-1">
           <CardHeader>
@@ -141,31 +129,9 @@ export default function ManageWhitelistForm({
           />
         </div>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Whitelisted Addresses</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="max-h-96 overflow-y-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-1/2">Wallet Address</TableHead>
-                  <TableHead className="w-1/2">Consumed At</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {processedStatistic.whitelistedAddresses.map((user, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{user.address}</TableCell>
-                    <TableCell>{user.timestamp}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+      <WhitelistedTable whitelistedAddresses={processedStatistic.whitelistedAddresses} />
+      <ManualWhitelisting whitelistAddress={whitelistAddress} refreshStatistics={fetchStatistics} />
+      <Landing />
     </div>
   );
 }

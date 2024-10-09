@@ -1,13 +1,11 @@
 import React from "react";
+import Collapsible from "../ui/collapsible";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
 
 const Landing = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Quick Integration Guide</CardTitle>
-      <CardDescription>Add Talaria to your project in few simple steps</CardDescription>
-    </CardHeader>
-    <CardContent>
+  <Collapsible
+    title="Quick Integration Guide"
+    children={
       <div className="space-y-4">
         <section>
           <h3 className="text-lg font-semibold">1. Whitelist Manager</h3>
@@ -71,8 +69,8 @@ function test() public view onlyWhitelisted {
           </p>
         </section>
       </div>
-    </CardContent>
-  </Card>
+    }
+  />
 );
 
 export default Landing;

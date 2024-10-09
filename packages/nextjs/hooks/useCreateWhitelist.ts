@@ -87,8 +87,10 @@ export default function useCreateWhitelist() {
 
   React.useEffect(() => {
     const saveWhitelist = async () => {
-      if (!publicClient || !account.address || !txReceipt) return;
+      if (!account.address) return;
       try {
+        if (!txReceipt || txReceipt.status !== "success") throw new Error();
+
         const whitelistAddress = await contractService.getWhitelistAddress({
           txReceipt,
         });
@@ -119,7 +121,7 @@ export default function useCreateWhitelist() {
       }
     };
 
-    if (hash && txReceiptSuccess && !hasSavedRef.current && publicClient) {
+    if (hash && txReceiptSuccess && !hasSavedRef.current) {
       hasSavedRef.current = true;
       saveWhitelist();
     }
@@ -133,5 +135,6 @@ export default function useCreateWhitelist() {
     isWhitelistCreated,
     createdSlug,
     isFastCreating,
+    hash,
   };
 }

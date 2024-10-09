@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AutoRedirect from "../auto-redirect";
+import { Hash } from "viem";
 import { useAccount } from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/card";
@@ -8,6 +9,7 @@ import { Input } from "~~/components/ui/input";
 import { Label } from "~~/components/ui/label";
 import { WalletRequiredButton } from "~~/components/wallet-required-button/WalletRequiredButton";
 import SlugInput from "~~/components/whitelist/slug-input";
+import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 interface ManualCreationProps {
   handleManualCration: ({ e, slug }: { e: React.FormEvent<HTMLFormElement>; slug: string }) => void;
@@ -15,6 +17,7 @@ interface ManualCreationProps {
   isWhitelistCreated: boolean;
   disableForm: boolean;
   createdSlug?: string;
+  hash?: Hash;
 }
 
 const ManualCreation = ({
@@ -23,6 +26,7 @@ const ManualCreation = ({
   isWhitelistCreated,
   disableForm,
   createdSlug,
+  hash,
 }: ManualCreationProps) => {
   const { isConnected, chainId } = useAccount();
   const [slug, setSlug] = useState("");
@@ -71,12 +75,22 @@ const ManualCreation = ({
                   type="submit"
                   className="w-full"
                   disabled={isCreatingWhitelist || disableForm}
-                  isLoading={isCreatingWhitelist}
+                  isLoading={!disableForm && isCreatingWhitelist}
+                  loadingText="Waiting to confirm transaction"
                 >
                   {!isConnected ? "Connect Wallet" : "Submit Whitelist"}
                 </Button>
               }
             ></WalletRequiredButton>
+            {hash && chainId && (
+              <Link
+                className="cursor-pointer text-xs font-light text-blue-500"
+                target="_blank"
+                href={`${TransactionExplorerBaseUrl[chainId]}${hash}`}
+              >
+                See transaction in Explorer
+              </Link>
+            )}
             {isWhitelistCreated && createdSlug && chainId && (
               <AutoRedirect chainId={chainId} createdSlug={createdSlug} />
             )}

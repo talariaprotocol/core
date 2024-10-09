@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Code } from "lucide-react";
-import { Address, Hash } from "viem";
-import { useAccount, useTransactionReceipt, useWriteContract } from "wagmi";
+import { Address, Hash, encodeFunctionData } from "viem";
+import { useAccount, useGasPrice, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
 import { ButtonGroup } from "~~/components/button-group";
 import { Alert, AlertDescription } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
@@ -18,6 +18,7 @@ interface GenerateCodesFormProps {
   ownerAddress: Address;
   whitelistAddress: Address;
   setIsGeneratingCodes: (value: boolean) => void;
+  refetchStatistics: () => Promise<void>;
 }
 
 const GenerateCodesForm = ({
@@ -25,8 +26,9 @@ const GenerateCodesForm = ({
   ownerAddress,
   whitelistAddress,
   setIsGeneratingCodes,
+  refetchStatistics,
 }: GenerateCodesFormProps) => {
-  const [codeCount, setCodeCount] = useState("50");
+  const [codeCount, setCodeCount] = useState("1");
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
   const { isSuccess: txReceiptSuccess, isFetching } = useTransactionReceipt({ hash });
@@ -76,10 +78,6 @@ const GenerateCodesForm = ({
         // gas,
         // gasPrice: maxFeePerGas,
       });
-
-      toast({
-        title: "Talaria Codes generated",
-      });
     } catch (e) {
       toast({
         title: "Transaction was not submitted",
@@ -91,6 +89,11 @@ const GenerateCodesForm = ({
 
   useEffect(() => {
     if (txReceiptSuccess) {
+      toast({
+        title: "Talaria Codes generated",
+      });
+
+      refetchStatistics();
       setIsGeneratingCodes(false);
     }
   }, [txReceiptSuccess]);
@@ -126,7 +129,8 @@ const GenerateCodesForm = ({
                     min="1"
                     value={codeCount}
                     onChange={e => setCodeCount(e.target.value)}
-                    disabled={disabledForm}
+                    // disabled={disabledForm}
+                    disabled
                   />
                 </div>
                 <div className="col-span-2">
@@ -141,7 +145,7 @@ const GenerateCodesForm = ({
                 </div>
                 <div className="col-span-3">
                   <ButtonGroup
-                    options={["25", "50", "100"]}
+                    options={["1", "2", "3"]}
                     selected={codeCount}
                     onChange={newValue => setCodeCount(newValue)}
                     disabled={disabledForm}
