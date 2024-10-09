@@ -6,7 +6,14 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { ZeroAddress, toBeHex, zeroPadValue } from "ethers";
 import { CheckIcon, CircleDotDashedIcon, ClockIcon, LockOpenIcon } from "lucide-react";
 import { Address, Hash } from "viem";
-import { useAccount, usePublicClient, useSwitchChain, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useReadContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { Button } from "~~/components/ui/button";
 import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
@@ -33,7 +40,7 @@ const websnarkUtils = require("websnark/src/utils");
 const buildGroth16 = require("websnark/src/groth16");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const circuit = require("~~/contracts-data/helpers/withdraw.json");
-const levels = 20;
+// const levels = 20;
 
 enum TxStatusEnum {
   NOT_STARTED = "NOT_STARTED",
@@ -77,6 +84,11 @@ const RedeemCodeForm = ({
   const [provingKey, setProvingKey] = useState<Buffer | null>(null);
   const account = useAccount();
   const { data: hash, isPending: isPendingSendNumber, error, writeContractAsync } = useWriteContract();
+  const { data: levels } = useReadContract({
+    abi: Whitelist__factory.abi,
+    functionName: "levels",
+    address: whitelistAddress,
+  });
   const [processedCode, setProcessedCode] = useState<any>();
   const [transactionSteps, setTransactionSteps] = useState<Record<TxStepsEnum, TxStep>>({
     [TxStepsEnum.GENERATE_CODES]: {
@@ -119,7 +131,7 @@ const RedeemCodeForm = ({
   }, []);
 
   const submitTx = async () => {
-    if (!account.address || !publicClient) {
+    if (!account.address || !publicClient || levels === undefined) {
       return;
     }
     try {
@@ -138,6 +150,7 @@ const RedeemCodeForm = ({
         abi: Whitelist__factory.abi,
         contractAddress: whitelistAddress,
       });
+
       const tree = new MerkleTree(levels, commitments);
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);

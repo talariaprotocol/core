@@ -18,6 +18,7 @@ interface GenerateCodesFormProps {
   ownerAddress: Address;
   whitelistAddress: Address;
   setIsGeneratingCodes: (value: boolean) => void;
+  refetchStatistics: () => Promise<void>;
 }
 
 const GenerateCodesForm = ({
@@ -25,6 +26,7 @@ const GenerateCodesForm = ({
   ownerAddress,
   whitelistAddress,
   setIsGeneratingCodes,
+  refetchStatistics,
 }: GenerateCodesFormProps) => {
   const [codeCount, setCodeCount] = useState("1");
   const { toast } = useToast();
@@ -76,10 +78,6 @@ const GenerateCodesForm = ({
         // gas,
         // gasPrice: maxFeePerGas,
       });
-
-      toast({
-        title: "Talaria Codes generated",
-      });
     } catch (e) {
       toast({
         title: "Transaction was not submitted",
@@ -91,6 +89,11 @@ const GenerateCodesForm = ({
 
   useEffect(() => {
     if (txReceiptSuccess) {
+      toast({
+        title: "Talaria Codes generated",
+      });
+
+      refetchStatistics();
       setIsGeneratingCodes(false);
     }
   }, [txReceiptSuccess]);
