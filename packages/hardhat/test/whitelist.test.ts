@@ -30,7 +30,7 @@ import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 
-const MerkleTree = require('fixed-merkle-tree')
+const MerkleTree = require('../lib/MerkleTree')
 
 describe('Whitelist', function () {
   let Verifier: Verifier__factory, verifier: Verifier
@@ -38,11 +38,14 @@ describe('Whitelist', function () {
   let WhitelistFactoryFactory: WhitelistFactory__factory, whitelistFactory: WhitelistFactory
   let Whitelist: Whitelist__factory, whitelist: Whitelist
 
-  let owner: HardhatEthersSigner, addr1: HardhatEthersSigner, addr2: HardhatEthersSigner, addr3: HardhatEthersSigner
+  let owner: HardhatEthersSigner,
+    addr1: HardhatEthersSigner,
+    addr2: HardhatEthersSigner,
+    addr3: HardhatEthersSigner
 
   let tree: any
   let groth16: any
-  const levels = 20
+  const levels = 10
   let circuit: any
   let proving_key: any
 
@@ -96,10 +99,15 @@ describe('Whitelist', function () {
     )
 
     // Create parameters for the consumption
-    const { pathElements, pathIndices } = tree.path(Number(await whitelist.nextIndex()) - 1)
+    const path = await tree.path(Number(await whitelist.nextIndex()) - 1)
+
+    const { root: untransformedRoot, path_elements: pathElements, path_index: pathIndices } = path
+
+    const root = toFixedHex(untransformedRoot)
+
     const input = stringifyBigInts({
       // public
-      root: tree.root(),
+      root,
       nullifierHash: pedersenHash(transfer.nullifier.leInt2Buff(31)),
       relayer: ZeroAddress,
       recipient: await addr2.getAddress(),
@@ -116,7 +124,7 @@ describe('Whitelist', function () {
     const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, proving_key)
     const { proof } = websnarkUtils.toSolidityInput(proofData)
 
-    const root = zeroPadValue(toBeHex(input.root), 32)
+    // const root = zeroPadValue(toBeHex(input.root), 32)
     const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32)
 
     expect(await testProtocol.betaAccessEnabled()).to.equal(true)
