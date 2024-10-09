@@ -157,7 +157,7 @@ const RedeemCodeForm = ({
 
       const path = await tree.path(commitmentIndex)
       const { root: untransformedRoot, path_elements: pathElements, path_index: pathIndices } = path
-      const root = toFixedHex(untransformedRoot)
+      const root = toFixedHex(untransformedRoot) as Hash;
 
       // const { pathElements, pathIndices } = tree.path(commitmentIndex);
       const input = stringifyBigInts({
@@ -179,8 +179,10 @@ const RedeemCodeForm = ({
       const proofData = await websnarkUtils.genWitnessAndProve(groth16, input, circuit, provingKey?.buffer);
 
       const { proof } = websnarkUtils.toSolidityInput(proofData);
-      // const root = zeroPadValue(toBeHex(input.root), 32) as Hash;
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
+
+      console.log("input", input);
+
 
       setTransactionSteps(prev => ({
         ...prev,
