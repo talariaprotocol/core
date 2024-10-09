@@ -3908,6 +3908,7 @@ __metadata:
     clsx: ^2.1.1
     cmdk: ^1.0.0
     connectkit: ^1.7.2
+    crypto: ^1.0.1
     eslint: ^8.15.0
     eslint-config-next: ^14.0.4
     eslint-config-prettier: ^9.1.0

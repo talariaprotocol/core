@@ -89,6 +89,12 @@ const RedeemCodeForm = ({
     functionName: "levels",
     address: whitelistAddress,
   });
+  const { data: veriier } = useReadContract({
+    abi: Whitelist__factory.abi,
+    functionName: "verifier",
+    address: whitelistAddress,
+  });
+  console.log("verifier", veriier);
   const [processedCode, setProcessedCode] = useState<any>();
   const [transactionSteps, setTransactionSteps] = useState<Record<TxStepsEnum, TxStep>>({
     [TxStepsEnum.GENERATE_CODES]: {
@@ -182,6 +188,9 @@ const RedeemCodeForm = ({
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
 
       console.log("input", input);
+      console.log("levels", levels);
+      console.log("proof", proof);
+      console.log(tree)
 
 
       setTransactionSteps(prev => ({
