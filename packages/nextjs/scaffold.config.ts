@@ -36,7 +36,7 @@ export const mapHardhatNetworkToViemChain = (network: string): chains.Chain => {
       console.log("Unsupported network", network);
       throw new Error(`Unsupported network ${network}`);
   }
-}
+};
 
 export const mapViemChainToHardhatNetwork = (network: chains.Chain): string => {
   switch (network) {
@@ -62,10 +62,12 @@ export const mapViemChainToHardhatNetwork = (network: chains.Chain): string => {
       console.log("Unsupported network", network);
       throw new Error(`Unsupported network ${network}`);
   }
-}
+};
 
-
-export const supportedNetworks = Object.keys(file).filter((network) => network !== "default").map(mapHardhatNetworkToViemChain);
+export const supportedNetworks = Object.keys(file)
+  .filter(network => network !== "default")
+  .map(mapHardhatNetworkToViemChain)
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 // const targetNetworks = isProduction ? chains.hardhat : chains.optimismSepolia;
 const scaffoldConfig = {
@@ -94,13 +96,11 @@ const scaffoldConfig = {
 
 export default scaffoldConfig;
 
-
-
 /**
  * Gets the chain object for the given chain id.
  * @param chainId - Chain id of the target EVM chain.
  * @returns Viem's chain object.
-*/
+ */
 export function getChainByChainId(chainId: number) {
   for (const chain of Object.values(chains)) {
     if (chain.id === chainId) {

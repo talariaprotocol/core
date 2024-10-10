@@ -13,12 +13,15 @@ import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/
 import { compressEncryptAndEncode } from "~~/helper";
 import { trimAddress } from "~~/utils";
 
+const MAX_AMOUNT = 1024;
+
 interface GenerateCodesFormProps {
   setGeneratedCodes: Dispatch<SetStateAction<string[]>>;
   ownerAddress: Address;
   whitelistAddress: Address;
   setIsGeneratingCodes: (value: boolean) => void;
   refetchStatistics: () => Promise<void>;
+  generatedCodesAmount: number;
 }
 
 const GenerateCodesForm = ({
@@ -27,12 +30,15 @@ const GenerateCodesForm = ({
   whitelistAddress,
   setIsGeneratingCodes,
   refetchStatistics,
+  generatedCodesAmount,
 }: GenerateCodesFormProps) => {
   const [codeCount, setCodeCount] = useState("1");
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
   const { isSuccess: txReceiptSuccess, isFetching } = useTransactionReceipt({ hash });
   const account = useAccount();
+
+  const maxAmountReached = generatedCodesAmount > MAX_AMOUNT;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,11 +142,11 @@ const GenerateCodesForm = ({
                 <div className="col-span-2">
                   <Button
                     type="submit"
-                    disabled={disabledForm}
+                    disabled={disabledForm || maxAmountReached}
                     isLoading={isPendingWrite || isFetching}
                     className="min-w-20 w-full"
                   >
-                    Generate
+                    {maxAmountReached ? "Max reached" : "Generate"}
                   </Button>
                 </div>
                 <div className="col-span-3">
