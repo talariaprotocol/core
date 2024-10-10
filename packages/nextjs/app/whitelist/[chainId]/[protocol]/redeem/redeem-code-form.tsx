@@ -89,11 +89,6 @@ const RedeemCodeForm = ({
     functionName: "levels",
     address: whitelistAddress,
   });
-  const { data: veriier } = useReadContract({
-    abi: Whitelist__factory.abi,
-    functionName: "verifier",
-    address: whitelistAddress,
-  });
 
   const [processedCode, setProcessedCode] = useState<any>();
   const [transactionSteps, setTransactionSteps] = useState<Record<TxStepsEnum, TxStep>>({
