@@ -94,7 +94,7 @@ const RedeemCodeForm = ({
     functionName: "verifier",
     address: whitelistAddress,
   });
-  console.log("verifier", veriier);
+
   const [processedCode, setProcessedCode] = useState<any>();
   const [transactionSteps, setTransactionSteps] = useState<Record<TxStepsEnum, TxStep>>({
     [TxStepsEnum.GENERATE_CODES]: {
@@ -161,8 +161,8 @@ const RedeemCodeForm = ({
 
       const commitmentIndex = commitments.indexOf(processedCode.commitment);
 
-      const path = await tree.path(commitmentIndex)
-      const { root: untransformedRoot, path_elements: pathElements, path_index: pathIndices } = path
+      const path = await tree.path(commitmentIndex);
+      const { root: untransformedRoot, path_elements: pathElements, path_index: pathIndices } = path;
       const root = toFixedHex(untransformedRoot) as Hash;
 
       // const { pathElements, pathIndices } = tree.path(commitmentIndex);
@@ -186,12 +186,6 @@ const RedeemCodeForm = ({
 
       const { proof } = websnarkUtils.toSolidityInput(proofData);
       const nullifierHash = zeroPadValue(toBeHex(input.nullifierHash), 32) as Hash;
-
-      console.log("input", input);
-      console.log("levels", levels);
-      console.log("proof", proof);
-      console.log(tree)
-
 
       setTransactionSteps(prev => ({
         ...prev,
