@@ -95,7 +95,7 @@ const RedeemCodeForm = ({
     [TxStepsEnum.GENERATE_CODES]: {
       id: TxStepsEnum.GENERATE_CODES,
       status: TxStatusEnum.NOT_STARTED,
-      message: "Generate Talaria Proof",
+      message: "Generate Proof",
     },
     [TxStepsEnum.SUBMIT]: {
       id: TxStepsEnum.SUBMIT,
@@ -114,6 +114,7 @@ const RedeemCodeForm = ({
       const provingKeyPath = path.resolve(__dirname, "./withdraw_proving_key.bin");
       const provingKey = await fetch(provingKeyPath);
       const provingKeyParsed = await provingKey.arrayBuffer();
+
       setProvingKey(Buffer.from(provingKeyParsed));
     };
     void getProvingKey();
@@ -140,7 +141,7 @@ const RedeemCodeForm = ({
         ...prev,
         [TxStepsEnum.GENERATE_CODES]: {
           ...prev[TxStepsEnum.GENERATE_CODES],
-          message: "Generating Talaria Proof...",
+          message: "Generating Proof...",
           status: TxStatusEnum.PENDING,
         },
       }));
@@ -186,7 +187,7 @@ const RedeemCodeForm = ({
         ...prev,
         [TxStepsEnum.GENERATE_CODES]: {
           ...prev[TxStepsEnum.GENERATE_CODES],
-          message: "Talaria Proof generated!",
+          message: "Proof generated!",
           status: TxStatusEnum.DONE,
         },
       }));
