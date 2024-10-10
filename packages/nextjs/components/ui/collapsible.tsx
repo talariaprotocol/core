@@ -16,7 +16,7 @@ export default function Collapsible({ title, children, defaultExpanded = false }
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
 
   return (
-    <div className="border rounded-md overflow-scroll">
+    <div className="border rounded-md">
       <button
         className="flex justify-between items-center w-full p-4 text-left bg-gray-100 hover:bg-gray-200 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -28,7 +28,7 @@ export default function Collapsible({ title, children, defaultExpanded = false }
       </button>
       <div
         className={cn(
-          "transition-all duration-200 ease-in-out",
+          "transition-all duration-200 ease-in-out overflow-scroll",
           isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         )}
       >

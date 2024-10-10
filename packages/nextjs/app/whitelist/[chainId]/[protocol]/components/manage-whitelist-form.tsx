@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import DownloadCodes from "./download-codes";
 import GenerateCodesForm from "./generate-codes-form";
 import ManualWhitelisting from "./manual-whitelisting";
 import WhitelistedTable from "./whitelisted-table";
-import { AlertTriangle, BarChart2Icon, Code, Copy, Download, Loader2 } from "lucide-react";
+import { AlertTriangle, BarChart2Icon, Code, Copy, Download, ExternalLink, Loader2 } from "lucide-react";
 import { Address } from "viem";
 import { useEstimateMaxPriorityFeePerGas, useGasPrice, usePublicClient } from "wagmi";
 import Landing from "~~/components/landing";
@@ -16,6 +17,7 @@ import { Progress } from "~~/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~~/components/ui/table";
 import { talariaService } from "~~/services/talariaService";
 import { WhitelistStatistics } from "~~/types/whitelist";
+import { AddressExplorerBaseUrl, TransactionExplorerBaseUrl } from "~~/utils/explorer";
 import { walletSubstring } from "~~/utils/misc";
 
 export default function ManageWhitelistForm({
@@ -75,6 +77,13 @@ export default function ManageWhitelistForm({
             onClick={() => navigator.clipboard.writeText(whitelistAddress)}
             className="h-5 w-5 cursor-pointer"
           ></Copy>
+          <Link
+            className="cursor-pointer"
+            target="_blank"
+            href={`${AddressExplorerBaseUrl[chainId]}${whitelistAddress}`}
+          >
+            <ExternalLink className="h-5 w-5" />
+          </Link>
         </div>
       </div>
       {/* <div className="flex items-center gap-4"> */}
@@ -93,6 +102,7 @@ export default function ManageWhitelistForm({
           setIsGeneratingCodes={setIsGeneratingCodes}
           refetchStatistics={fetchStatistics}
           generatedCodesAmount={processedStatistic.generated}
+          chainId={chainId}
         />
         <Card className="lg:col-span-1">
           <CardHeader>

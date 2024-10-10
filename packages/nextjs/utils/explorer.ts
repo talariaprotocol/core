@@ -19,3 +19,9 @@ export const TransactionExplorerBaseUrl: Record<number, string> = {
   [ChillizChainId]: "https://testnet.chiliscan.com/tx/",
   [MorphHoleskyChainId]: "\thttps://explorer-holesky.morphl2.io/tx/"
 };
+
+export const AddressExplorerBaseUrl: Record<number, string> = {
+  [polygonAmoyTestnet]: "https://amoy.polygonscan.com/address/",
+  [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/address/",
+
+}
