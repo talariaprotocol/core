@@ -92,6 +92,7 @@ export default function ManageWhitelistForm({
           whitelistAddress={whitelistAddress}
           setIsGeneratingCodes={setIsGeneratingCodes}
           refetchStatistics={fetchStatistics}
+          generatedCodesAmount={processedStatistic.generated}
         />
         <Card className="lg:col-span-1">
           <CardHeader>
