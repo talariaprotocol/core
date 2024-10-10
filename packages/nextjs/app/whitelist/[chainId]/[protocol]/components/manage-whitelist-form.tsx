@@ -102,6 +102,7 @@ export default function ManageWhitelistForm({
           setIsGeneratingCodes={setIsGeneratingCodes}
           refetchStatistics={fetchStatistics}
           generatedCodesAmount={processedStatistic.generated}
+          chainId={chainId}
         />
         <Card className="lg:col-span-1">
           <CardHeader>

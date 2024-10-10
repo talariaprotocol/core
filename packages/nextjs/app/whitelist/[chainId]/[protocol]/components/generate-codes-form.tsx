@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Code } from "lucide-react";
-import { Address, Hash, encodeFunctionData } from "viem";
+import Link from "next/link";
+import { AlertTriangle, Code, ExternalLink } from "lucide-react";
+import { Address, Hash, encodeFunctionData, formatEther } from "viem";
+import { estimateGas } from "viem/actions";
 import { useAccount, useGasPrice, usePublicClient, useTransactionReceipt, useWriteContract } from "wagmi";
 import { ButtonGroup } from "~~/components/button-group";
 import { Alert, AlertDescription } from "~~/components/ui/alert";
@@ -12,6 +14,7 @@ import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/contracts/useCases/whitelist/Whitelist__factory";
 import { compressEncryptAndEncode } from "~~/helper";
 import { trimAddress } from "~~/utils";
+import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 const MAX_AMOUNT = 1024;
 
@@ -22,6 +25,7 @@ interface GenerateCodesFormProps {
   setIsGeneratingCodes: (value: boolean) => void;
   refetchStatistics: () => Promise<void>;
   generatedCodesAmount: number;
+  chainId: number;
 }
 
 const GenerateCodesForm = ({
@@ -31,12 +35,15 @@ const GenerateCodesForm = ({
   setIsGeneratingCodes,
   refetchStatistics,
   generatedCodesAmount,
+  chainId,
 }: GenerateCodesFormProps) => {
-  const [codeCount, setCodeCount] = useState("1");
+  const [codeCount, setCodeCount] = useState("4");
   const { toast } = useToast();
   const { writeContractAsync, isPending: isPendingWrite, data: hash } = useWriteContract();
   const { isSuccess: txReceiptSuccess, isFetching } = useTransactionReceipt({ hash });
   const account = useAccount();
+  const publicClient = usePublicClient();
+  const gasPrice = useGasPrice();
 
   const maxAmountReached = generatedCodesAmount > MAX_AMOUNT;
 
@@ -72,8 +79,37 @@ const GenerateCodesForm = ({
     // const maxPriorityFeePerGas = maxPriorityFee.data;
 
     // console.log("bulkGasEstimate", gas);
-    // console.log("maxFeePerGas", maxFeePerGas);
+    const maxFeePerGas = await publicClient?.estimateMaxPriorityFeePerGas();
     // console.log("maxPriorityFeePerGas", maxPriorityFeePerGas);
+
+    const estimatedGas = await publicClient?.estimateGas({
+      account: account.address,
+      to: whitelistAddress,
+      value: 0n,
+      data: encodeFunctionData({
+        abi: Whitelist__factory.abi,
+        functionName: "bulkCreateEarlyAccessCodes",
+        args: [commitments, validationModules],
+      }),
+    });
+
+    console.log("gasPrice", gasPrice);
+    console.log("maxFeePerGas", maxFeePerGas);
+    console.log("estimatedGas", estimatedGas);
+
+    const gasLimit = estimatedGas ? (estimatedGas * 130n) / 100n : undefined;
+
+    console.log("gasLimit", gasLimit);
+
+    const isAbove1ETH = gasLimit && maxFeePerGas && formatEther(gasLimit * maxFeePerGas);
+
+    if (Number(isAbove1ETH) >= 1) {
+      toast({
+        title: `Gas is too high (${isAbove1ETH} ETH), please reduce the amount of codes`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
       await writeContractAsync({
@@ -81,8 +117,8 @@ const GenerateCodesForm = ({
         address: whitelistAddress,
         functionName: "bulkCreateEarlyAccessCodes",
         args: [commitments, validationModules],
-        // gas,
-        // gasPrice: maxFeePerGas,
+        gas: gasLimit,
+        gasPrice: maxFeePerGas,
       });
     } catch (e) {
       toast({
@@ -135,8 +171,7 @@ const GenerateCodesForm = ({
                     min="1"
                     value={codeCount}
                     onChange={e => setCodeCount(e.target.value)}
-                    // disabled={disabledForm}
-                    disabled
+                    disabled={disabledForm}
                   />
                 </div>
                 <div className="col-span-2">
@@ -145,13 +180,29 @@ const GenerateCodesForm = ({
                     disabled={disabledForm || maxAmountReached}
                     isLoading={isPendingWrite || isFetching}
                     className="min-w-20 w-full"
+                    loadingText={
+                      isPendingWrite
+                        ? "Submitting..."
+                        : isFetching && txReceiptSuccess
+                          ? "Waiting for confirmation..."
+                          : undefined
+                    }
                   >
                     {maxAmountReached ? "Max reached" : "Generate"}
                   </Button>
+                  {hash && (
+                    <Link
+                      className="cursor-pointer flex gap-2 items-center"
+                      target="_blank"
+                      href={`${TransactionExplorerBaseUrl[chainId]}${hash}`}
+                    >
+                      Open in explorer <ExternalLink className="h-4 w-4" />
+                    </Link>
+                  )}
                 </div>
                 <div className="col-span-3">
                   <ButtonGroup
-                    options={["1", "2", "3"]}
+                    options={["2", "4", "8"]}
                     selected={codeCount}
                     onChange={newValue => setCodeCount(newValue)}
                     disabled={disabledForm}
@@ -160,6 +211,14 @@ const GenerateCodesForm = ({
               </div>
             </div>
           </form>
+          {Number(codeCount) > 8 && (
+            <Alert variant="warning">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                For gas limitations, we suggest generating up to 8 codes per transaction
+              </AlertDescription>
+            </Alert>
+          )}
           {!isOwner && (
             <Alert variant="warning">
               <AlertTriangle className="h-4 w-4" />
