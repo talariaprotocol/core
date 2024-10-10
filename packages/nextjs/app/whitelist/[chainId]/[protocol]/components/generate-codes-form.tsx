@@ -44,6 +44,7 @@ const GenerateCodesForm = ({
   const account = useAccount();
   const publicClient = usePublicClient();
   const gasPrice = useGasPrice();
+  const [submittedCodes, setSubmittedCodes] = useState<string[]>([]);
 
   const maxAmountReached = generatedCodesAmount > MAX_AMOUNT;
 
@@ -60,12 +61,13 @@ const GenerateCodesForm = ({
     setIsGeneratingCodes(true);
     const commitments: Hash[] = [];
     const validationModules: Address[][] = [];
+    const generatedProofs: string[] = [];
 
     for (let i = 0; i < count; i++) {
       const generatedProof = generateTransfer();
 
       const compressedObject = compressEncryptAndEncode(generatedProof);
-      setGeneratedCodes(prev => [...prev, compressedObject]);
+      generatedProofs.push(compressedObject);
 
       commitments.push(generatedProof.commitment as Hash);
       validationModules.push([]);
@@ -120,6 +122,8 @@ const GenerateCodesForm = ({
         gas: gasLimit,
         gasPrice: maxFeePerGas,
       });
+
+      setSubmittedCodes(generatedProofs);
     } catch (e) {
       toast({
         title: "Transaction was not submitted",
@@ -134,7 +138,7 @@ const GenerateCodesForm = ({
       toast({
         title: "Talaria Codes generated",
       });
-
+      setGeneratedCodes(prev => [...prev, ...submittedCodes]);
       refetchStatistics();
       setIsGeneratingCodes(false);
     }
