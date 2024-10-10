@@ -3,7 +3,7 @@ export const snarkjs = require('snarkjs')
 export const bigInt = snarkjs.bigInt
 export const crypto = require('crypto')
 export const circomlib = require('circomlib')
-export const MerkleTree = require('fixed-merkle-tree')
+export const MerkleTree = require('../lib/MerkleTree')
 
 export const rbigint = (nbytes: number) => snarkjs.bigInt.leBuff2int(crypto.randomBytes(nbytes))
 export const pedersenHash = (data: Buffer) => circomlib.babyJub.unpackPoint(circomlib.pedersenHash.hash(data))[0]

@@ -59,7 +59,6 @@
     "zksync-web3": "^0.17.1"
   },
   "dependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.44",
     "@layerzerolabs/lz-evm-oapp-v2": "^2.3.40",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.40",
     "@layerzerolabs/lz-v2-utilities": "^2.3.41",
@@ -77,6 +76,6 @@
     "nft.storage": "^7.2.0",
     "qrcode": "^1.5.1",
     "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
-    "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+    "websnark": "git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7"
   }
 }

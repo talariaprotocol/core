@@ -1115,51 +1115,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@layerzerolabs/lz-evm-messagelib-v2@npm:^2.3.44":
+"@layerzerolabs/lz-evm-oapp-v2@npm:^2.3.40":
   version: 2.3.44
-  resolution: "@layerzerolabs/lz-evm-messagelib-v2@npm:2.3.44"
+  resolution: "@layerzerolabs/lz-evm-oapp-v2@npm:2.3.44"
   peerDependencies:
-    "@arbitrum/nitro-contracts": ^1.1.0
-    "@axelar-network/axelar-gmp-sdk-solidity": ^5.6.4
-    "@chainlink/contracts-ccip": ^0.7.6
-    "@eth-optimism/contracts": ^0.6.0
+    "@layerzerolabs/lz-evm-messagelib-v2": ^2.3.44
     "@layerzerolabs/lz-evm-protocol-v2": ^2.3.44
     "@layerzerolabs/lz-evm-v1-0.7": ^2.3.44
     "@openzeppelin/contracts": ^4.8.1 || ^5.0.0
     "@openzeppelin/contracts-upgradeable": ^4.8.1 || ^5.0.0
     hardhat-deploy: ^0.12.4
     solidity-bytes-utils: ^0.8.0
-  peerDependenciesMeta:
-    "@arbitrum/nitro-contracts":
-      optional: true
-  checksum: 2937f6f83d2fcdc9ab26598e6522ac65d281686ddec080e46d510e2a33b04b9800db34958c1382b55b92f22b143e3ba7a597e3a0d66774056e532bc0fbf71459
-  languageName: node
-  linkType: hard
-
-"@layerzerolabs/lz-evm-oapp-v2@npm:^2.3.40":
-  version: 2.3.42
-  resolution: "@layerzerolabs/lz-evm-oapp-v2@npm:2.3.42"
-  peerDependencies:
-    "@layerzerolabs/lz-evm-messagelib-v2": ^2.3.42
-    "@layerzerolabs/lz-evm-protocol-v2": ^2.3.42
-    "@layerzerolabs/lz-evm-v1-0.7": ^2.3.42
-    "@openzeppelin/contracts": ^4.8.1 || ^5.0.0
-    "@openzeppelin/contracts-upgradeable": ^4.8.1 || ^5.0.0
-    hardhat-deploy: ^0.12.4
-    solidity-bytes-utils: ^0.8.0
-  checksum: 23285453175f1d4f9e2acd74178b9ab59cbdae8112b1b857213d233258568c93cb052df13cae1dbc036d81bc2033794583d31fd3d9ea13575938e2f442b85908
+  checksum: 0e172c104f23e59c86f53668829b148baa87324b788508f25db175aaf0005c14dd391822bc9576695ba622b1737ade1f97ceaae59087f8880b7258edb9f9cfe3
   languageName: node
   linkType: hard
 
 "@layerzerolabs/lz-evm-protocol-v2@npm:^2.3.40":
-  version: 2.3.42
-  resolution: "@layerzerolabs/lz-evm-protocol-v2@npm:2.3.42"
+  version: 2.3.44
+  resolution: "@layerzerolabs/lz-evm-protocol-v2@npm:2.3.44"
   peerDependencies:
     "@openzeppelin/contracts": ^4.8.1 || ^5.0.0
     "@openzeppelin/contracts-upgradeable": ^4.8.1 || ^5.0.0
     hardhat-deploy: ^0.12.4
     solidity-bytes-utils: ^0.8.0
-  checksum: 86ec1273a7dc4f7db4970e9e2500099ebe127e0faaa19a4709b49200c62899a730998a84aea707802479c3aab9961eac43d9b911eb479c558387ac656571ec5b
+  checksum: a86ffe88128aa6d226479aecce7f6f80df9dad4bf2a5c9f24a35c62339fa1671e048f99d51fde4d72b31d9530b7b44b4cdd9294b58372586ed3c2df00a8b455d
   languageName: node
   linkType: hard
 
@@ -3837,7 +3816,6 @@ __metadata:
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/providers": ^5.7.1
-    "@layerzerolabs/lz-evm-messagelib-v2": ^2.3.44
     "@layerzerolabs/lz-evm-oapp-v2": ^2.3.40
     "@layerzerolabs/lz-evm-protocol-v2": ^2.3.40
     "@layerzerolabs/lz-v2-utilities": ^2.3.41
@@ -3887,7 +3865,7 @@ __metadata:
     ts-node: ^10.9.1
     typechain: ^8.1.0
     typescript: ^5.1.6
-    websnark: "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+    websnark: "git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7"
     zksync-ethers: ^6.11.2
     zksync-web3: ^0.17.1
   languageName: unknown
@@ -3930,6 +3908,7 @@ __metadata:
     clsx: ^2.1.1
     cmdk: ^1.0.0
     connectkit: ^1.7.2
+    crypto: ^1.0.1
     eslint: ^8.15.0
     eslint-config-next: ^14.0.4
     eslint-config-prettier: ^9.1.0
@@ -3966,7 +3945,7 @@ __metadata:
     vercel: ^32.4.1
     viem: 2.21.2
     wagmi: 2.9.8
-    websnark: "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+    websnark: "git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7"
     zod: ^3.23.8
     zustand: ^4.1.2
   languageName: unknown
@@ -20697,12 +20676,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"websnark@git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d":
+"websnark@git+https://github.com/tornadocash/websnark.git#2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7":
   version: 0.0.4
-  resolution: "websnark@https://github.com/tornadocash/websnark.git#commit=4c0af6a8b65aabea3c09f377f63c44e7a58afa6d"
+  resolution: "websnark@https://github.com/tornadocash/websnark.git#commit=2041cfa5fa0b71cd5cca9022a4eeea4afe28c9f7"
   dependencies:
     big-integer: ^1.6.42
-  checksum: 32a85a36c0c76a5f1b7ead76cfe7a9e457e2fd0bfb52d06d573d623cb4df0b7fdabe9d9181375bde2d39c066d20b2181ee1b1fae6daf4d6e9ba369400541181f
+  checksum: b0ea188d36cc6451c29b1a11d2474f91c7dbb36f2466fe49c9575b515a125d13ee3d9f74bea82153282368c9f1cad0464a5959a27def8e18645b5861d9111ac2
   languageName: node
   linkType: hard
 
