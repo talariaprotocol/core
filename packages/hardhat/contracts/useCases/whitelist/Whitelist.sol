@@ -8,6 +8,9 @@ contract Whitelist is Ownable, TalariaProtocol{
 
   mapping(address => bool) public usersWhitelisted;
 
+  event UserAddedToWhitelist(address indexed user, uint256 timestamp);
+  event UserRemovedFromWhitelist(address indexed user, uint256 timestamp);
+
   constructor(
     IVerifier _verifier,
     IHasher _hasher,
@@ -65,11 +68,15 @@ contract Whitelist is Ownable, TalariaProtocol{
     require(!usersWhitelisted[_user], "User already whitelisted");
 
     usersWhitelisted[_user] = true;
+
+    emit UserAddedToWhitelist(_user, block.timestamp);
   }
 
   function removeUserFromWhitelist(address _user) public onlyOwner {
     require(usersWhitelisted[_user], "User not whitelisted");
 
     usersWhitelisted[_user] = false;
+    
+    emit UserRemovedFromWhitelist(_user, block.timestamp);
   }
 }

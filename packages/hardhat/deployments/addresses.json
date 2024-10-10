@@ -2,12 +2,12 @@
   "arbitrumSepolia": {
     "Verifier": "0x1889812B384a273F308de9C2Ccbd75B353905A23",
     "Hasher": "0x537d630b33B2CEE5282231B0A0c5aFB96A63Be19",
-    "WhitelistFactory": "0xA6bBa90D423461029B9c69f40519Dbea7be9d7D3"
+    "WhitelistFactory": "0x22f5e0BBD7Dcbc65363a71ee06cF321c3ff56B0F"
   },
   "polygonAmoy": {
     "Verifier": "0xe5941240a4fA52aD2402B49Ed0e1b94a35DaaB76",
     "Hasher": "0x0aE14e75D815F78EF0d179e93F09329AD6F45D78",
-    "WhitelistFactory": "0x6Cc07bd227C460ed0b4e514533c2a376549F1BfF"
+    "WhitelistFactory": "0x2F56D40aC12Cd4cD2a6c27Fe119B6d2C44aF7A3c"
   },
   "arbitrum": {
     "Verifier": "0xB8fFFEAb3D08Ea86E010AbEa164F81e20286F94f",
