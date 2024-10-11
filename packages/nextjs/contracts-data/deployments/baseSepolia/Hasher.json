@@ -1,0 +1,70 @@
+{
+  "address": "0x3dc846E0100A60940902d56a72743AE01A053237",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "xL_in",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "xR_in",
+          "type": "uint256"
+        }
+      ],
+      "name": "MiMCSponge",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x06af3105e66552ae1379aa6164d215a87dfdbc9f7425f03613f4807cc42b24e6",
+  "receipt": {
+    "to": null,
+    "from": "0xEB71ed911e4dFc35Da80103a72fE983C8c709F33",
+    "contractAddress": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "transactionIndex": 8,
+    "gasUsed": "148011",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x8696819e55c902a68376ca59f910598f85457dbfde65da2c0441c77d4b5dc081",
+    "transactionHash": "0x06af3105e66552ae1379aa6164d215a87dfdbc9f7425f03613f4807cc42b24e6",
+    "logs": [],
+    "blockNumber": 16446299,
+    "cumulativeGasUsed": "1278357",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "d7dce6649d111b43e589a19e23ab1c5a",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"xL_in\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"xR_in\",\"type\":\"uint256\"}],\"name\":\"MiMCSponge\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/helpers/Hasher.sol\":\"Hasher\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"contracts/helpers/Hasher.sol\":{\"content\":\"pragma solidity ^0.8.20; \\ncontract Hasher { \\n    function MiMCSponge(uint256 xL_in,uint256 xR_in) external pure returns(uint256,uint256) { \\n        uint n = 220; \\n        bytes32 ci = 0x0fbe43c36a80e36d7c7c584d4f8f3759fb51f0d66065d8a227b688d12488c5d4;\\n        uint q = 0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001;\\n        uint xL = xL_in;\\n        uint xR = xR_in;\\n        uint t=xL;\\n        uint b=mulmod(t, t, q);\\n        uint c=mulmod(b, b, q);\\n        uint d=mulmod(c, t, q);\\n        xR=addmod(xR, d, q);\\n        \\n        for(uint i = 0; i < n-1; i++){\\n            if (i<n-2 && i!=0){\\n                ci = keccak256(abi.encodePacked(ci));\\n            }\\n            else if(i==n-2)\\n            {\\n                ci = 0;\\n            }\\n            (xL, xR)=(xR, xL);\\n            t = addmod(uint(ci), xL, q);\\n            \\n            b = mulmod(t, t, q);\\n            c = mulmod(b, b, q);\\n            d = mulmod(c, t, q);\\n            xR = addmod(xR, d, q);\\n        }\\n        return (xL, xR);\\n    } \\n\\n} \",\"keccak256\":\"0x5e487f820edd2179cf9e192b293d9fa494226ab6ffbd6aeae7753cfda997fb79\"}},\"version\":1}",
+  "bytecode": "0x60808060405234610016576101b6908161001c8239f35b600080fdfe60406080815260048036101561001457600080fd5b600090813560e01c63f47d33b51461002b57600080fd5b3461017c578260031936011261017c579081356024918235927f0fbe43c36a80e36d7c7c584d4f8f3759fb51f0d66065d8a227b688d12488c5d49183957f30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001809681808880099781869980090990089582945b60db86106100b45789898982519182526020820152f35b60da98959791929394969880891080610173575b1561016157508951602080820192835281528a810181811067ffffffffffffffff82111761014f578b52519020945b90809861013d57828091870891818084800993818895800909900896600019811461012b576001019495939291909561009d565b634e487b7160e01b8552601184528685fd5b634e487b7160e01b8552601284528685fd5b634e487b7160e01b8752604186528887fd5b88969196036100f757945083946100f7565b508815156100c8565b5080fdfea2646970667358221220f543ac0e134d7f4444d5e6e92a6e20c28ba7a11fffaae9a485a6b9b8c1e4d4e864736f6c63430008140033",
+  "deployedBytecode": "0x60406080815260048036101561001457600080fd5b600090813560e01c63f47d33b51461002b57600080fd5b3461017c578260031936011261017c579081356024918235927f0fbe43c36a80e36d7c7c584d4f8f3759fb51f0d66065d8a227b688d12488c5d49183957f30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001809681808880099781869980090990089582945b60db86106100b45789898982519182526020820152f35b60da98959791929394969880891080610173575b1561016157508951602080820192835281528a810181811067ffffffffffffffff82111761014f578b52519020945b90809861013d57828091870891818084800993818895800909900896600019811461012b576001019495939291909561009d565b634e487b7160e01b8552601184528685fd5b634e487b7160e01b8552601284528685fd5b634e487b7160e01b8752604186528887fd5b88969196036100f757945083946100f7565b508815156100c8565b5080fdfea2646970667358221220f543ac0e134d7f4444d5e6e92a6e20c28ba7a11fffaae9a485a6b9b8c1e4d4e864736f6c63430008140033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

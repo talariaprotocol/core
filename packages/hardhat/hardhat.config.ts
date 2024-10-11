@@ -29,6 +29,7 @@ const etherscanApiKey = process.env.ETHERSCAN_API_KEY || 'DNXJA8RX2Q3VZ4URQIWP7Z
 const blockscoutApiKey = process.env.BLOCKSCOUT_API_KEY || '' // Use a Blockscout API key if required
 const polygonApiKey = '3WV3Z8PP7HFSW2E6Z65GR9845PJMW2ET6Z'
 const arbitrumApiKey = '1W124WYR21JHW7CWPD5ZDGAKCSP3AIVC7I'
+const basescanApiKey = '4JYEQWT7Q2FH4C3B7VMNKY3CQ6KPVD6XNG'
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -39,7 +40,7 @@ const config: HardhatUserConfig = {
         // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
         runs: 200,
       },
-      viaIR:true
+      viaIR: true,
     },
   },
   ...(process.env.DEPLOY_TARGET === 'zksync'
@@ -201,6 +202,7 @@ const config: HardhatUserConfig = {
       morphHolesky: 'anything',
       chilizSpicy: etherscanApiKey,
       kinto: etherscanApiKey,
+      baseSepolia: basescanApiKey,
       default: `${etherscanApiKey}`,
     },
     customChains: [
@@ -266,6 +268,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: 'https://api.routescan.io/v2/network/testnet/evm/88882/etherscan/api',
           browserURL: 'https://testnet.chiliscan.com',
+        },
+      },
+      {
+        network: 'baseSepolia',
+        chainId: 84532,
+        urls: {
+          apiURL: 'https://api-sepolia.basescan.org/api',
+          browserURL: 'https://sepolia.basescan.org/',
         },
       },
     ],
