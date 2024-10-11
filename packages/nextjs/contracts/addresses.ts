@@ -10,6 +10,7 @@ export const AvalancheFujiChainId = 43113;
 export const ArbitrumSepoliaChainId = 421614;
 export const KintoChainId = 7887;
 export const MorphHoleskyChainId = 2810;
+export const BaseSepoliaChainId = 84532;
 
 // @todo separate test and mainnet addresses -> test at testnet.app.talariaprotocol.xyz
 export const WhitelistFactoryAddresses: Record<number, Address> = {

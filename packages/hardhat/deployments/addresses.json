@@ -18,5 +18,10 @@
     "Verifier": "0xf712f5cc6444a08d75f64212611b1C2A7f99a250",
     "Hasher": "0x9823777c670Dd2fF8D3304464Bf8FDb92698886F",
     "WhitelistFactory": "0xB8fFFEAb3D08Ea86E010AbEa164F81e20286F94f"
+  },
+  "baseSepolia": {
+    "Verifier": "0x8adbd2f6bc6519D86F7C259edC7A30804cbc4Ae9",
+    "Hasher": "0x3dc846E0100A60940902d56a72743AE01A053237",
+    "WhitelistFactory": "0xB808ffe40A4Add6DF866a22ace5AfCD1a782EcC0"
   }
 }

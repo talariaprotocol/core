@@ -32,6 +32,8 @@ export const mapHardhatNetworkToViemChain = (network: string): chains.Chain => {
       return chains.arbitrum;
     case "polygon":
       return chains.polygon;
+    case "baseSepolia":
+      return chains.baseSepolia;
     default:
       console.log("Unsupported network", network);
       throw new Error(`Unsupported network ${network}`);
@@ -58,6 +60,8 @@ export const mapViemChainToHardhatNetwork = (network: chains.Chain): string => {
       return "arbitrum";
     case chains.polygon:
       return "polygon";
+    case chains.baseSepolia:
+      return "baseSepolia";
     default:
       console.log("Unsupported network", network);
       throw new Error(`Unsupported network ${network}`);

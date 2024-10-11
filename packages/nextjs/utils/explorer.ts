@@ -1,12 +1,13 @@
 import {
   ArbitrumSepoliaChainId,
   AvalancheFujiChainId,
+  BaseSepoliaChainId,
   ChillizChainId,
   KintoChainId,
+  MorphHoleskyChainId,
   OptimismSepoliaChainId,
   polygonAmoyTestnet,
   zkSyncTestNetCode,
-    MorphHoleskyChainId
 } from "~~/contracts/addresses";
 
 export const TransactionExplorerBaseUrl: Record<number, string> = {
@@ -17,11 +18,12 @@ export const TransactionExplorerBaseUrl: Record<number, string> = {
   [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/tx/",
   [KintoChainId]: "https://kintoscan.io/tx/",
   [ChillizChainId]: "https://testnet.chiliscan.com/tx/",
-  [MorphHoleskyChainId]: "\thttps://explorer-holesky.morphl2.io/tx/"
+  [MorphHoleskyChainId]: "\thttps://explorer-holesky.morphl2.io/tx/",
+  [BaseSepoliaChainId]: "https://sepolia.basescan.org/tx/",
 };
 
 export const AddressExplorerBaseUrl: Record<number, string> = {
   [polygonAmoyTestnet]: "https://amoy.polygonscan.com/address/",
   [ArbitrumSepoliaChainId]: "https://arbitrum-sepolia.blockscout.com/address/",
-
-}
+  [BaseSepoliaChainId]: "https://sepolia.basescan.org/address/",
+};
