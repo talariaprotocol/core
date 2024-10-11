@@ -68,8 +68,11 @@ export const mapViemChainToHardhatNetwork = (network: chains.Chain): string => {
   }
 };
 
+const excludedChains = ["arbitrum", "polygon"];
+
 export const supportedNetworks = Object.keys(file)
   .filter(network => network !== "default")
+  .filter(network => !excludedChains.includes(network))
   .map(mapHardhatNetworkToViemChain)
   .sort((a, b) => a.name.localeCompare(b.name));
 

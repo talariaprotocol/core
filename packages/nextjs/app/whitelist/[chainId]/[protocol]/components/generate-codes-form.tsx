@@ -12,6 +12,7 @@ import { Input } from "~~/components/ui/input";
 import { useToast } from "~~/components/ui/use-toast";
 import { generateTransfer } from "~~/contracts-data/helpers/helpers";
 import { Whitelist__factory } from "~~/contracts-data/typechain-types/factories/contracts/useCases/whitelist/Whitelist__factory";
+import { BaseSepoliaChainId } from "~~/contracts/addresses";
 import { compressEncryptAndEncode } from "~~/helper";
 import { trimAddress } from "~~/utils";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
@@ -113,18 +114,27 @@ const GenerateCodesForm = ({
       return;
     }
 
+    let gasProps = {};
+
+    if (chainId !== BaseSepoliaChainId) {
+      gasProps = {
+        gas: gasLimit,
+        gasPrice: maxFeePerGas,
+      };
+    }
+
     try {
       await writeContractAsync({
         abi: Whitelist__factory.abi,
         address: whitelistAddress,
         functionName: "bulkCreateEarlyAccessCodes",
         args: [commitments, validationModules],
-        gas: gasLimit,
-        gasPrice: maxFeePerGas,
+        ...gasProps,
       });
 
       setSubmittedCodes(generatedProofs);
     } catch (e) {
+      console.error(e);
       toast({
         title: "Transaction was not submitted",
         variant: "destructive",
