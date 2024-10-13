@@ -115,7 +115,11 @@ export default function useCreateWhitelist() {
           description: "Your whitelist has been created.",
         });
       } catch (error) {
-        console.error("Error saving whitelist", error);
+        console.error("Error saving whitelist");
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+
         toast({
           title: "Error",
           description: "There was an error saving your whitelist.",
