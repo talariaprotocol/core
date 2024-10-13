@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { AlertTriangle, Download } from "lucide-react";
 import { Alert, AlertDescription } from "~~/components/ui/alert";
 import { Button } from "~~/components/ui/button";
-import { BASE_URL } from "~~/constants";
 
 interface DownloadCodesProps {
   generatedCodes: string[];
@@ -13,7 +12,9 @@ interface DownloadCodesProps {
 
 const DownloadCodes = ({ generatedCodes, isGeneratingCodes, chainId, protocol }: DownloadCodesProps) => {
   const downloadCSV = useCallback(() => {
-    const generatedUrls = generatedCodes.map(code => `${BASE_URL}/whitelist/${chainId}/${protocol}/redeem#${code}`);
+    const generatedUrls = generatedCodes.map(
+      code => `${window.location}/whitelist/${chainId}/${protocol}/redeem#${code}`,
+    );
     const csvContent = generatedUrls.join("\n");
     const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
     const link = document.createElement("a");
