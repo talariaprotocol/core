@@ -13,7 +13,7 @@ interface DownloadCodesProps {
 const DownloadCodes = ({ generatedCodes, isGeneratingCodes, chainId, protocol }: DownloadCodesProps) => {
   const downloadCSV = useCallback(() => {
     const generatedUrls = generatedCodes.map(
-      code => `${window.location}/whitelist/${chainId}/${protocol}/redeem#${code}`,
+      code => `${window.location}/redeem#${code}`,
     );
     const csvContent = generatedUrls.join("\n");
     const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
