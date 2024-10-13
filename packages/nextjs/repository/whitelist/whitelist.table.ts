@@ -9,5 +9,6 @@ export interface WhitelistTable {
     slug?: string;
     owner: Address;
     whitelist_address: Address;
+    chain_id: number;
     protocolRedirect?: string;
 }

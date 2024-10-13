@@ -18,6 +18,7 @@ const RedeemPage = async ({
   if (isAddress(protocol)) {
     whitelist = await getWhitelistByAddressAction({
       address: protocol,
+      chain_id: chainId,
     });
   } else {
     whitelist = await getWhitelistAction({

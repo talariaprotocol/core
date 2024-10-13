@@ -20,6 +20,7 @@ export default async function CodeGenerator({
   if (isAddress(protocol)) {
     whitelist = await getWhitelistByAddressAction({
       address: protocol,
+      chain_id: chainId,
     });
   } else {
     whitelist = await getWhitelistAction({

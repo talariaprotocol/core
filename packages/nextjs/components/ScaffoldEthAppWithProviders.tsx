@@ -28,7 +28,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const shouldHideHeaderAndFooter = pathname.includes("redeem");
+  const isRedeemUser = pathname.includes("redeem");
 
   useEffect(() => {
     setMounted(true);
@@ -44,12 +44,12 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
         >
           <div className="flex flex-col min-h-screen">
             <TooltipProvider>
-              <Navigation hideBrand={shouldHideHeaderAndFooter} />
+              <Navigation isTalariaUser={!isRedeemUser} />
               <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20 mt-20">
                 {children}
                 <Toaster />
               </main>
-              {!shouldHideHeaderAndFooter && <Footer />}
+              {!isRedeemUser && <Footer />}
             </TooltipProvider>
           </div>
         </RainbowKitProvider>

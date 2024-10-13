@@ -35,6 +35,7 @@ class DatabaseService {
     protocol_name,
     slug,
     owner,
+    chain_id,
     whitelist_address,
     protocolRedirect,
   }: Insertable<WhitelistTable>) {
@@ -46,6 +47,7 @@ class DatabaseService {
         protocol_name: protocol_name,
         slug: slug,
         owner: owner,
+        chain_id,
         whitelist_address: whitelist_address,
         protocolRedirect: protocolRedirect,
       })
@@ -58,12 +60,20 @@ class DatabaseService {
     return result;
   }
 
+  async getWhitelistsByOwner({ owner }: Pick<WhitelistTable, "owner">) {
+    // Fetch the whitelist data where the wallet matches the provided value
+    const result = await this.db.selectFrom("whitelist").selectAll().where("owner", "=", owner).execute();
+    console.log("result", result, owner);
+    return result;
+  }
+
   // TODO: Send also chain id when added to whitelsit table
-  async getWhitelistByAddress({ whitelist_address }: Pick<WhitelistTable, "whitelist_address">) {
+  async getWhitelistByAddress({ whitelist_address, chain_id }: Pick<WhitelistTable, "whitelist_address" | "chain_id">) {
     const result = await this.db
       .selectFrom("whitelist")
       .selectAll()
       .where("whitelist_address", "=", whitelist_address)
+      .where("chain_id", "=", chain_id)
       .executeTakeFirst();
     return result;
   }

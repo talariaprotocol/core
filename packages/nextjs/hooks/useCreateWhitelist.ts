@@ -22,11 +22,8 @@ export default function useCreateWhitelist() {
   const [createdSlug, setCreatedSlug] = useState<string | undefined>(undefined);
   const [formData, setFormData] = useState<SubmittedFormData | undefined>();
   const account = useAccount();
-  const chainId = account.chainId || polygonAmoyTestnet;
+  const chainId = account.chainId;
 
-  const publicClient = usePublicClient({
-    chainId,
-  });
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
   const { isSuccess: txReceiptSuccess, data: txReceipt } = useWaitForTransactionReceipt({
     hash,
@@ -66,6 +63,8 @@ export default function useCreateWhitelist() {
   const handleSubmit = async () => {
     setIsCreatingWhitelist(true);
 
+    if (!chainId) return;
+
     try {
       await writeContractAsync({
         abi: WhitelistFactory__factory.abi,
@@ -97,12 +96,15 @@ export default function useCreateWhitelist() {
 
         if (!whitelistAddress) throw new Error("No address was found");
 
+        if (!chainId) throw new Error("No chain id for saving whitelists");
+
         await createWhitelistAction({
           //   logo: formData?.logo, // TODO: Send logo
           protocol_name: formData?.name,
           slug: formData?.slug,
           owner: account.address,
           whitelist_address: whitelistAddress,
+          chain_id: chainId,
           protocolRedirect: formData?.productUrl,
         });
         setCreatedSlug(formData?.slug || whitelistAddress);
