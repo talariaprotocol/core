@@ -18,7 +18,7 @@ const wallets = [
   metaMaskWallet,
   walletConnectWallet,
   ledgerWallet,
-  //coinbaseWallet,
+  coinbaseWallet,
   rainbowWallet,
   bitgetWallet,
   safeWallet,
@@ -38,7 +38,7 @@ export const wagmiConnectors = connectorsForWallets(
     },
   ],
   {
-    appName: "scaffold-eth-2",
+    appName: "Talaria Protocol",
     projectId: scaffoldConfig.walletConnectProjectId,
   },
 );
