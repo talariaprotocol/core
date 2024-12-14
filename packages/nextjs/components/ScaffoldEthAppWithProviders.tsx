@@ -13,6 +13,7 @@ import { useTheme } from "next-themes";
 import { WagmiProvider } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
+import { UserProvider } from "~~/context";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 export const queryClient = new QueryClient({
@@ -35,25 +36,27 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   }, []);
 
   return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <ProgressBar />
-        <RainbowKitProvider
-          avatar={BlockieAvatar}
-          theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
-        >
-          <div className="flex flex-col min-h-screen">
-            <TooltipProvider>
-              <Navigation isTalariaUser={!isRedeemUser} />
-              <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20 mt-20">
-                {children}
-                <Toaster />
-              </main>
-              {!isRedeemUser && <Footer />}
-            </TooltipProvider>
-          </div>
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <UserProvider>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <ProgressBar />
+          <RainbowKitProvider
+            avatar={BlockieAvatar}
+            theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
+          >
+            <div className="flex flex-col min-h-screen">
+              <TooltipProvider>
+                <Navigation isTalariaUser={!isRedeemUser} />
+                <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20 mt-20">
+                  {children}
+                  <Toaster />
+                </main>
+                {!isRedeemUser && <Footer />}
+              </TooltipProvider>
+            </div>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </UserProvider>
   );
 };

@@ -1,6 +1,0 @@
-'use client'
-
-const ConsumeWhitelisteWrapper = () => {
-
-    
-}

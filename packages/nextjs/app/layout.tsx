@@ -5,8 +5,8 @@ import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
-  title: "Talaria",
-  description: "Descentralized access control for your smart contracts",
+  title: "Underloans",
+  description: "Loans without need of colateral",
 });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
