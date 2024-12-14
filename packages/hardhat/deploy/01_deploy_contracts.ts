@@ -1,29 +1,8 @@
+import { readFileSync, writeFileSync } from 'fs'
+import { run } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { ethers, run } from 'hardhat'
-import { readFileSync, writeFileSync } from 'fs'
 import path from 'path'
-import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory } from '../typechain-types'
-import {
-  isLayerZeroNetworkSupported,
-  LayerZeroEndpointPerNetwork,
-  LayerZeroSupportedChainsType,
-} from '../constants/layerzero.constants'
-import {
-  isWorldcoinNetworkSupported,
-  WorldcoinEndpointPerNetwork,
-  WorldcoinSupportedChainsType,
-} from '../constants/worldcoin.constants'
-import {
-  isKintoNetworkSupported,
-  KintoKYCViewerEndpointPerNetwork,
-  KintoSupportedChainsType,
-} from '../constants/kinto.constants'
-import {
-  isPrivadoIdNetworkSupported,
-  PrivadoIdEndpointPerNetwork,
-  PrivadoIdSupportedChainsType,
-} from '../constants/privadoId.constants'
 
 const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre
@@ -48,32 +27,25 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
     addresses[network.name] = {}
   }
 
-  const verifier = await deploy('Verifier', {
+  const usdc = await deploy('USDC', {
     from: deployer,
     log: true,
+    args: [deployer],
     skipIfAlreadyDeployed: false,
   })
 
-  const hasher = await deploy('Hasher', {
+  const lendingProtocol = await deploy('LendingProtocol', {
     from: deployer,
     log: true,
+    args: [deployer, deployer, usdc.address],
     skipIfAlreadyDeployed: false,
-  })
-
-  const levels = 10 // Merkle tree height
-
-  const whitelistFactory = await deploy('WhitelistFactory', {
-    from: deployer,
-    log: true,
-    skipIfAlreadyDeployed: false,
-    args: [verifier.address, hasher.address, levels],
   })
 
   // Save addresses
   addresses[network.name] = {
-    Verifier: verifier.address,
-    Hasher: hasher.address,
-    WhitelistFactory: whitelistFactory.address,
+    ...addresses[network.name],
+    usdc: usdc.address,
+    lendingProtocol: lendingProtocol.address,
   }
 
   // Write updated addresses back to the JSON file
@@ -83,18 +55,13 @@ const deployContracts: DeployFunction = async function (hre: HardhatRuntimeEnvir
   console.log('Verifying contracts...')
 
   await run('verify:verify', {
-    address: verifier.address,
-    constructorArguments: [],
+    address: lendingProtocol.address,
+    constructorArguments: [deployer, deployer, usdc.address],
   })
 
   await run('verify:verify', {
-    address: hasher.address,
-    constructorArguments: [],
-  })
-
-  await run('verify:verify', {
-    address: whitelistFactory.address,
-    constructorArguments: [verifier.address, hasher.address, levels],
+    address: usdc.address,
+    constructorArguments: [deployer],
   })
 
   console.log('Verification successful!')

@@ -21,15 +21,32 @@ import type {
 } from "../../common";
 
 export interface VerifierInterface extends Interface {
-  getFunction(nameOrSignature: "verifyProof"): FunctionFragment;
+  getFunction(
+    nameOrSignature:
+      | "verifyProof(bytes,uint256[6])"
+      | "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[6])"
+  ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "verifyProof",
+    functionFragment: "verifyProof(bytes,uint256[6])",
     values: [BytesLike, BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[6])",
+    values: [
+      [BigNumberish, BigNumberish],
+      [[BigNumberish, BigNumberish], [BigNumberish, BigNumberish]],
+      [BigNumberish, BigNumberish],
+      BigNumberish[]
+    ]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "verifyProof",
+    functionFragment: "verifyProof(bytes,uint256[6])",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[6])",
     data: BytesLike
   ): Result;
 }
@@ -77,8 +94,19 @@ export interface Verifier extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  verifyProof: TypedContractMethod<
-    [proof: BytesLike, input: BigNumberish[]],
+  "verifyProof(bytes,uint256[6])": TypedContractMethod<
+    [proof: BytesLike, inputs: BigNumberish[]],
+    [boolean],
+    "view"
+  >;
+
+  "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[6])": TypedContractMethod<
+    [
+      a: [BigNumberish, BigNumberish],
+      b: [[BigNumberish, BigNumberish], [BigNumberish, BigNumberish]],
+      c: [BigNumberish, BigNumberish],
+      input: BigNumberish[]
+    ],
     [boolean],
     "view"
   >;
@@ -88,9 +116,21 @@ export interface Verifier extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "verifyProof"
+    nameOrSignature: "verifyProof(bytes,uint256[6])"
   ): TypedContractMethod<
-    [proof: BytesLike, input: BigNumberish[]],
+    [proof: BytesLike, inputs: BigNumberish[]],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[6])"
+  ): TypedContractMethod<
+    [
+      a: [BigNumberish, BigNumberish],
+      b: [[BigNumberish, BigNumberish], [BigNumberish, BigNumberish]],
+      c: [BigNumberish, BigNumberish],
+      input: BigNumberish[]
+    ],
     [boolean],
     "view"
   >;

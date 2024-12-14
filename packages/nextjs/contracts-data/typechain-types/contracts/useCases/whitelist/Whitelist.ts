@@ -61,7 +61,12 @@ export interface WhitelistInterface extends Interface {
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "ConsumeCode" | "NewCode" | "OwnershipTransferred"
+    nameOrSignatureOrTopic:
+      | "ConsumeCode"
+      | "NewCode"
+      | "OwnershipTransferred"
+      | "UserAddedToWhitelist"
+      | "UserRemovedFromWhitelist"
   ): EventFragment;
 
   encodeFunctionData(
@@ -339,6 +344,32 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UserAddedToWhitelistEvent {
+  export type InputTuple = [user: AddressLike, timestamp: BigNumberish];
+  export type OutputTuple = [user: string, timestamp: bigint];
+  export interface OutputObject {
+    user: string;
+    timestamp: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UserRemovedFromWhitelistEvent {
+  export type InputTuple = [user: AddressLike, timestamp: BigNumberish];
+  export type OutputTuple = [user: string, timestamp: bigint];
+  export interface OutputObject {
+    user: string;
+    timestamp: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -701,6 +732,20 @@ export interface Whitelist extends BaseContract {
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
+  getEvent(
+    key: "UserAddedToWhitelist"
+  ): TypedContractEvent<
+    UserAddedToWhitelistEvent.InputTuple,
+    UserAddedToWhitelistEvent.OutputTuple,
+    UserAddedToWhitelistEvent.OutputObject
+  >;
+  getEvent(
+    key: "UserRemovedFromWhitelist"
+  ): TypedContractEvent<
+    UserRemovedFromWhitelistEvent.InputTuple,
+    UserRemovedFromWhitelistEvent.OutputTuple,
+    UserRemovedFromWhitelistEvent.OutputObject
+  >;
 
   filters: {
     "ConsumeCode(address,bytes32,uint256)": TypedContractEvent<
@@ -734,6 +779,28 @@ export interface Whitelist extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "UserAddedToWhitelist(address,uint256)": TypedContractEvent<
+      UserAddedToWhitelistEvent.InputTuple,
+      UserAddedToWhitelistEvent.OutputTuple,
+      UserAddedToWhitelistEvent.OutputObject
+    >;
+    UserAddedToWhitelist: TypedContractEvent<
+      UserAddedToWhitelistEvent.InputTuple,
+      UserAddedToWhitelistEvent.OutputTuple,
+      UserAddedToWhitelistEvent.OutputObject
+    >;
+
+    "UserRemovedFromWhitelist(address,uint256)": TypedContractEvent<
+      UserRemovedFromWhitelistEvent.InputTuple,
+      UserRemovedFromWhitelistEvent.OutputTuple,
+      UserRemovedFromWhitelistEvent.OutputObject
+    >;
+    UserRemovedFromWhitelist: TypedContractEvent<
+      UserRemovedFromWhitelistEvent.InputTuple,
+      UserRemovedFromWhitelistEvent.OutputTuple,
+      UserRemovedFromWhitelistEvent.OutputObject
     >;
   };
 }
