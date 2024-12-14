@@ -1,8 +1,8 @@
 import { join } from 'path'
 
-import { NFTStorage } from 'nft.storage'
-import { WorldChampionNFT, WorldChampionNFT__factory, BCN, BCN__factory, MatchTicket__factory, MatchTicket } from '../typechain-types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { NFTStorage } from 'nft.storage'
+import { USDC, USDC__factory } from '../typechain-types'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
 require('dotenv').config({ path: join(__dirname, '../../.env') })
@@ -44,47 +44,15 @@ async function uploadAndMint() {
 
   console.log('Uploading metadata and minting NFTs...')
 
-  // Send Match Tickets
-  const MatchTicketContract = (await hre.ethers.getContractFactory('MatchTicket')) as MatchTicket__factory
-  const MatchTicket = MatchTicketContract.attach(addresses[network.name].MatchTicket) as MatchTicket
-
-  console.log('Sending Match Tickets...')
-  await MatchTicket.mint(leboAddress, 1, 10, '0x');
-  await MatchTicket.mint(fainsteinAddress, 2, 10, '0x');
-  await MatchTicket.mint(martinAddress, 3, 10, '0x');
-  await MatchTicket.mint(leboAddress, 4, 10, '0x');
-  await MatchTicket.mint(fainsteinAddress, 5, 10, '0x');
-  await MatchTicket.mint(martinAddress, 6, 10, '0x');
-  console.log('Match Tickets sent!')
-
   // Send some tokens to initial owners
-  const BCNContract = (await hre.ethers.getContractFactory('BCN')) as BCN__factory
-  const BCN = BCNContract.attach(addresses[network.name].BCN) as BCN
+  const USDCContract = (await hre.ethers.getContractFactory('USDC')) as USDC__factory
+  const USDC = USDCContract.attach(addresses[network.name].USDC) as USDC
 
   console.log('Transferring tokens to initial owners...')
-  await BCN.transfer(leboAddress, hre.ethers.parseEther('100'))
-  await BCN.transfer(fainsteinAddress, hre.ethers.parseEther('100'))
-  await BCN.transfer(martinAddress, hre.ethers.parseEther('100'))
+  await USDC.transfer(leboAddress, hre.ethers.parseEther('100'))
+  await USDC.transfer(fainsteinAddress, hre.ethers.parseEther('100'))
+  await USDC.transfer(martinAddress, hre.ethers.parseEther('100'))
   console.log('Tokens transferred!')
-
-  // Mint some NFTs
-  const WorldChampionNFTContract = (await hre.ethers.getContractFactory(
-    'WorldChampionNFT',
-  )) as WorldChampionNFT__factory
-  const worldChampionNFT = WorldChampionNFTContract.attach(
-    addresses[network.name].WorldChampionNFT,
-  ) as WorldChampionNFT
-
-  console.log('Minting NFTs...')
-  const folder = 'https://ipfs.io/ipfs/Qmacc3iJq3uarS9bp8uDz36gHthp9VW833FaYApST9erMn'
-  await worldChampionNFT.safeMint(leboAddress, 10, folder + '/0.json')
-  await worldChampionNFT.safeMint(fainsteinAddress, 11, folder + '/1.json')
-  await worldChampionNFT.safeMint(martinAddress, 12, folder + '/2.json')
-  await worldChampionNFT.safeMint(leboAddress, 13, folder + '/3.json')
-  await worldChampionNFT.safeMint(fainsteinAddress, 14, folder + '/4.json')
-  await worldChampionNFT.safeMint(martinAddress, 15, folder + '/5.json')
-
-  console.log('NFTs minted!')
 }
 
 uploadAndMint()

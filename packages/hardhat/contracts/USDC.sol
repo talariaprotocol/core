@@ -7,11 +7,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
-contract BCN is ERC20, ERC20Burnable, Ownable, ERC20Permit {
+contract USDC is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     constructor(address initialOwner)
-        ERC20("BCN", "BCN")
+        ERC20("USDC", "USDC")
         Ownable(initialOwner)
-        ERC20Permit("BCN")
+        ERC20Permit("USDC")
     {
     _mint(msg.sender, 100000000 * 10 ** decimals());
     }
