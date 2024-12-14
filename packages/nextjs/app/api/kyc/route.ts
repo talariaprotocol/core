@@ -5,7 +5,6 @@ import {updateUserAction} from "~~/repository/user/updateUser.action";
 import {UserStatus} from "~~/types/entities/user";
 import {MetamapStatusEnum} from "~~/types/entities/user";
 
-
 export async function POST(req: NextRequest) {
   const { extraData, status, verified, data } = await req.json();
   console.log(`CallbackMetamap: ${extraData}, ${status}, ${verified}, ${data} }`);
