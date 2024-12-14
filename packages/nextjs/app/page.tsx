@@ -1,47 +1,19 @@
-"use client";
+import { Address, createWalletClient } from "viem";
+import { privateKeyToAccount, signMessage } from "viem/accounts";
+import RequestLoanForm from "~~/components/request-loan-form";
+import { calculateScoreAndMaxAmount } from "~~/repository/bcra/generateScore";
 
-import React, { useContext, useState } from "react";
-import Link from "next/link";
-import { useAccount, useTransactionReceipt, useWriteContract } from "wagmi";
-import KYCButton from "~~/components/KYCButton.tsx";
-import { Button } from "~~/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/card";
-import { Input } from "~~/components/ui/input";
-import { UserContext } from "~~/context";
-import { OptimismSepoliaChainId } from "~~/contracts/addresses";
-import { UserStatus } from "~~/types/entities/user";
-import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
+async function prepareLoanData(userDocument: number) {
+  const { maxLoanAmount } = await calculateScoreAndMaxAmount(userDocument);
+  const walletClient = privateKeyToAccount(process.env.DEPLOYER_PRIVATE_KEY as Address);
+  const parsedAmount = BigInt(maxLoanAmount).toString();
+  const signedMessage = await walletClient.signMessage({
+    message: parsedAmount,
+  });
+
+  return { signedMessage, maxLoanAmount: parsedAmount };
+}
 
 export default function Page() {
-  const { user } = useContext(UserContext);
-  const account = useAccount();
-  const [amount, setAmount] = useState<string>();
-  const chainId = account.chainId || OptimismSepoliaChainId;
-  const { writeContractAsync, isPending, isSuccess, data: txHash } = useWriteContract();
-  const receipt = useTransactionReceipt({ chainId, hash: txHash });
-  const kycCompleted = user?.status === UserStatus.done;
-
-  const handleTransaction = () => {
-    alert("Transaction sent");
-  };
-  return (
-    <div className="flex flex-col gap-20 max-w-md">
-      <Card className="">
-        <CardHeader>
-          <CardTitle>Collateral-Free Borrowing</CardTitle>
-          <CardDescription>Experience the freedom of borrowing without the need for collateral.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <KYCButton />
-          <Input placeholder="XXX USDC" value={amount} onChange={e => setAmount(e.target.value)} />
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handleTransaction} disabled={!kycCompleted || isPending || !amount} className="w-full">
-            Execute Transaction
-          </Button>
-          <Link target="_blank" href={`${TransactionExplorerBaseUrl[chainId]}/${txHash}`} />
-        </CardFooter>
-      </Card>
-    </div>
-  );
+  return <RequestLoanForm prepareLoanData={prepareLoanData} />;
 }
