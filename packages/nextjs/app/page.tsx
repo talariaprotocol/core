@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "~~/components/ui/input";
 import { UserContext } from "~~/context";
 import { OptimismSepoliaChainId } from "~~/contracts/addresses";
+import { UserStatus } from "~~/types/entities/user";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
 export default function Page() {
@@ -18,7 +19,7 @@ export default function Page() {
   const chainId = account.chainId || OptimismSepoliaChainId;
   const { writeContractAsync, isPending, isSuccess, data: txHash } = useWriteContract();
   const receipt = useTransactionReceipt({ chainId, hash: txHash });
-  const kycCompleted = !!user?.hasDoneKYC;
+  const kycCompleted = user?.status === UserStatus.done;
 
   const handleTransaction = () => {
     alert("Transaction sent");

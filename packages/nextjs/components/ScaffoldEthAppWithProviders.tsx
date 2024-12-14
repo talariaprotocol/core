@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import AuthUpdater from "./auth-updater";
 import Footer from "./footer";
 import { Navigation } from "./navigation";
 import { Toaster } from "./ui/toaster";
@@ -28,8 +28,6 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
-  const isRedeemUser = pathname.includes("redeem");
 
   useEffect(() => {
     setMounted(true);
@@ -46,12 +44,13 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
           >
             <div className="flex flex-col min-h-screen">
               <TooltipProvider>
-                <Navigation isTalariaUser={!isRedeemUser} />
+                <Navigation />
                 <main className="flex-1 flex justify-center bg-background py-8 px-2 md:px-20 mt-20">
                   {children}
+                  <AuthUpdater />
                   <Toaster />
                 </main>
-                {!isRedeemUser && <Footer />}
+                <Footer />
               </TooltipProvider>
             </div>
           </RainbowKitProvider>

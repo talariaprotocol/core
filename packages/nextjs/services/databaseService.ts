@@ -1,8 +1,8 @@
 import { createKysely } from "@vercel/postgres-kysely";
-import {Updateable} from "kysely";
+import { Selectable, Updateable } from "kysely";
 import { Insertable, Kysely, sql } from "kysely";
-import {UserTable} from "~~/repository/user/user.table";
-import {UserStatus} from "~~/types/entities/user";
+import { UserTable } from "~~/repository/user/user.table";
+import { UserStatus } from "~~/types/entities/user";
 
 interface Database {
   user: UserTable;
@@ -29,27 +29,26 @@ class DatabaseService {
       .execute();
   }
 
-  async createUser({
-                     wallet,
-                     document,
-  }: Insertable<UserTable>) {
-    await this.db
-      .insertInto("user")
-      .values({
-        status: UserStatus.created,
-        wallet: wallet,
-        document: document,
-      })
-      .execute();
-  }
-  async updateUser({
-                          id,
-                          status,
-                       document
-                      }: Updateable<UserTable>) {
-        // update the user status data into the database
-        await this.db.updateTable("user").set({status, document}).where("id", "=", id!).execute();
+  async createUser({ wallet, document }: Insertable<UserTable>): Promise<Selectable<UserTable> | undefined> {
+    // Check if user exists
+    let user = await this.db.selectFrom("user").selectAll().where("wallet", "=", wallet).executeTakeFirst();
+    if (!user) {
+      user = await this.db
+        .insertInto("user")
+        .values({
+          status: UserStatus.created,
+          wallet: wallet,
+          document: document,
+        })
+        .returningAll()
+        .executeTakeFirst();
     }
+    return user;
+  }
+  async updateUser({ id, status, document }: Updateable<UserTable>) {
+    // update the user status data into the database
+    await this.db.updateTable("user").set({ status, document }).where("id", "=", id!).execute();
+  }
 
   async getUser({ wallet }: Pick<UserTable, "wallet">) {
     // Fetch the whitelist data where the wallet matches the provided value
