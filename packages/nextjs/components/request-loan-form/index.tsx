@@ -15,7 +15,7 @@ import { calculateScoreAndMaxAmount } from "~~/repository/bcra/generateScore";
 import { UserStatus } from "~~/types/entities/user";
 import { TransactionExplorerBaseUrl } from "~~/utils/explorer";
 
-const TOKEN_DECIMALS = 18;
+export const TOKEN_DECIMALS = 18;
 
 export default function RequestLoanForm({
   prepareLoanData,
@@ -27,7 +27,7 @@ export default function RequestLoanForm({
 }) {
   const { user } = useContext(UserContext);
   const account = useAccount();
-  const [amount, setAmount] = useState<string>();
+  const [amount, setAmount] = useState<string>("");
   const chainId = account.chainId || OptimismSepoliaChainId;
   const { writeContractAsync, isPending, isSuccess, data: txHash } = useWriteContract();
   const receipt = useWaitForTransactionReceipt({ chainId, hash: txHash });
@@ -72,7 +72,7 @@ export default function RequestLoanForm({
 
   return (
     <div className="flex flex-col gap-20 max-w-md">
-      <Card className="">
+      <Card>
         <CardHeader>
           <CardTitle>Collateral-Free Borrowing</CardTitle>
           <CardDescription>Experience the freedom of borrowing without the need for collateral.</CardDescription>
@@ -83,7 +83,7 @@ export default function RequestLoanForm({
         </CardContent>
         <CardFooter>
           <Button onClick={handleTransaction} disabled={!kycCompleted || isPending || !amount} className="w-full">
-            Execute Transaction
+            Request Loan
           </Button>
           {txHash && <Link target="_blank" href={`${TransactionExplorerBaseUrl[chainId]}/${txHash}`} />}
         </CardFooter>
