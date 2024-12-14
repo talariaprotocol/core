@@ -1,8 +1,8 @@
-import { Wallet, Provider, ContractFactory } from 'zksync-ethers'
 import { Deployer } from '@matterlabs/hardhat-zksync-deploy'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { readFileSync, writeFileSync } from 'fs'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import path from 'path'
+import { ContractFactory, Provider, Wallet } from 'zksync-ethers'
 
 console.log('Initializing ...')
 
@@ -49,41 +49,12 @@ const deployAndVerify = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   // Deploy all contracts
-  const verifier = await deployAndVerifyContract('Verifier')
-  const hasher = await deployAndVerifyContract('Hasher')
-  const earlyAccessCodes = await deployAndVerifyContract('EarlyAccessCodes', [
-    await verifier.getAddress(),
-    await hasher.getAddress(),
-    20,
+  const usdc = await deployAndVerifyContract('USDC', [deployer.zkWallet.address])
+  const lendingProtocol = await deployAndVerifyContract('LendingProtocol', [
+    deployer.zkWallet.address,
+    deployer.zkWallet.address,
+    await usdc.getAddress(),
   ])
-  const earlyAccessCodesTestContract = await deployAndVerifyContract('EarlyAccessCodesTestContract', [
-    await earlyAccessCodes.getAddress(),
-  ])
-  const numberContract = await deployAndVerifyContract('NumberContract', [
-    await earlyAccessCodes.getAddress(),
-  ])
-
-  const BCN = await deployAndVerifyContract('BCN', [deployer.zkWallet.address])
-
-  const WorldChampionNFT = await deployAndVerifyContract('WorldChampionNFT', [deployer.zkWallet.address])
-
-  const giftCardsContract = await deployAndVerifyContract('GiftCards', [
-    await verifier.getAddress(),
-    await hasher.getAddress(),
-    20,
-    await BCN.getAddress(),
-  ])
-
-  const WorldChampionNFTAirdropperContract = await deployAndVerifyContract('WorldChampionNFTAirdropper', [
-    await verifier.getAddress(),
-    await hasher.getAddress(),
-    20,
-    await BCN.getAddress(),
-  ])
-
-  const testValidatorModule = await deployAndVerifyContract('TestValidatorModule')
-  const worldcoinValidatorModule = await deployAndVerifyContract('WorldcoinValidatorModule')
-
   // Save deployed addresses to JSON file
   writeFileSync(addressesFilePath, JSON.stringify(addresses, null, 2))
 

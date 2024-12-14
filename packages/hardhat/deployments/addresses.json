@@ -2,5 +2,9 @@
   "optimismSepolia": {
     "usdc": "0xDE73ccf0FEd614E5556F305f0906341E7eFa455F",
     "lendingProtocol": "0x442b0fc1f9760737c61439342c73dD903231E571"
+  },
+  "zkSyncSepolia": {
+    "usdc": "0xC2bcA9e25C58b18a358e0062002D7acC92C56202",
+    "LendingProtocol": "0x8eb33A9F1bbD4eA73ED4645b8D170ad5d6078B8e"
   }
 }
