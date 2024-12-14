@@ -3,6 +3,7 @@
 import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { UserContext } from "~~/context";
+import { UserStatus } from "~~/types/entities/user";
 
 const KYCButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ const KYCButton = () => {
     setIsLoading(false);
   };
 
-  const kycCompleted = !!user?.hasDoneKYC;
+  const kycCompleted = user?.status === UserStatus.done;
   return (
     <Button onClick={handleKYCVerification} disabled={kycCompleted || isLoading} className="w-full">
       {isLoading ? "Loading..." : kycCompleted ? "KYC Verified" : "Complete KYC Verification"}

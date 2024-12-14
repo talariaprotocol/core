@@ -1,10 +1,8 @@
-import { createContext, useState } from 'react';
-import { Address } from 'viem';
+import { createContext, useState } from "react";
+import { Selectable } from "kysely";
+import { UserTable } from "~~/repository/user/user.table";
 
-interface User {
-  id: string;
-  wallet: Address;
-  hasDoneKYC?: boolean;
+interface User extends Selectable<UserTable> {
   creditLimit?: bigint;
 }
 
@@ -21,12 +19,7 @@ const UserContext = createContext<UserContext>({
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
 
 export { UserProvider, UserContext };
-
