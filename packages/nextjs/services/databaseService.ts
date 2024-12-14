@@ -1,9 +1,11 @@
 import { createKysely } from "@vercel/postgres-kysely";
+import {Updateable} from "kysely";
 import { Insertable, Kysely, sql } from "kysely";
-import { WhitelistTable } from "~~/repository/whitelist/whitelist.table";
+import {UserTable} from "~~/repository/user/user.table";
+import {UserStatus} from "~~/types/entities/user";
 
 interface Database {
-  whitelist: WhitelistTable;
+  user: UserTable;
 }
 
 class DatabaseService {
@@ -17,64 +19,42 @@ class DatabaseService {
 
   private async createTableIfNotExists() {
     await this.db.schema
-      .createTable("whitelist")
+      .createTable("user")
       .ifNotExists()
       .addColumn("id", "serial", col => col.primaryKey())
       .addColumn("created_at", sql`timestamp with time zone`, cb => cb.defaultTo(sql`current_timestamp`))
-      .addColumn("logo", "varchar")
-      .addColumn("protocol_name", "varchar")
-      .addColumn("slug", "varchar", col => col.unique())
-      .addColumn("owner", "varchar", col => col.notNull())
-      .addColumn("whitelist_address", "varchar", col => col.notNull())
-      .addColumn("protocolRedirect", "varchar")
+      .addColumn("wallet", "varchar")
+      .addColumn("status", "varchar")
+      .addColumn("document", "varchar")
       .execute();
   }
 
-  async createWhitelist({
-    logo,
-    protocol_name,
-    slug,
-    owner,
-    chain_id,
-    whitelist_address,
-    protocolRedirect,
-  }: Insertable<WhitelistTable>) {
-    // Insert the whitelist data into the database, omitting id and created_at
+  async createUser({
+                     wallet,
+                     document,
+  }: Insertable<UserTable>) {
     await this.db
-      .insertInto("whitelist")
+      .insertInto("user")
       .values({
-        logo: logo,
-        protocol_name: protocol_name,
-        slug: slug,
-        owner: owner,
-        chain_id,
-        whitelist_address: whitelist_address,
-        protocolRedirect: protocolRedirect,
+        status: UserStatus.created,
+        wallet: wallet,
+        document: document,
       })
       .execute();
   }
-  async getWhitelist({ slug }: Pick<WhitelistTable, "slug">) {
+  async updateUser({
+                          id,
+                          status,
+                       document
+                      }: Updateable<UserTable>) {
+        // update the user status data into the database
+        await this.db.updateTable("user").set({status, document}).where("id", "=", id!).execute();
+    }
+
+  async getUser({ wallet }: Pick<UserTable, "wallet">) {
     // Fetch the whitelist data where the wallet matches the provided value
-    const result = await this.db.selectFrom("whitelist").selectAll().where("slug", "=", slug).executeTakeFirst();
+    const result = await this.db.selectFrom("user").selectAll().where("wallet", "=", wallet).executeTakeFirst();
     // Return the result (it will be an array, so handle it accordingly)
-    return result;
-  }
-
-  async getWhitelistsByOwner({ owner }: Pick<WhitelistTable, "owner">) {
-    // Fetch the whitelist data where the wallet matches the provided value
-    const result = await this.db.selectFrom("whitelist").selectAll().where("owner", "=", owner).execute();
-    console.log("result", result, owner);
-    return result;
-  }
-
-  // TODO: Send also chain id when added to whitelsit table
-  async getWhitelistByAddress({ whitelist_address, chain_id }: Pick<WhitelistTable, "whitelist_address" | "chain_id">) {
-    const result = await this.db
-      .selectFrom("whitelist")
-      .selectAll()
-      .where("whitelist_address", "=", whitelist_address)
-      .where("chain_id", "=", chain_id)
-      .executeTakeFirst();
     return result;
   }
 }
